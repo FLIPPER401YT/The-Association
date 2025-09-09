@@ -12,6 +12,9 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     [Header("Perception")]
     [SerializeField] protected int faceTargetSpeed;
     [SerializeField] protected int FOV;
+    [SerializeField] protected float viewDistance;
+    [SerializeField] protected float eyeHeight;
+    [SerializeField] protected LayerMask losMask;
 
     [Header("Movement")]
     [SerializeField] protected EnemyMovementBaseRB mover;
@@ -56,31 +59,39 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (CanSeePlayer()) aggro = true;
+        bool sees = CanSeePlayer();
+        aggro = playerInTrigger || sees;     // keep chasing if in trigger OR seeing
 
         if (mover)
-        {
-            if (aggro && player) mover.SetTarget(player);
-            else mover.SetTarget(null);
-        }
+            mover.SetTarget(aggro && player ? player : null);
 
-        if(aggro && player)
+        if (aggro && player)
         {
             playerDir = player.position - transform.position;
             FaceTarget();
         }
-        
+
     }
 
     protected bool CanSeePlayer()
     {
-        if(!player)return false;
+        if (!player) return false;
 
-        Vector3 toPlayer = player.position - transform.position;
-        float angle = Vector3.Angle(toPlayer, transform.forward);
+        // distance gate
+        Vector3 eyePos = transform.position + Vector3.up * eyeHeight;
+        Vector3 toPlayer = player.position - eyePos;
+        float dist = toPlayer.magnitude;
+        if (dist > viewDistance) return false;
+
+        // FOV gate (flattened so vertical doesn’t matter)
+        Vector3 flatTo = new Vector3(toPlayer.x, 0f, toPlayer.z);
+        Vector3 flatFwd = new Vector3(transform.forward.x, 0f, transform.forward.z);
+        if (flatTo.sqrMagnitude < 0.0001f) return true;
+        float angle = Vector3.Angle(flatFwd.normalized, flatTo.normalized);
         if (angle > FOV) return false;
 
-        if (Physics.Raycast(transform.position, toPlayer.normalized, out RaycastHit hit))
+        // LOS raycast (exclude your own enemy layers in losMask)
+        if (Physics.Raycast(eyePos, toPlayer.normalized, out RaycastHit hit, viewDistance, losMask, QueryTriggerInteraction.Ignore))
             return hit.collider.CompareTag("Player");
 
         return false;
@@ -132,6 +143,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = true;
+            Debug.Log($"{name}: Player ENTER trigger");
             aggro = true;
         }
     }
@@ -141,6 +153,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = false;
+            Debug.Log($"{name}: Player EXIT trigger");
         }
     }
 

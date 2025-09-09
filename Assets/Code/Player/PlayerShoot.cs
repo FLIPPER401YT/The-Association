@@ -3,7 +3,7 @@ using UnityEngine;
 
 class PlayerShoot : MonoBehaviour
 {
-    [SerializeField] float damage;
+    [SerializeField] int damage;
     [SerializeField] float fireRate;
     [SerializeField] float fireDistance;
     [SerializeField] int bullets;

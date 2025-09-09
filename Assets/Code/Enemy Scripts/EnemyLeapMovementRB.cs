@@ -10,6 +10,11 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
     [SerializeField] float leapCooldown;
     [SerializeField] float controlLockDuration;
 
+    [Header("Leap Ballistics")]
+    [SerializeField] float minAirTime;   
+    [SerializeField] float maxAirTime;   
+    [SerializeField] float maxLeapSpeed;    
+
     [Header("Grounding")]
     [SerializeField] LayerMask groundMask = ~0;
     [SerializeField] float gravity;
@@ -27,29 +32,33 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
         if (!target) { BrakeToStop(); return; }
 
         Vector3 to = target.position - transform.position;
-        float dist = to.magnitude;
+        float dist = new Vector3(to.x, 0f, to.z).magnitude;
 
-        if(stopDistance > 0f && dist <= stopDistance)
+        // stop if close
+        if (stopDistance > 0f && dist <= stopDistance)
         {
             BrakeToStop();
             if (dist > 0.001f) Face(new Vector3(to.x, 0f, to.z).normalized);
             return;
         }
 
+        // during leap, let physics carry it
         if (controlLocked) return;
 
         cooldownTimer += Time.fixedDeltaTime;
 
-        bool canLeap = dist >= minLeapDist && dist <= maxLeapDist && cooldownTimer >= leapCooldown;
+        bool inLeapWindow = dist >= minLeapDist && dist <= maxLeapDist;
+        bool canLeap = inLeapWindow && cooldownTimer >= leapCooldown;
 
         if (canLeap)
         {
-            DoLeap(to);
+            DoBallisticLeap(target.position);
             return;
         }
 
+        // default chase (planar)
         Vector3 dirXZ = new Vector3(to.x, 0f, to.z);
-        if(dirXZ.sqrMagnitude > 0.0001f)
+        if (dirXZ.sqrMagnitude > 0.0001f)
         {
             Vector3 dir = ApplyAvoidance(dirXZ.normalized);
             Face(dir);
@@ -59,32 +68,57 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
         {
             BrakeToStop();
         }
-        
     }
 
-    void DoLeap(Vector3 toTarget)
+    void DoBallisticLeap(Vector3 targetPos)
     {
         cooldownTimer = 0f;
         controlLocked = true;
 
-        // Face the target on the flat plane
-        Vector3 flat = new Vector3(toTarget.x, 0f, toTarget.z);
-        if (flat.sqrMagnitude > 0.0001f) Face(flat.normalized);
+        // snapshot pos
+        Vector3 p0 = transform.position;
+        Vector3 pT = targetPos;
 
-        // Compose leap direction with upward bias
-        Vector3 dir = toTarget.normalized;
-        dir.y += upwardBoost;
-        dir.Normalize();
+        // deltas
+        Vector3 to = pT - p0;
+        Vector3 toXZ = new Vector3(to.x, 0f, to.z);
+        float dXZ = toXZ.magnitude;
+        float dY = to.y;
 
-        // Zero downward velocity to make leap arcs consistent
+        if (dXZ < 0.01f) // basically on top—nudge forward a bit
+        {
+            toXZ = transform.forward;
+            dXZ = 1f;
+            dY = 0f;
+        }
+
+        // choose airtime based on distance within leap window
+        float t = Mathf.Lerp(minAirTime, maxAirTime, Mathf.InverseLerp(minLeapDist, maxLeapDist, dXZ));
+        t = Mathf.Clamp(t, minAirTime, maxAirTime);
+
+        float g = Mathf.Abs(gravity); // gravity magnitude
+
+        Vector3 vxz = (toXZ / dXZ) * (dXZ / t);
+        float vy = (dY + 0.5f * g * t * t) / t;
+        Vector3 v0 = vxz + Vector3.up * vy;
+
+        // clamp speed
+        float speed = v0.magnitude;
+        if (speed > maxLeapSpeed) v0 *= (maxLeapSpeed / speed);
+
+        // clear downward velocity for consistency
         Vector3 v = rb.linearVelocity;
         if (v.y < 0f) v.y = 0f;
         rb.linearVelocity = v;
 
-        // Impulse jump toward target
-        rb.AddForce(dir * leapForce, ForceMode.Impulse);
+        // face horizontal launch direction
+        Vector3 faceDir = new Vector3(v0.x, 0f, v0.z);
+        if (faceDir.sqrMagnitude > 0.001f) Face(faceDir.normalized);
 
-        // Unlock after a short delay
+        // set launch instantly (mass-independent)
+        rb.AddForce(v0, ForceMode.VelocityChange);
+
+        // brief lock so chase steering doesn't fight the arc
         Invoke(nameof(UnlockControl), controlLockDuration);
     }
 

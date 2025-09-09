@@ -7,19 +7,19 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
     [SerializeField] protected Transform target;
 
     [Header("Motion")]
-    [SerializeField] protected float maxSpeed = 6f;
-    [SerializeField] protected float acceleration = 20f;
-    [SerializeField] protected float decel = 30f;
-    [SerializeField] protected float turnSpeed = 12f;
+    [SerializeField] protected float maxSpeed;
+    [SerializeField] protected float acceleration;
+    [SerializeField] protected float decel;
+    [SerializeField] protected float turnSpeed;
 
     [Header("Stop")]
-    [SerializeField] protected float stopDistance = 1.75f;
+    [SerializeField] protected float stopDistance;
 
     [Header("Simple Avoidance")]
     [SerializeField] protected LayerMask obstacleMask = ~0;
-    [SerializeField] protected float avoidProbeDist = 1.25f;
-    [SerializeField] protected float sideProbeOffset = 0.4f;
-    [SerializeField] protected float avoidSteerStrength = 10f;
+    [SerializeField] protected float avoidProbeDist;
+    [SerializeField] protected float sideProbeOffset;
+    [SerializeField] protected float avoidSteerStrength;
 
     protected Rigidbody rb;
 
