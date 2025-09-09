@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
     public PlayerController playerScript;
+    public GameObject playerSpawnPos;
 
     float timeScaleOriginal;
 
