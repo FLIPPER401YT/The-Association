@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 750
-  jumpHeight: 10
+  jumpHeight: 3
   jumpMax: 1
 --- !u!33 &522231321136395076
 MeshFilter:
