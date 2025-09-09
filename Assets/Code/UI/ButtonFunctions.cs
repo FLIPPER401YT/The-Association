@@ -8,4 +8,14 @@ public class ButtonFunctions : MonoBehaviour
         GameManager.instance.stateUnpaused();
     }
 
+    public void restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameManager.instance.stateUnpaused();
+    }
+
+    public void quitToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }
