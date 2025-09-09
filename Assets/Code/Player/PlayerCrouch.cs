@@ -3,8 +3,10 @@ using UnityEngine;
 class PlayerCrouch : MonoBehaviour
 {
     [SerializeField] float crouchHeightPct;
-    [SerializeField] float crouchSpeed;
+    [SerializeField] float crouchSpeedMod;
+    [SerializeField] float crouchDownSpeed;
     [SerializeField] CapsuleCollider col;
+    [SerializeField] PlayerMovement movement;
 
     float heightOriginal;
 
@@ -17,11 +19,13 @@ class PlayerCrouch : MonoBehaviour
     {
         if (Input.GetButton("Crouch"))
         {
-            col.height = Mathf.MoveTowards(col.height, heightOriginal * crouchHeightPct, crouchSpeed * Time.deltaTime);
+            col.height = Mathf.MoveTowards(col.height, heightOriginal * crouchHeightPct, crouchDownSpeed * Time.deltaTime);
+            movement.speed = movement.speedOriginal * crouchSpeedMod;
         }
         else
         {
-            col.height = Mathf.MoveTowards(col.height, heightOriginal, crouchSpeed * Time.deltaTime);
+            col.height = Mathf.MoveTowards(col.height, heightOriginal, crouchDownSpeed * Time.deltaTime);
+            movement.speed = movement.speedOriginal;
         }
     }
 }
