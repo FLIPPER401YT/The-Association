@@ -1,17 +1,17 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamage
 {
-    [SerializeField] float speed;
+    [SerializeField] float health;
     [SerializeField] PlayerJump jump;
     [SerializeField] PlayerCrouch crouch;
-    [SerializeField] Rigidbody rb;
-
-    Vector3 moveDir;
+    [SerializeField] PlayerMovement movement;
+    [SerializeField] PlayerDash dash;
 
     void FixedUpdate()
     {
-        Movement();
+        movement.Movement();
+        dash.Dash();
     }
 
     void Update()
@@ -20,11 +20,8 @@ public class PlayerController : MonoBehaviour
         crouch.Crouch();
     }
 
-    void Movement()
+    public void TakeDamage(float damage)
     {
-        moveDir = ((transform.forward * Input.GetAxis("Vertical")) + (transform.right * Input.GetAxis("Horizontal"))) * speed * Time.fixedDeltaTime;
-        rb.linearVelocity = moveDir + new Vector3(0, rb.linearVelocity.y, 0);
+        
     }
-
-    
 }

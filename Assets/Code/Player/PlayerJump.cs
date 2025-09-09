@@ -27,6 +27,5 @@ class PlayerJump : MonoBehaviour
         {
             jumps = 0;
         }
-        Debug.Log(collision.gameObject.layer);
     }
 }
