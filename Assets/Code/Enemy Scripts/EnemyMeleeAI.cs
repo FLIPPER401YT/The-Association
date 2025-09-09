@@ -21,7 +21,27 @@ public class EnemyMeleeAI : EnemyAI_Base
     // Update is called once per frame
     protected override void Update()
     {
+        base.Update();
+        attackTimer += Time.deltaTime;
 
+        if (!player) return;
+
+        if (!playerInTrigger) return;
+
+        Vector3 toPlayer = player.position - transform.position;
+        float distance = toPlayer.magnitude;
+
+        if(distance <= attackRange)
+        {
+            playerDir = toPlayer;
+            FaceTarget();
+
+            if(attackTimer >= attackCooldown)
+            {
+                attackTimer = 0f;
+                DoMeleeAttack();
+            }
+        } 
         
     }
 
