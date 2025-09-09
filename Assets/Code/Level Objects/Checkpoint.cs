@@ -1,18 +1,14 @@
-using UnityEngine;
+//using UnityEngine;
+//using System.Collections;
 
-public class Checkpoint : MonoBehaviour
-{
-    [SerializeField] GameObject player, checkPoint;
-    [SerializeField] Vector3 move;
-    [SerializeField] float dead;
-    // Update is called once per frame
-    void Update()
-    {
-        if (player.transform.position.y < -dead) player.transform.position = move;
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        move = player.transform.position;
-        Destroy(other.gameObject);
-    }
-}
+//public class Checkpoint : MonoBehaviour
+//{
+//    [SerializeField] Renderer player;
+//    private void OnTriggerEnter(Collider other)
+//    {
+//        if(other.CompareTag("Player") && GameManager.instance.playerSpawn.transform.position != transform.position)
+//        {
+//            GameManager.instance.playerSpawn.transform.position = transform.position;
+//        }
+//    }
+//}
