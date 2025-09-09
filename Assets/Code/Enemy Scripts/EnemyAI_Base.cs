@@ -14,7 +14,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     [SerializeField] protected int FOV;
 
     [Header("Movement")]
-    [SerializeField] protected EnemyMovmentBaseRB mover;
+    [SerializeField] protected EnemyMovementBaseRB mover;
 
     [System.Serializable]
     public class DropItem
