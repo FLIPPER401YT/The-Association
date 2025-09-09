@@ -10,6 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8635141838717556200}
   - component: {fileID: 4256127293666220363}
+  - component: {fileID: 4592218793867380759}
+  - component: {fileID: 5762488403691970888}
+  - component: {fileID: 2027198226169990103}
+  - component: {fileID: 4178799075887348108}
   - component: {fileID: 522231321136395076}
   - component: {fileID: 2246903850826596874}
   - component: {fileID: 3282056699460555531}
@@ -49,9 +53,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39c8950a5082d654b89c9da7d3f1bec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
+  jump: {fileID: 2027198226169990103}
+  crouch: {fileID: 4178799075887348108}
+  movement: {fileID: 4592218793867380759}
+  dash: {fileID: 5762488403691970888}
+--- !u!114 &4592218793867380759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602741367445022904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4c628a774bfd8a44b0250579b52555e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   speed: 750
-  jumpHeight: 10
+  rb: {fileID: 3717102040862646966}
+  moveDir: {x: 0, y: 0, z: 0}
+--- !u!114 &5762488403691970888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602741367445022904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc8e81b0a98118643abd8941a3978ddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashMax: 1
+  dashDistance: 1000
+  dashReloadTime: 1
+  dashTimeLength: 0.2
+  rb: {fileID: 3717102040862646966}
+  movement: {fileID: 4592218793867380759}
+--- !u!114 &2027198226169990103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602741367445022904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9de7ae5361c0d048a1845709a45e7a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpHeight: 6
   jumpMax: 1
+--- !u!114 &4178799075887348108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602741367445022904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3d3d9bfe392db74dad6d5a2fe128465, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crouchHeightPct: 0.65
+  crouchSpeed: 3
+  col: {fileID: 3282056699460555531}
 --- !u!33 &522231321136395076
 MeshFilter:
   m_ObjectHideFlags: 0
