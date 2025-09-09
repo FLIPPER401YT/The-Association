@@ -2,10 +2,17 @@ using UnityEngine;
 
 class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float speed;
+    [SerializeField] public float speed;
     [SerializeField] Rigidbody rb;
 
     public Vector3 moveDir;
+    public float speedOriginal;
+
+
+    void Start()
+    {
+        speedOriginal = speed;
+    }
 
     public void Movement()
     {
