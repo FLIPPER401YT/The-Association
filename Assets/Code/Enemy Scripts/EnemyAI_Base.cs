@@ -3,7 +3,7 @@ using System.Collections;
 
 
 [RequireComponent(typeof(Collider))]
-public class EnemyAI_Base : MonoBehaviour //,IDamage
+public class EnemyAI_Base : MonoBehaviour, IDamage
 { 
     [Header("Visuals & Stats")]
     [SerializeField] protected Renderer model;
