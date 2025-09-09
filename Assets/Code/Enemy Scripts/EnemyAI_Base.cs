@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using UnityEditor.Build.Content;
+
 
 [RequireComponent(typeof(Collider))]
 public class EnemyAI_Base : MonoBehaviour //,IDamage
@@ -38,7 +38,7 @@ public class EnemyAI_Base : MonoBehaviour //,IDamage
     protected float angleToPlayer;
     protected bool aggro;
 
-    void Start()
+    protected virtual void Start()
     {
         player = GameManager.instance.player.transform;
         colorOrig = model.material.color;
@@ -54,8 +54,21 @@ public class EnemyAI_Base : MonoBehaviour //,IDamage
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
+        if (CanSeePlayer()) aggro = true;
+
+        if (mover)
+        {
+            if (aggro && player) mover.SetTarget(player);
+            else mover.SetTarget(null);
+        }
+
+        if(aggro && player)
+        {
+            playerDir = player.position - transform.position;
+            FaceTarget();
+        }
         
     }
 
@@ -116,11 +129,39 @@ public class EnemyAI_Base : MonoBehaviour //,IDamage
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("player"))
+        if (other.CompareTag("Player"))
         {
             playerInTrigger = true;
             aggro = true;
         }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInTrigger = false;
+        }
+    }
+
+    private void DropLoot()
+    {
+        if (drops == null) return;
+        
+        foreach(var item in drops)
+        {
+            if(item == null || item.prefab == null) continue;
+            if(Random.value > item.chance) continue;
+
+            int count = Random.Range(item.minCount, item.maxCount + 1);
+            for(int i = 0; i < count; i++)
+            {
+                Vector3 pos = transform.position + (Vector3)Random.insideUnitCircle * 0.5f;
+                Instantiate(item.prefab, pos, Quaternion.identity);
+            }
+        }
+            
+       
     }
 
 
