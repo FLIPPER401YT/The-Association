@@ -3,17 +3,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float speed;
-    [SerializeField] float jumpHeight;
-    [SerializeField] int jumpMax;
+    [SerializeField] PlayerJump jump;
+    [SerializeField] PlayerCrouch crouch;
+    [SerializeField] Rigidbody rb;
 
-    Rigidbody rb;
     Vector3 moveDir;
-    int jumps = 0;
-
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
 
     void FixedUpdate()
     {
@@ -22,16 +16,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Jump();
-    }
-
-    void Jump()
-    {
-        if (Input.GetButtonDown("Jump") && jumps < jumpMax)
-        {
-            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
-            jumps++;
-        }
+        jump.Jump();
+        crouch.Crouch();
     }
 
     void Movement()
@@ -40,12 +26,5 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = moveDir + new Vector3(0, rb.linearVelocity.y, 0);
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            jumps = 0;
-        }
-        Debug.Log(collision.gameObject.layer);
-    }
+    
 }
