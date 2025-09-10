@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 3111702030261257001}
-  HP: 10
+  HP: 50
   faceTargetSpeed: 10
   FOV: 90
   viewDistance: 10
@@ -200,6 +200,7 @@ MonoBehaviour:
   losMask:
     serializedVersion: 2
     m_Bits: 9
+  aggroMemorySeconds: 4
   mover: {fileID: 8776218185966148276}
   enableDrops: 0
   drops: []

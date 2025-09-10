@@ -15,6 +15,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     [SerializeField] protected float viewDistance;
     [SerializeField] protected float eyeHeight;
     [SerializeField] protected LayerMask losMask;
+    [SerializeField] protected float aggroMemorySeconds;
 
     [Header("Movement")]
     [SerializeField] protected EnemyMovementBaseRB mover;
@@ -40,6 +41,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     protected Vector3 playerDir;
     protected float angleToPlayer;
     protected bool aggro;
+    protected float aggroTimer;
 
     protected virtual void Start()
     {
@@ -59,13 +61,24 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     // Update is called once per frame
     protected virtual void Update()
     {
+        if (!player) return;
+
         bool sees = CanSeePlayer();
-        aggro = playerInTrigger || sees;     // keep chasing if in trigger OR seeing
 
-        if (mover)
-            mover.SetTarget(aggro && player ? player : null);
+        // refresh memory if we see the player or they are in our close-range trigger
+        if (sees || playerInTrigger)
+            aggroTimer = aggroMemorySeconds;
 
-        if (aggro && player)
+        // tick memory
+        if (aggroTimer > 0f)
+            aggroTimer -= Time.deltaTime;
+
+        // aggro if: in trigger OR currently see player OR memory still active
+        aggro = playerInTrigger || sees || (aggroTimer > 0f);
+
+        if (mover) mover.SetTarget(aggro ? player : null);
+
+        if (aggro)
         {
             playerDir = player.position - transform.position;
             FaceTarget();
@@ -90,7 +103,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         float angle = Vector3.Angle(flatFwd.normalized, flatTo.normalized);
         if (angle > FOV) return false;
 
-        // LOS raycast (exclude your own enemy layers in losMask)
+        // LOS raycast
         if (Physics.Raycast(eyePos, toPlayer.normalized, out RaycastHit hit, viewDistance, losMask, QueryTriggerInteraction.Ignore))
             return hit.collider.CompareTag("Player");
 
@@ -110,6 +123,8 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         if (HP > 0)
         {
             HP -= amount;
+
+            aggroTimer = aggroMemorySeconds;
 
             aggro = true;
             if (mover && player) mover.SetTarget(player);
@@ -144,6 +159,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         {
             playerInTrigger = true;
             Debug.Log($"{name}: Player ENTER trigger");
+            aggroTimer = aggroMemorySeconds;
             aggro = true;
         }
     }

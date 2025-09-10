@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3450861346065507354}
   - component: {fileID: 8933258127500704465}
   m_Layer: 0
-  m_Name: enemy test 2
+  m_Name: enemy leaper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 2186109506890268714}
-  HP: 10
+  HP: 50
   faceTargetSpeed: 10
   FOV: 90
   viewDistance: 10
@@ -61,6 +61,7 @@ MonoBehaviour:
   losMask:
     serializedVersion: 2
     m_Bits: 9
+  aggroMemorySeconds: 4
   mover: {fileID: 0}
   enableDrops: 0
   drops: []
