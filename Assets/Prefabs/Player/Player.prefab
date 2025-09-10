@@ -93,6 +93,7 @@ MonoBehaviour:
   fireDistance: 100
   bullets: 1
   bulletSpeed: 200
+  bloomMod: 0
   ammo: 100
   isAutomatic: 1
   shootPoint: {fileID: 8937604189313975159}
@@ -100,6 +101,9 @@ MonoBehaviour:
   shootMask:
     serializedVersion: 2
     m_Bits: 73
+  gunList:
+  - {fileID: 11400000, guid: f332b78939376294883b112873199401, type: 2}
+  - {fileID: 11400000, guid: df78de77897891b4f9f453efe422d0c9, type: 2}
 --- !u!114 &5762488403691970888
 MonoBehaviour:
   m_ObjectHideFlags: 0
