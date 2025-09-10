@@ -1,4 +1,5 @@
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 
 class PlayerShoot : MonoBehaviour
@@ -7,9 +8,11 @@ class PlayerShoot : MonoBehaviour
     [SerializeField] float fireRate;
     [SerializeField] float fireDistance;
     [SerializeField] int bullets;
+    [SerializeField] float bulletSpeed;
     [SerializeField] int ammo;
     [SerializeField] bool isAutomatic;
     [SerializeField] GameObject shootPoint;
+    [SerializeField] GameObject bulletPrefab;
     [SerializeField] LayerMask shootMask;
 
     float fireTimer = 0;
@@ -30,6 +33,10 @@ class PlayerShoot : MonoBehaviour
                         dmg.TakeDamage(damage);
                     }
                 }
+                Bullet bulletObj = Instantiate(bulletPrefab, shootPoint.transform.position, Camera.main.transform.rotation, null).GetComponent<Bullet>();
+                bulletObj.targetPoint = hit.point;
+                bulletObj.distance = fireDistance;
+                bulletObj.bulletSpeed = bulletSpeed;// * (hit.transform != null ? Vector3.Distance(shootPoint.transform.position, hit.point) : );
             }
             ammo--;
             fireTimer = 0;
