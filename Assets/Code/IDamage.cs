@@ -1,6 +1,6 @@
 using UnityEngine;
 
-interface IDamage
+public interface IDamage
 {
-    public void TakeDamage(float damage);
+   void TakeDamage(int damage);
 }

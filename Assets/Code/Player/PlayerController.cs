@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IDamage
 {
-    [SerializeField] float health;
+    [SerializeField] int health;
     [SerializeField] PlayerJump jump;
     [SerializeField] PlayerCrouch crouch;
     [SerializeField] PlayerMovement movement;
@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour, IDamage
         shoot.Shoot();
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
         health -= damage;
         if (health <= 0)
