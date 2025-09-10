@@ -15,12 +15,14 @@ class PlayerShoot : MonoBehaviour
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] LayerMask shootMask;
     [SerializeField] List<GunStats> gunList;
+    [SerializeField] MeleeStats meleeStats;
 
     float fireTimer = 0;
+    bool isMelee = false;
 
     void Start()
     {
-        gunList[0].ammo = gunList[0].maxAmmo;
+        foreach (GunStats stat in gunList) ReloadWeapon(stat);
         SwitchWeapons(gunList[0]);
     }
 
@@ -29,21 +31,29 @@ class PlayerShoot : MonoBehaviour
         if (Input.GetButtonDown("Weapon1"))
         {
             SwitchWeapons(gunList[0]);
+            isMelee = false;
         }
         else if (gunList.Count > 1 && Input.GetButtonDown("Weapon2"))
         {
             SwitchWeapons(gunList[1]);
+            isMelee = false;
         }
-        else
+        else if (Input.GetButtonDown("Weapon3"))
         {
-            // Melee weapon
+            SwitchWeapons(meleeStats);
+            isMelee = true;
         }
+    }
+
+    void ReloadWeapon(GunStats stat)
+    {
+        stat.ammo = stat.maxAmmo;
     }
 
     public void Shoot()
     {
         fireTimer += Time.deltaTime;
-        if (fireTimer >= fireRate && ammo > 0 && isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1"))
+        if (fireTimer >= fireRate && ammo > 0 && (isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1")))
         {
             for (int bullet = 0; bullet < bullets; bullet++)
             {
@@ -64,12 +74,15 @@ class PlayerShoot : MonoBehaviour
                         dmg.TakeDamage(damage);
                     }
                 }
-                Bullet bulletObj = Instantiate(bulletPrefab, shootPoint.transform.position, new Quaternion(Camera.main.transform.rotation.x + rangeX, Camera.main.transform.rotation.y + rangeY, Camera.main.transform.rotation.z, Camera.main.transform.rotation.w), null).GetComponent<Bullet>();
-                bulletObj.targetPoint = hit.point;
-                bulletObj.distance = fireDistance;
-                bulletObj.bulletSpeed = bulletSpeed;// * (hit.transform != null ? Vector3.Distance(shootPoint.transform.position, hit.point) : );
+                if (!isMelee)
+                {
+                    Bullet bulletObj = Instantiate(bulletPrefab, shootPoint.transform.position, new Quaternion(Camera.main.transform.rotation.x + rangeX, Camera.main.transform.rotation.y + rangeY, Camera.main.transform.rotation.z, Camera.main.transform.rotation.w), null).GetComponent<Bullet>();
+                    bulletObj.targetPoint = hit.point;
+                    bulletObj.distance = fireDistance;
+                    bulletObj.bulletSpeed = bulletSpeed;
+                }
             }
-            ammo--;
+            if (!isMelee) ammo--;
             fireTimer = 0;
         }
     }
@@ -83,5 +96,15 @@ class PlayerShoot : MonoBehaviour
         bullets = stats.bullets;
         ammo = stats.ammo;
         isAutomatic = stats.isAutomatic;
+    }
+
+    void SwitchWeapons(MeleeStats stats)
+    {
+        damage = stats.damage;
+        fireRate = stats.swingRate;
+        fireDistance = stats.swingDistance;
+        bullets = 1;
+        ammo = 1;
+        bloomMod = 0;
     }
 }

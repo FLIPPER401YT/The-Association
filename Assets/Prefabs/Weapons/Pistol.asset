@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   damage: 15
-  fireRate: 0.2
+  fireRate: 1
   fireDistance: 150
   bloomMod: 0.05
   bullets: 1
-  ammo: 0
-  maxAmmo: 0
-  isAutomatic: 0
+  ammo: 100
+  maxAmmo: 100
+  isAutomatic: 1

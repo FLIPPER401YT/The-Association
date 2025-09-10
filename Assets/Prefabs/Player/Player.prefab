@@ -95,7 +95,7 @@ MonoBehaviour:
   bulletSpeed: 200
   bloomMod: 0
   ammo: 100
-  isAutomatic: 1
+  isAutomatic: 0
   shootPoint: {fileID: 8937604189313975159}
   bulletPrefab: {fileID: 2146355934780771645, guid: 594ce16b677d2c049a6b86b7d5da4962, type: 3}
   shootMask:
@@ -104,6 +104,7 @@ MonoBehaviour:
   gunList:
   - {fileID: 11400000, guid: f332b78939376294883b112873199401, type: 2}
   - {fileID: 11400000, guid: df78de77897891b4f9f453efe422d0c9, type: 2}
+  meleeStats: {fileID: 11400000, guid: d53ba188a1d2c13438b6cf094a2ab880, type: 2}
 --- !u!114 &5762488403691970888
 MonoBehaviour:
   m_ObjectHideFlags: 0

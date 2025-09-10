@@ -9,14 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e76608fce4ec8e4e862ab23616b0ad7, type: 3}
-  m_Name: Shotgun
+  m_Script: {fileID: 11500000, guid: 6955dbe37035ee2439f4d6cf97805356, type: 3}
+  m_Name: Bat
   m_EditorClassIdentifier: 
-  damage: 8
-  fireRate: 2
-  fireDistance: 20
-  bloomMod: 0.2
-  bullets: 200
-  ammo: 100
-  maxAmmo: 100
-  isAutomatic: 0
+  damage: 50
+  swingRate: 1
+  swingDistance: 1
