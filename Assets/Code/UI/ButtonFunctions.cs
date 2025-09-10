@@ -7,6 +7,24 @@ public class ButtonFunctions : MonoBehaviour
     {
         GameManager.instance.stateUnpaused();
     }
+    public void settings()
+    {
+        GameManager.instance.settingsOpen();
+    }
+
+    public void controlSettings()
+    {
+        GameManager.instance.controlSettingsOpen();
+    }
+    public void audioSettings()
+    {
+        GameManager.instance.audioSettingsOpen();
+    }
+    public void back()
+    {
+        GameManager.instance.settingsClosed();
+    }
+
 
     public void restart()
     {

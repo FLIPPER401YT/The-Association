@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuSettings;
+    [SerializeField] GameObject menuControlSettings;
+    [SerializeField] GameObject menuAudioSettings;
+    [SerializeField] MenuState menuCurr;
 
     public bool isPaused;
 
@@ -15,6 +18,15 @@ public class GameManager : MonoBehaviour
     public GameObject playerSpawnPos;
 
     float timeScaleOriginal;
+
+    public enum MenuState
+    {
+        None,
+        Pause,
+        Settings
+    }
+
+    public MenuState originalMenu;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -50,6 +62,9 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        menuCurr = MenuState.Pause;
+        originalMenu = MenuState.Pause;
+
 
     }
 
@@ -61,5 +76,58 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         menuActive.SetActive(false);
         menuActive = null;
+        menuCurr = 0;
+        originalMenu = 0;
+    }
+
+    public void settingsOpen()
+    {
+        menuActive.SetActive(false);
+        menuActive = null;
+        menuActive = menuSettings;
+        menuActive.SetActive(true);
+    }
+
+    public void controlSettingsOpen()
+    {
+        menuActive.SetActive(false);
+        menuActive = null;
+        menuActive = menuControlSettings;
+        menuActive.SetActive(true);
+        menuCurr = MenuState.Settings;
+    }
+
+    public void audioSettingsOpen()
+    {
+        menuActive.SetActive(false);
+        menuActive = null;
+        menuActive = menuAudioSettings;
+        menuActive.SetActive(true);
+        menuCurr = MenuState.Settings;
+    }
+    public void settingsClosed()
+    {
+        switch (menuCurr)
+        {
+            case MenuState.Pause:
+                {
+                    menuActive.SetActive(false);
+                    menuActive = null;
+                    menuActive = menuPause;
+                    menuActive.SetActive(true);
+                    break;
+                }
+            case MenuState.Settings:
+                {
+                    menuCurr = originalMenu;
+                    menuActive.SetActive(false);
+                    menuActive = null;
+                    menuActive = menuSettings;
+                    menuActive.SetActive(true);
+                    break;
+                }
+            default:
+                break;
+        }
     }
 }
