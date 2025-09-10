@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1317877196894607081}
   - component: {fileID: 2628150222777615787}
   - component: {fileID: 4565709893834156841}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 3480459649898975980}
   - component: {fileID: 2583161192548235506}
   - component: {fileID: 5143209115262118658}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: enemy chaser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,7 +199,7 @@ MonoBehaviour:
   eyeHeight: 1.2
   losMask:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 137
   aggroMemorySeconds: 4
   mover: {fileID: 8776218185966148276}
   enableDrops: 0
