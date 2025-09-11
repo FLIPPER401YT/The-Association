@@ -20,7 +20,7 @@ public class LightEvent : MonoBehaviour
     }
     void Flashlight()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             if (lightController.isActiveAndEnabled)
             {
