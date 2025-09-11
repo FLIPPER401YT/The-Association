@@ -203,8 +203,8 @@ public class BigfootBoss : Base_Boss_AI
                 var dmg = h.GetComponent<IDamage>();
                 if (dmg != null) dmg.TakeDamage((int)slamDamage);
 
-                var stun = player.GetComponentInChildren<StatusEffects>();
-                if (stun) stun.ApplyStun(slamStunDuration);
+                var status = player.GetComponentInChildren<StatusEffects>();
+                if (status) status.ApplyStun(slamStunDuration);
             }
             if(h.attachedRigidbody && h.transform != transform)
             {
