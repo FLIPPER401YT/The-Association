@@ -16,9 +16,9 @@ GameObject:
   - component: {fileID: 329962325042255156}
   - component: {fileID: 3450861346065507354}
   - component: {fileID: 8933258127500704465}
-  m_Layer: 0
-  m_Name: enemy test 2
-  m_TagString: Untagged
+  m_Layer: 6
+  m_Name: enemy leaper
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -53,14 +53,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 2186109506890268714}
-  HP: 10
+  HP: 50
   faceTargetSpeed: 10
   FOV: 90
   viewDistance: 10
   eyeHeight: 1.2
   losMask:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 137
+  aggroMemorySeconds: 4
   mover: {fileID: 0}
   enableDrops: 0
   drops: []
@@ -275,7 +276,7 @@ GameObject:
   - component: {fileID: 6045249200673834472}
   - component: {fileID: 2278302962699300915}
   - component: {fileID: 5019041994905647811}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

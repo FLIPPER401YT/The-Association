@@ -12,8 +12,8 @@ public class EnemyRangeAI : EnemyAI_Base
 
     void Awake()
     {
-        
         if (!mover) mover = GetComponent<EnemyMovementBaseRB>();
+        if (!shootPos) shootPos = transform; // safe fallback
     }
 
     protected override void Update()
@@ -23,29 +23,27 @@ public class EnemyRangeAI : EnemyAI_Base
         shootTimer += Time.deltaTime;
         if (!player) return;
 
-        if (!playerInTrigger) return;
+        // vision gate
         if (!CanSeePlayer()) return;
 
-        float d = Vector3.Distance(transform.position, player.position);
+        float dist = Vector3.Distance(transform.position, player.position);
 
-        
+        // approach until in range, then stop
         if (mover)
         {
-            if (d <= shootRange)
+            if (dist > shootRange)
             {
-                mover.SetTarget(null); // stop chasing
+                mover.SetTarget(player);
+                return; // not in range yet
             }
-            else
-            {
-                mover.SetTarget(player); // keep chasing until in range
-                return; 
-            }
+            mover.SetTarget(null); // in range => stop to shoot
         }
 
-      
+        // face target
         playerDir = player.position - transform.position;
         FaceTarget();
 
+        // fire on cooldown
         if (shootTimer >= shootCooldown)
         {
             shootTimer = 0f;
@@ -57,17 +55,33 @@ public class EnemyRangeAI : EnemyAI_Base
     {
         if (!bullet || !shootPos || !player) return;
 
-        Vector3 dir = (player.position - shootPos.position).normalized;
+        Vector3 aim = GetPlayerAimPoint();                         // collider center
+        Vector3 dir = (aim - shootPos.position).normalized;
+
+#if UNITY_EDITOR
+        Debug.DrawLine(shootPos.position, aim, Color.red, 0.25f);
+#endif
 
         Instantiate(bullet, shootPos.position, Quaternion.LookRotation(dir));
+    }
+
+    // Prefer the player's collider center, fallback to a reasonable upward offset.
+    Vector3 GetPlayerAimPoint()
+    {
+        if (player && player.TryGetComponent<Collider>(out var col))
+        {
+            // Slight downward nudge in case the collider is very tall
+            return col.bounds.center + Vector3.down * 0.1f;
+        }
+        // Fallback if no collider found (tweak 0.8–1.2 based on your character rig)
+        return player ? player.position + Vector3.up * 0.9f : transform.position + transform.forward;
     }
 
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
-        if (!shootPos) return;
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(shootPos.position, shootRange);
+        Gizmos.DrawWireSphere(transform.position, shootRange);
     }
 #endif
 }
