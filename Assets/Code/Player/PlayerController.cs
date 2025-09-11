@@ -10,6 +10,14 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] PlayerDash dash;
     [SerializeField] PlayerShoot shoot;
 
+    int healthMax;
+
+    void Start()
+    {
+        healthMax = health;
+        updatePlayerHealthBarUI();
+    }
+
     void FixedUpdate()
     {
         movement.Movement();
@@ -18,6 +26,7 @@ public class PlayerController : MonoBehaviour, IDamage
 
     void Update()
     {
+        updatePlayerHealthBarUI();
         jump.Jump();
         crouch.Crouch();
         shoot.Shoot();
@@ -31,5 +40,10 @@ public class PlayerController : MonoBehaviour, IDamage
             // Player Dies
             Destroy(gameObject);
         }
+    }
+
+    public void updatePlayerHealthBarUI()
+    {
+        GameManager.instance.playerHealthBar.fillAmount = (float)health / healthMax;
     }
 }
