@@ -16,7 +16,6 @@ class PlayerDash : MonoBehaviour
 
     public void Dash()
     {
-        Debug.Log(Input.GetButtonDown("Dash"));
         if (Input.GetButtonDown("Dash") && dashes < dashMax)
         {
             Debug.Log("Dash");
