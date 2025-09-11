@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Data;
 using UnityEngine;
 
@@ -35,6 +36,9 @@ public class PlayerController : MonoBehaviour, IDamage
     public void TakeDamage(int damage)
     {
         health -= damage;
+
+        StartCoroutine(damageScreenEffect());
+
         if (health <= 0)
         {
             // Player Dies
@@ -45,5 +49,12 @@ public class PlayerController : MonoBehaviour, IDamage
     public void updatePlayerHealthBarUI()
     {
         GameManager.instance.playerHealthBar.fillAmount = (float)health / healthMax;
+    }
+
+    IEnumerator damageScreenEffect()
+    {
+        GameManager.instance.playerDamageEffect.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.playerDamageEffect.SetActive(false);
     }
 }

@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public PlayerController playerScript;
     public Image playerHealthBar;
+    public GameObject playerDamageEffect;
     public GameObject playerSpawnPos;
 
     public GameObject contractBoardCam;
