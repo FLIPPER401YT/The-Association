@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
     public PlayerController playerScript;
+    public Image playerHealthBar;
     public GameObject playerSpawnPos;
 
     public GameObject contractBoardCam;
