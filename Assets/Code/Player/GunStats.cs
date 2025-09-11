@@ -9,6 +9,8 @@ public class GunStats : ScriptableObject
     public float bloomMod;
     public int bullets;
     public int ammo;
+    public int clipSize;
+    public int clip;
     public int maxAmmo;
     public bool isAutomatic;
     public GameObject model;
