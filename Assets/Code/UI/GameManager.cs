@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public Image playerHealthBar;
     public GameObject playerDamageEffect;
     public GameObject playerSpawnPos;
+    public TMP_Text playerHealthMaxText;
+    public TMP_Text playerHealthText;
 
     public GameObject contractBoardCam;
     public GameObject contractBoardUI;

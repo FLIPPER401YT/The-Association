@@ -31,6 +31,9 @@ public class PlayerController : MonoBehaviour, IDamage
         jump.Jump();
         crouch.Crouch();
         shoot.Shoot();
+
+        GameManager.instance.playerHealthText.text = health.ToString("F0");
+        GameManager.instance.playerHealthMaxText.text = healthMax.ToString("F0");
     }
 
     public void TakeDamage(int damage)
