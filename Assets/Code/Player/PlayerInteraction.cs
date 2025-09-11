@@ -45,6 +45,8 @@ public class PlayerInteraction : MonoBehaviour
         {
             DisableCurrentInteractable();
         }
+
+        
     }
 
     void SetNewCurrentInteractable(Interactable newInteractable)
