@@ -71,6 +71,14 @@ public class BigfootBoss : Base_Boss_AI
 
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
+        var choices = new List<IEnumerator>();
+        if (distToPlayer <= meleeRange && swipeCD <= 0f) choices.Add(DoSwipe());
+        if (distToPlayer >= leapMinDist && distToPlayer <= leapMaxDist && leapCD <= 0f) choices.Add(DoLeapSlam());
+        if (distToPlayer >= rushMinDist && rushCD <= 0f) choices.Add(DoRush());
+
+        if (choices.Count == 0) yield break;
+        int pick = Random.Range(0, choices.Count);
+        yield return StartCoroutine(choices[pick]);
 
     }
 
@@ -97,7 +105,7 @@ public class BigfootBoss : Base_Boss_AI
         ChangeState(BossState.Recover);
     }
 
-    IEnumerator DoDash()
+    IEnumerator DoRush()
     {
         ChangeState(BossState.Attack);
         rushDidHit = false;
@@ -186,8 +194,45 @@ public class BigfootBoss : Base_Boss_AI
 
         if(indicator) Destroy(indicator);
 
-        //Slam AOE
+        //Slam AOE (Damage+Stun+OutwardForce)
+        Vector3 slamCenter = transform.position + Vector3.up * 0.3f;
+        foreach(var h in Physics.OverlapSphere(slamCenter, slamRadius, ~0, QueryTriggerInteraction.Ignore))
+        {
+            if (h.transform == player)
+            {
+                var dmg = h.GetComponent<IDamage>();
+                if (dmg != null) dmg.TakeDamage((int)slamDamage);
 
-        
+                var stun = player.GetComponentInChildren<PlayerStunEffect>();
+                if (stun) stun.ApplyStun(slamStunDuration);
+            }
+            if(h.attachedRigidbody && h.transform != transform)
+            {
+                Vector3 away = (h.transform.position - transform.position).normalized;
+                h.attachedRigidbody.AddForce(away * slamKnock, ForceMode.Impulse);
+            }
+        }
+
+        //Flee after slam
+        float t = 0f;
+        while (t < fleeTime)
+        {
+            t += Time.fixedDeltaTime;
+            if (player)
+            {
+                Vector3 away = (transform.position - player.position); away.y = 0f;
+                Vector3 desired = away.normalized * fleeSpeed;
+                Vector3 accel = Vector3.ClampMagnitude(desired - GetPlanarVel(), maxAccel);
+                rb.AddForce(new Vector3(accel.x, 0f, accel.z), ForceMode.Acceleration);
+                ClampPlanarSpeed(fleeSpeed);
+                FaceVelocity();
+            }
+            yield return new WaitForFixedUpdate();
+        }
+
+        leapCD = leapCooldown;
+        attackLockout = globalAttackCooldown;
+        ChangeState(BossState.Recover);
+
     }
 }
