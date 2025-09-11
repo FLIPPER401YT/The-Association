@@ -36,4 +36,13 @@ public class ButtonFunctions : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void returnToGameFromBoard()
+    {
+        GameManager.instance.contractBoardMouseInvisibiliy();
+        GameManager.instance.contractBoardUI.SetActive(false);
+        GameManager.instance.player.SetActive(true);
+        GameManager.instance.contractBoardCam.SetActive(false);
+        GameManager.instance.interactableTextObject.SetActive(true);
+    }
 }

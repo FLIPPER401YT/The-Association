@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,9 +14,15 @@ public class GameManager : MonoBehaviour
 
     public bool isPaused;
 
+    [SerializeField] public GameObject interactableTextObject;
+    [SerializeField] public TMP_Text interactableText;
+
     public GameObject player;
     public PlayerController playerScript;
     public GameObject playerSpawnPos;
+
+    public GameObject contractBoardCam;
+    public GameObject contractBoardUI;
 
     float timeScaleOriginal;
 
@@ -129,5 +136,28 @@ public class GameManager : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void enableInteractableText(string text)
+    {
+        interactableText.text = text + "(E)";
+        interactableText.gameObject.SetActive(true);
+    }
+
+    public void disableInteractableText()
+    {
+        interactableText.gameObject.SetActive(false);
+    }
+
+    public void contractBoardMouseVisibility()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void contractBoardMouseInvisibiliy()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

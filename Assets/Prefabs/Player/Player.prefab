@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5762488403691970888}
   - component: {fileID: 2027198226169990103}
   - component: {fileID: 4178799075887348108}
+  - component: {fileID: 2802193453196257593}
   - component: {fileID: 522231321136395076}
   - component: {fileID: 2246903850826596874}
   - component: {fileID: 3282056699460555531}
@@ -154,6 +155,19 @@ MonoBehaviour:
   crouchDownSpeed: 3
   col: {fileID: 3282056699460555531}
   movement: {fileID: 4592218793867380759}
+--- !u!114 &2802193453196257593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602741367445022904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100fda1130cb0e949aba04a234aa221b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerReachDist: 3
 --- !u!33 &522231321136395076
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -414,7 +428,8 @@ MonoBehaviour:
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
-  m_Cameras: []
+  m_Cameras:
+  - {fileID: 0}
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
