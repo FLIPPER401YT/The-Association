@@ -16,6 +16,9 @@ class PlayerShoot : MonoBehaviour
     [SerializeField] LayerMask shootMask;
     [SerializeField] List<GunStats> gunList;
     [SerializeField] MeleeStats meleeStats;
+    [SerializeField] MeshFilter weaponMesh;
+    [SerializeField] Renderer weaponRenderer;
+    [SerializeField] Animator weaponAnimator;
 
     float fireTimer = 0;
     bool isMelee = false;
@@ -82,7 +85,12 @@ class PlayerShoot : MonoBehaviour
                     bulletObj.bulletSpeed = bulletSpeed;
                 }
             }
-            if (!isMelee) ammo--;
+            if (!isMelee)
+            {
+                ammo--;
+                weaponAnimator.SetTrigger("Ranged");
+            }
+            else weaponAnimator.SetTrigger("Melee");
             fireTimer = 0;
         }
     }
@@ -96,6 +104,8 @@ class PlayerShoot : MonoBehaviour
         bullets = stats.bullets;
         ammo = stats.ammo;
         isAutomatic = stats.isAutomatic;
+        weaponMesh.sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
+        weaponRenderer.sharedMaterial = stats.model.GetComponent<Renderer>().sharedMaterial;
     }
 
     void SwitchWeapons(MeleeStats stats)
@@ -106,5 +116,7 @@ class PlayerShoot : MonoBehaviour
         bullets = 1;
         ammo = 1;
         bloomMod = 0;
+        weaponMesh.sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
+        weaponRenderer.sharedMaterial = stats.model.GetComponent<Renderer>().sharedMaterial;
     }
 }
