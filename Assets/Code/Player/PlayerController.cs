@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] PlayerMovement movement;
     [SerializeField] PlayerDash dash;
     [SerializeField] PlayerShoot shoot;
+    [SerializeField] StatusEffects statusEffects;
 
     int healthMax;
 
@@ -21,16 +22,23 @@ public class PlayerController : MonoBehaviour, IDamage
 
     void FixedUpdate()
     {
-        movement.Movement();
-        dash.Dash();
+        if (statusEffects.IsStunned)
+        {
+            movement.Movement();
+            dash.Dash();
+        }
     }
 
     void Update()
     {
         updatePlayerHealthBarUI();
-        jump.Jump();
-        crouch.Crouch();
-        shoot.Shoot();
+        
+        if (statusEffects.IsStunned)
+        {
+            jump.Jump();
+            crouch.Crouch();
+            shoot.Shoot();
+        }
 
         GameManager.instance.playerHealthText.text = health.ToString("F0");
         GameManager.instance.playerHealthMaxText.text = healthMax.ToString("F0");
