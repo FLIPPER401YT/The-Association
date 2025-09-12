@@ -64,7 +64,19 @@ MonoBehaviour:
   aggroMemorySeconds: 4
   mover: {fileID: 0}
   enableDrops: 0
-  drops: []
+  drops:
+  - prefab: {fileID: 8785546810196909131, guid: d6fdf5f2770771c428b0b4eb6129be4f, type: 3}
+    chance: 0.5
+    minCount: 0
+    maxCount: 1
+  - prefab: {fileID: 947772046809006057, guid: ecba7a51da70bc945bcfaffae1cb0c4e, type: 3}
+    chance: 0.5
+    minCount: 0
+    maxCount: 1
+  - prefab: {fileID: 3856367770644429541, guid: 1e7100d0f4f89a64bb282aa1ebf7356d, type: 3}
+    chance: 0.5
+    minCount: 0
+    maxCount: 1
   weapon: {fileID: 0}
   attackPos: {fileID: 6101181926861926551}
   attackRange: 1.5

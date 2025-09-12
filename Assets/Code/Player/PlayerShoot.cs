@@ -107,8 +107,7 @@ public class PlayerShoot : MonoBehaviour
 
             if ((isMelee || gunList[gunListPos].clip > 0) && ((isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1")) || (isMelee && Input.GetButtonDown("Fire2"))))
             {
-                //float totalDamage = 0;
-                List<IDamage> damages = new List<IDamage>();
+                Dictionary<IDamage, int> damages = new Dictionary<IDamage, int>();
                 for (int bullet = 0; bullet < bullets; bullet++)
                 {
                     RaycastHit hit;
@@ -122,8 +121,8 @@ public class PlayerShoot : MonoBehaviour
                         IDamage dmg = hit.transform.GetComponent<IDamage>();
                         if (dmg != null)
                         {
-                            //totalDamage += damage;
-                            damages.Add(dmg);
+                            if (damages.ContainsKey(dmg)) damages[dmg] += isMelee && heavyAttack ? damage * 2 : damage;
+                            else damages.Add(dmg, isMelee && heavyAttack ? damage * 2 : damage);
                         }
                     }
                     if (!isMelee)
@@ -135,7 +134,7 @@ public class PlayerShoot : MonoBehaviour
                     }
                 }
 
-                foreach (IDamage dmg in damages) if (dmg != null) dmg.TakeDamage(isMelee && heavyAttack ? damage * 2 : damage);
+                foreach (KeyValuePair<IDamage, int> dmg in damages) dmg.Key.TakeDamage(dmg.Value);
 
                 if (!isMelee)
                 {

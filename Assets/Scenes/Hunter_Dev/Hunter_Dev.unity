@@ -453,10 +453,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 916949143658799426, guid: 0d42ffeffd37700438e53b78633e7661, type: 3}
-      propertyPath: meleeDamage
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7951363960414340280, guid: 0d42ffeffd37700438e53b78633e7661, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6
@@ -500,14 +496,6 @@ PrefabInstance:
     - target: {fileID: 9003971440569338922, guid: 0d42ffeffd37700438e53b78633e7661, type: 3}
       propertyPath: m_Name
       value: enemy chaser
-      objectReference: {fileID: 0}
-    - target: {fileID: 9003971440569338922, guid: 0d42ffeffd37700438e53b78633e7661, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 9003971440569338922, guid: 0d42ffeffd37700438e53b78633e7661, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
