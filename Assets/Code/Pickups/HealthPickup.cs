@@ -1,22 +1,13 @@
 using UnityEngine;
 
-public class HealthPickup : MonoBehaviour, IPickup
+public class HealthPickup : Pickup
 {
     [SerializeField] int healAmount;
-    [SerializeField] AudioClip pickupSound;
 
-    public void ApplyPickup()
+    public override void ApplyPickup()
     {
-        GameManager.instance.playerScript.audioSource.PlayOneShot(pickupSound);
+        base.ApplyPickup();
         GameManager.instance.playerScript.Heal(healAmount);
         Destroy(gameObject);
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            ApplyPickup();
-        }
     }
 }

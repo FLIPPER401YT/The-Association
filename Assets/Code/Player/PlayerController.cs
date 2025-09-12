@@ -11,11 +11,13 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] PlayerDash dash;
     [SerializeField] StatusEffects statusEffects;
     [SerializeField] Animator anim;
+    [SerializeField] AudioClip deathSound;
 
     public PlayerShoot shoot;
     public AudioSource audioSource;
 
     int healthMax;
+    int bloodSamples;
     bool canMove = true;
 
     void Start()
@@ -67,14 +69,20 @@ public class PlayerController : MonoBehaviour, IDamage
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
-        if (LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
-        StartCoroutine(damageScreenEffect());
-
-        if (health <= 0)
+        if (enabled)
         {
-            anim.enabled = true;
-            anim.SetTrigger("Death");
+            health -= damage;
+            if (LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
+            StartCoroutine(damageScreenEffect());
+            updatePlayerHealthBarUI();
+
+            if (health <= 0)
+            {
+                anim.enabled = true;
+                audioSource.PlayOneShot(deathSound);
+                anim.SetTrigger("Death");
+                enabled = false;
+            }
         }
     }
 
@@ -89,9 +97,14 @@ public class PlayerController : MonoBehaviour, IDamage
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.playerDamageEffect.SetActive(false);
     }
-    
+
     public void Lose()
     {
         GameManager.instance.Lose();
+    }
+
+    public void PickupBloodSample(int amount)
+    {
+        bloodSamples += amount;
     }
 }
