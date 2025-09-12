@@ -24,8 +24,8 @@ public class BigfootBoss : Base_Boss_AI
     [SerializeField] float rushSpeed;
     [SerializeField] float rushTime;
     [SerializeField] float rushDamage;
-    [SerializeField] float rushKnockback;
-    [SerializeField] float rushUpwardKick;
+    [SerializeField] float rushKnockback;     // used for StatusEffects knockback strength
+    [SerializeField] float rushUpwardKick;    // only used for rigidbody fallback
     [SerializeField] float rushRestDuration;
     [SerializeField] float rushCooldown;
     [SerializeField] float rushShoulderCastRadius;
@@ -34,13 +34,15 @@ public class BigfootBoss : Base_Boss_AI
     [Header("Leap Ground Pound")]
     [SerializeField] float leapForce;
     [SerializeField] float leapUpBoost;
+
     [Tooltip("Outer radius of the damage ring at impact.")]
     [SerializeField] float slamOuterRadius;
     [Tooltip("Inner radius (no damage inside this). 0 = solid disk.")]
     [SerializeField] float slamInnerRadius;
+
     [SerializeField] float slamDamage;
     [SerializeField] float slamStunDuration;
-    [SerializeField] float slamKnock;
+    [SerializeField] float slamKnock;         // used for StatusEffects knockback strength
     [SerializeField] float fleeTime;
     [SerializeField] float fleeSpeed;
     [SerializeField] float leapCooldown;
@@ -52,20 +54,17 @@ public class BigfootBoss : Base_Boss_AI
 
     [Header("Hit Masks")]
     [SerializeField] LayerMask rushHitMask = ~0;
-    [SerializeField] LayerMask slamHitMask = ~0; // used for swipe; slam ignores mask when debugSlam=true
+    [SerializeField] LayerMask slamHitMask = ~0;
 
     [Header("Tags")]
     [SerializeField] string playerTag = "Player";
-
-    [Header("Debug")]
-    [SerializeField] bool debugSlam = false;
 
     float swipeCD;
     float rushCD;
     float leapCD;
     bool rushDidHit;
 
-    // Attack guards
+    // Attack guards so zeroed blocks never get picked
     bool MeleeEnabled => swipeDamage > 0f && swipeRadius > 0f;
     bool RushEnabled => rushSpeed > 0f && rushTime > 0f && rushDamage > 0f;
     bool LeapEnabled => leapForce > 0f && leapUpBoost > 0f && slamOuterRadius > 0f;
@@ -76,6 +75,9 @@ public class BigfootBoss : Base_Boss_AI
 
     static IDamage FindDamage(Component c)
         => c.GetComponentInParent<IDamage>() ?? c.GetComponentInChildren<IDamage>();
+
+    static StatusEffects FindStatus(Component c)
+        => c.GetComponentInParent<StatusEffects>() ?? c.GetComponentInChildren<StatusEffects>();
 
     protected override bool CanAttack(float distToPlayer)
     {
@@ -114,7 +116,6 @@ public class BigfootBoss : Base_Boss_AI
         Vector3 center = attackPos ? attackPos.position
                                    : transform.position + transform.TransformVector(swipeOffset);
 
-        // keep using the configured mask for swipe
         var hits = Physics.OverlapSphere(center, swipeRadius, slamHitMask, QueryTriggerInteraction.Collide);
         foreach (var h in hits)
         {
@@ -162,14 +163,25 @@ public class BigfootBoss : Base_Boss_AI
 
                     rushDidHit = true;
 
+                    // damage
                     var dmg = FindDamage(c);
                     if (dmg != null) dmg.TakeDamage((int)rushDamage);
 
-                    var prb = c.attachedRigidbody ?? c.GetComponentInParent<Rigidbody>();
-                    if (prb)
+                    // PREFERRED: status-effect knockback
+                    var status = FindStatus(c);
+                    if (status)
                     {
-                        Vector3 impulse = transform.forward * rushKnockback + Vector3.up * rushUpwardKick;
-                        prb.AddForce(impulse, ForceMode.Impulse);
+                        status.ApplyKnockback(transform.position, rushKnockback);
+                    }
+                    else
+                    {
+                        // Fallback: physics impulse if no StatusEffects found
+                        var prb = c.attachedRigidbody ?? c.GetComponentInParent<Rigidbody>();
+                        if (prb)
+                        {
+                            Vector3 impulse = transform.forward * rushKnockback + Vector3.up * rushUpwardKick;
+                            prb.AddForce(impulse, ForceMode.Impulse);
+                        }
                     }
 
 #if UNITY_6000_0_OR_NEWER
@@ -249,64 +261,42 @@ public class BigfootBoss : Base_Boss_AI
         if (indicator) Destroy(indicator);
         yield return new WaitForSeconds(0.12f);
 
-        // ---------- AOE DAMAGE ----------
+        // AOE damage ring (inner/outer)
         Vector3 slamCenter = transform.position + Vector3.up * 0.3f;
-
-        // Use Everything while debugging so the player can't be masked out.
-        int maskToUse = debugSlam ? ~0 : slamHitMask;
-
-        var aoe = Physics.OverlapSphere(
-            slamCenter,
-            slamOuterRadius,
-            maskToUse,
-            QueryTriggerInteraction.Collide
-        );
-
-        int damaged = 0, seen = aoe.Length;
-        for (int i = 0; i < aoe.Length; i++)
+        var aoe = Physics.OverlapSphere(slamCenter, slamOuterRadius, slamHitMask, QueryTriggerInteraction.Collide);
+        foreach (var h in aoe)
         {
-            var h = aoe[i];
+            if (!IsPlayerObj(h.transform)) continue;
 
-            bool isPlayer =
-                (player && (h.transform == player || h.transform.IsChildOf(player))) ||
-                h.CompareTag(playerTag);
+            // planar distance for ring check
+            Vector3 p = h.bounds.ClosestPoint(slamCenter);
+            float dx = p.x - slamCenter.x;
+            float dz = p.z - slamCenter.z;
+            float planarDist = Mathf.Sqrt(dx * dx + dz * dz);
+            if (planarDist < slamInnerRadius) continue; // inside safe zone
 
-            if (!isPlayer) continue;
-
-            // Planar distance for ring test (XZ)
-            Vector3 cp = h.bounds.ClosestPoint(slamCenter);
-            float dx = cp.x - slamCenter.x;
-            float dz = cp.z - slamCenter.z;
-            float planar = Mathf.Sqrt(dx * dx + dz * dz);
-            if (planar < slamInnerRadius) continue; // inside safe hole
-
+            // damage
             var dmg = FindDamage(h);
-            if (dmg != null)
+            if (dmg != null) dmg.TakeDamage((int)slamDamage);
+
+            // knockback via StatusEffects (preferred)
+            StatusEffects status = FindStatus(h);
+            if (status)
             {
-                dmg.TakeDamage((int)slamDamage);
-                damaged++;
+                status.ApplyKnockback(transform.position, slamKnock);
+                if (slamStunDuration > 0f) status.ApplyStun(slamStunDuration);
             }
-
-            var status = player ? player.GetComponentInChildren<StatusEffects>() : null;
-            if (status) status.ApplyStun(slamStunDuration);
-        }
-
-        // Optional knockback to nearby rigidbodies
-        for (int i = 0; i < aoe.Length; i++)
-        {
-            var h = aoe[i];
-            if (h.attachedRigidbody && h.transform != transform)
+            else
             {
-                Vector3 away = (h.transform.position - transform.position).normalized;
-                h.attachedRigidbody.AddForce(away * slamKnock, ForceMode.Impulse);
+                // fallback rigidbody push
+                var prb = h.attachedRigidbody ?? h.GetComponentInParent<Rigidbody>();
+                if (prb)
+                {
+                    Vector3 away = (h.transform.position - transform.position).normalized;
+                    prb.AddForce(away * slamKnock, ForceMode.Impulse);
+                }
             }
         }
-
-        if (debugSlam)
-        {
-            Debug.Log($"[Bigfoot] Slam overlap={seen}, damaged={damaged}, center={slamCenter}, R={slamOuterRadius}, rInner={slamInnerRadius}");
-        }
-        // -----------------------------------------------
 
         // flee
         float t = 0f;
@@ -334,7 +324,6 @@ public class BigfootBoss : Base_Boss_AI
     protected override void OnDrawGizmosSelected()
     {
         base.OnDrawGizmosSelected();
-
         if (attackPos)
         {
             Gizmos.color = Color.red;

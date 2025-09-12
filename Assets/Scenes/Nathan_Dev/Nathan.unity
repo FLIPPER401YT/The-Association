@@ -556,6 +556,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
+    - target: {fileID: 5542426132645496481, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -942,12 +946,12 @@ MonoBehaviour:
   roamRadius: 20
   minHopDistance: 10
   arriveRadius: 2
-  dwellRange: {x: 0.5, y: 1.5}
+  dwellRange: {x: 0.1, y: 0.5}
   groundMask:
     serializedVersion: 2
     m_Bits: 8
-  maxSpeed: 10
-  chaseSpeed: 8
+  maxSpeed: 20
+  chaseSpeed: 20
   maxAccel: 20
   turnLerp: 8
   obstacleMask:
@@ -970,6 +974,7 @@ MonoBehaviour:
   swipeRadius: 1.5
   swipeCooldown: 0.8
   swipeOffset: {x: 0, y: 1, z: 1.5}
+  attackPos: {fileID: 2399806338594970593}
   rushSpeed: 12
   rushTime: 1.5
   rushDamage: 1
@@ -981,7 +986,8 @@ MonoBehaviour:
   rushShoulderCastLength: 3
   leapForce: 14
   leapUpBoost: 6
-  slamRadius: 5
+  slamOuterRadius: 15
+  slamInnerRadius: 0
   slamDamage: 1
   slamStunDuration: 2
   slamKnock: 10
@@ -994,6 +1000,11 @@ MonoBehaviour:
   rushHitMask:
     serializedVersion: 2
     m_Bits: 128
+  slamHitMask:
+    serializedVersion: 2
+    m_Bits: 128
+  playerTag: Player
+  debugSlam: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
