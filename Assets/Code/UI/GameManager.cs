@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [Header("Menu UI")]
-    [SerializeField] GameObject menuActive;
-    [SerializeField] GameObject menuPause;
+    [SerializeField] public GameObject menuActive;
+    [SerializeField] public GameObject menuPause;
     [SerializeField] GameObject menuSettings;
     [SerializeField] GameObject menuControlSettings;
     [SerializeField] GameObject menuAudioSettings;
@@ -49,6 +49,9 @@ public class GameManager : MonoBehaviour
     }
     public ContractBoardState origContractBoardState;
 
+    [Header("Shop UI")]
+    public GameObject shopCam;
+    public GameObject shopUI;
 
     float timeScaleOriginal;
 
@@ -168,13 +171,13 @@ public class GameManager : MonoBehaviour
         interactableText.gameObject.SetActive(false);
     }
 
-    public void contractBoardMouseVisibility()
+    public void mouseVisibility()
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
 
-    public void contractBoardMouseInvisibiliy()
+    public void mouseInvisibility()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
