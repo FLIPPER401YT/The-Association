@@ -10,11 +10,13 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] PlayerMovement movement;
     [SerializeField] PlayerDash dash;
     [SerializeField] StatusEffects statusEffects;
+    [SerializeField] Animator anim;
 
     public PlayerShoot shoot;
     public AudioSource audioSource;
 
     int healthMax;
+    bool canMove = true;
 
     void Start()
     {
@@ -39,11 +41,12 @@ public class PlayerController : MonoBehaviour, IDamage
 
     void Update()
     {
+        canMove = !statusEffects.IsStunned;
         updatePlayerHealthBarUI();
 
         if (Input.GetButtonDown("KnockbackDebug")) statusEffects.ApplyKnockback(transform.position + new Vector3(0, 0, 2), 1);
 
-        if (!statusEffects.IsStunned)
+        if (canMove)
         {
             jump.Jump();
             crouch.Crouch();
@@ -59,7 +62,7 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         health += amount;
         health = Mathf.Clamp(health, 0, healthMax);
-        if(LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
+        if (LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
     }
 
     public void TakeDamage(int damage)
@@ -70,8 +73,8 @@ public class PlayerController : MonoBehaviour, IDamage
 
         if (health <= 0)
         {
-            // Player Dies
-            Destroy(gameObject);
+            anim.enabled = true;
+            anim.SetTrigger("Death");
         }
     }
 
@@ -85,5 +88,10 @@ public class PlayerController : MonoBehaviour, IDamage
         GameManager.instance.playerDamageEffect.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.playerDamageEffect.SetActive(false);
+    }
+    
+    public void Lose()
+    {
+        GameManager.instance.Lose();
     }
 }
