@@ -255,6 +255,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
             if (!hitR.collider.transform.IsChildOf(transform))
                 acc += (Vector3.Cross(R, Vector3.up)).normalized * avoidStrength;
 
+        acc.y = 0f;
         return acc;
     }
 
