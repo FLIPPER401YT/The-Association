@@ -54,12 +54,17 @@ public class BigfootBoss : Base_Boss_AI
     float leapCD;
     bool rushDidHit;
 
+    //Attack guards so zeroed blocks never get picked
+    bool MeleeEnabled => swipeDamage > 0f && swipeRadius > 0f;
+    bool RushEnabled => rushSpeed > 0f && rushTime > 0f && rushDamage > 0f;
+    bool LeapEnabled => leapForce > 0f && leapUpBoost > 0f && slamRadius > 0f;
+
     protected override bool CanAttack(float distToPlayer)
     {
-        return (distToPlayer < meleeRange + 0.5f) ||
-               (distToPlayer >= leapMinDist && distToPlayer <= leapMaxDist) ||
-               (distToPlayer >= rushMinDist);
-
+        return
+            (MeleeEnabled && distToPlayer <= meleeRange + 0.5f) ||
+            (LeapEnabled && distToPlayer >= leapMinDist && distToPlayer <= leapMaxDist) ||
+            (RushEnabled && distToPlayer >= rushMinDist);
     }
 
     protected override void FixedUpdate()
@@ -72,14 +77,12 @@ public class BigfootBoss : Base_Boss_AI
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
         var choices = new List<IEnumerator>();
-        if (distToPlayer <= meleeRange && swipeCD <= 0f) choices.Add(DoSwipe());
-        if (distToPlayer >= leapMinDist && distToPlayer <= leapMaxDist && leapCD <= 0f) choices.Add(DoLeapSlam());
-        if (distToPlayer >= rushMinDist && rushCD <= 0f) choices.Add(DoRush());
+        if (MeleeEnabled && distToPlayer <= meleeRange && swipeCD <= 0f) choices.Add(DoSwipe());
+        if (LeapEnabled && distToPlayer >= leapMinDist && distToPlayer <= leapMaxDist && leapCD <= 0f) choices.Add(DoLeapSlam());
+        if (RushEnabled && distToPlayer >= rushMinDist && rushCD <= 0f) choices.Add(DoRush());
 
-        if (choices.Count == 0) yield break;
-        int pick = Random.Range(0, choices.Count);
-        yield return StartCoroutine(choices[pick]);
-
+        if (choices.Count == 0) yield break; // stay in Chase
+        yield return StartCoroutine(choices[Random.Range(0, choices.Count)]);
     }
 
     IEnumerator DoSwipe()
@@ -125,9 +128,11 @@ public class BigfootBoss : Base_Boss_AI
 
             if (!rushDidHit)
             {
-                var origin = transform.position + Vector3.up * 0.4f;
-                var top = origin + Vector3.up * 1.6f;
-                foreach (var c in Physics.OverlapCapsule(origin, top, 0.7f, rushHitMask, QueryTriggerInteraction.Ignore))
+                // capsule in front of chest/shoulders
+                Vector3 origin = transform.position + Vector3.up * 0.4f;
+                Vector3 top = origin + Vector3.up * 1.6f;
+                float radius = Mathf.Max(0.05f, rushShoulderCastRadius);
+                foreach (var c in Physics.OverlapCapsule(origin, top, radius, rushHitMask, QueryTriggerInteraction.Ignore))
                 {
                     if (c.transform == player)
                     {
@@ -143,7 +148,12 @@ public class BigfootBoss : Base_Boss_AI
                             prb.AddForce(impulse, ForceMode.Impulse);
                         }
 
+                        // stop the rush immediately
+#if UNITY_6000_0_OR_NEWER
                         rb.linearVelocity = Vector3.zero;
+#else
+                        rb.velocity = Vector3.zero;
+#endif
                         t = rushTime;
                         break;
                     }
@@ -152,9 +162,13 @@ public class BigfootBoss : Base_Boss_AI
             yield return new WaitForFixedUpdate();
         }
 
-        //rest after rush
+        // rest after rush
         BrakePlanar();
+#if UNITY_6000_0_OR_NEWER
         rb.linearVelocity = Vector3.zero;
+#else
+        rb.velocity = Vector3.zero;
+#endif
         yield return new WaitForSeconds(rushRestDuration);
 
         rushCD = rushCooldown;
@@ -167,53 +181,64 @@ public class BigfootBoss : Base_Boss_AI
         ChangeState(BossState.Attack);
         FacePlayer();
 
-        //Predict ground target under the player
+        // Predict ground target under the player
         Vector3 target = player.position;
         if (Physics.Raycast(new Vector3(player.position.x, player.position.y + 10f, player.position.z), Vector3.down, out RaycastHit ghit, 30f, groundMask))
             target = ghit.point;
 
-
-        //Telegraph
+        // Telegraph
         GameObject indicator = null;
         if (telegraphLanding && landingIndicatorPrefab)
         {
             indicator = Instantiate(landingIndicatorPrefab, target, Quaternion.identity);
             indicator.transform.localScale = new Vector3(slamRadius * 2f, 1f, slamRadius * 2f);
         }
-
         if (telegraphLanding) yield return new WaitForSeconds(Mathf.Max(0.1f, telegraphDuration * 0.5f));
 
-        //Launch toward target
+        // Launch toward target
         Vector3 dir = (target - transform.position); dir.y = 0f; dir.Normalize();
+#if UNITY_6000_0_OR_NEWER
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+#else
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+#endif
         rb.AddForce(dir * leapForce + Vector3.up * leapUpBoost, ForceMode.VelocityChange);
 
-        //Wait until grounded
-        while (!Physics.Raycast(transform.position + Vector3.up * 0.2f, Vector3.down, out _, 0.4f, groundMask))
-             yield return new WaitForFixedUpdate();
+        // Wait until grounded
+        while (!Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out _, 1.0f, groundMask))
+            yield return new WaitForFixedUpdate();
 
-        if(indicator) Destroy(indicator);
+        // Kill residual slide/spin
+#if UNITY_6000_0_OR_NEWER
+        rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+#else
+        rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+#endif
+        rb.angularVelocity = Vector3.zero;
 
-        //Slam AOE (Damage+Stun+OutwardForce)
+        if (indicator) Destroy(indicator);
+        yield return new WaitForSeconds(0.15f); // let physics settle
+
+        // Slam AOE (Damage + Stun + OutwardForce)
         Vector3 slamCenter = transform.position + Vector3.up * 0.3f;
-        foreach(var h in Physics.OverlapSphere(slamCenter, slamRadius, ~0, QueryTriggerInteraction.Ignore))
+        foreach (var h in Physics.OverlapSphere(slamCenter, slamRadius, ~0, QueryTriggerInteraction.Ignore))
         {
             if (h.transform == player)
             {
                 var dmg = h.GetComponent<IDamage>();
                 if (dmg != null) dmg.TakeDamage((int)slamDamage);
 
-                var stun = player.GetComponentInChildren<StatusEffects>();
-                if (stun) stun.ApplyStun(slamStunDuration);
+                var status = player.GetComponentInChildren<StatusEffects>();
+                if (status) status.ApplyStun(slamStunDuration);
             }
-            if(h.attachedRigidbody && h.transform != transform)
+            if (h.attachedRigidbody && h.transform != transform)
             {
                 Vector3 away = (h.transform.position - transform.position).normalized;
                 h.attachedRigidbody.AddForce(away * slamKnock, ForceMode.Impulse);
             }
         }
 
-        //Flee after slam
+        // Flee after slam
         float t = 0f;
         while (t < fleeTime)
         {
@@ -233,6 +258,5 @@ public class BigfootBoss : Base_Boss_AI
         leapCD = leapCooldown;
         attackLockout = globalAttackCooldown;
         ChangeState(BossState.Recover);
-
     }
 }

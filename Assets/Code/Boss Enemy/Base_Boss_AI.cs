@@ -22,7 +22,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
     [SerializeField] protected float roamRadius;
     [SerializeField] protected float minHopDistance;
     [SerializeField] protected float arriveRadius;
-    [SerializeField] protected Vector2 dwellRange = new Vector2();
+    [SerializeField] protected Vector2 dwellRange = new Vector2(0.5f, 1.5f);
     [SerializeField] protected LayerMask groundMask = ~0;
 
     [Header("Movement")]
@@ -57,7 +57,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
         currentHP = maxHP;
         spawn = transform.position;
 
-        rb.constraints |= RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezePositionZ;
+        rb.constraints |= RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
         PickRoamTarget(true);
         BeginDwell();
@@ -109,10 +109,35 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
 
     protected virtual void Die()
     {
+        if (state == BossState.Dead) return;
         state = BossState.Dead;
-        rb.isKinematic = true;
-        //Todo later - death VFX/SFX
+
+        // stop AI/coroutines so nothing else drives the RB after this frame
+        StopAllCoroutines();
+        enabled = false;
+
+        if (rb)
+        {
+            // IMPORTANT: zero velocity BEFORE switching to kinematic
+#if UNITY_6000_0_OR_NEWER
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+#else
+        rb.velocity         = Vector3.zero;
+        rb.angularVelocity  = Vector3.zero;
+#endif
+
+            rb.isKinematic = true;
+            rb.detectCollisions = false;  // optional, prevents stray hits this frame
+        }
+
+        // If you want a vanish delay for VFX, put the seconds instead of 0f
+        Destroy(gameObject, 0f);
     }
+
+
+
+
 
     //State helpers
     protected void ChangeState(BossState next) { state = next; }
@@ -179,22 +204,32 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
     protected virtual Vector3 Avoidance()
     {
         Vector3 forward = GetPlanarVel().sqrMagnitude > 0.01f ? GetPlanarVel().normalized : transform.forward;
-        Vector3 origin = transform.position + Vector3.up * 0.4f;
+        Vector3 origin = transform.position + Vector3.up * 0.4f + forward * 0.6f; // small forward offset
         Vector3 acc = Vector3.zero;
 
         if (Physics.SphereCast(origin, avoidRadius, forward, out RaycastHit hit, lookAhead, obstacleMask))
-            acc += hit.normal * avoidStrength;
+        {
+            if (!hit.collider.transform.IsChildOf(transform))   // ignore self
+                acc += hit.normal * avoidStrength;
+        }
 
         Vector3 L = Quaternion.AngleAxis(-whiskerAngle, Vector3.up) * forward;
         Vector3 R = Quaternion.AngleAxis(whiskerAngle, Vector3.up) * forward;
 
-        if (Physics.SphereCast(origin, avoidRadius, L, out _, whiskerLen, obstacleMask))
-            acc += (Vector3.Cross(Vector3.up, L)).normalized * avoidStrength;
-        if (Physics.SphereCast(origin, avoidRadius, R, out _, whiskerLen, obstacleMask))
-            acc += (Vector3.Cross(R, Vector3.up)).normalized * avoidStrength;
+        if (Physics.SphereCast(origin, avoidRadius, L, out RaycastHit hitL, whiskerLen, obstacleMask))
+        {
+            if (!hitL.collider.transform.IsChildOf(transform))
+                acc += (Vector3.Cross(Vector3.up, L)).normalized * avoidStrength;
+        }
+        if (Physics.SphereCast(origin, avoidRadius, R, out RaycastHit hitR, whiskerLen, obstacleMask))
+        {
+            if (!hitR.collider.transform.IsChildOf(transform))
+                acc += (Vector3.Cross(R, Vector3.up)).normalized * avoidStrength;
+        }
 
         return acc;
     }
+
 
     //Attack
     protected virtual bool CanAttack(float distToPlayer) => true;
@@ -241,10 +276,11 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
     protected void FaceVelocity()
     {
         Vector3 v = GetPlanarVel();
-        if (v.sqrMagnitude < 0.0001f) return;
+        if (v.sqrMagnitude < 0.05f) return; // don’t rotate if basically stopped
         Quaternion targetRot = Quaternion.LookRotation(v, Vector3.up);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.fixedDeltaTime * turnLerp);
     }
+
 
     protected void FacePlayer()
     {
