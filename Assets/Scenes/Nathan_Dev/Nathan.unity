@@ -359,6 +359,10 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1728491905800200378, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1728491905800200378, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
@@ -908,6 +912,10 @@ PrefabInstance:
     - target: {fileID: 1527598974048193402, guid: 9b378174520737248bb36053f1626362, type: 3}
       propertyPath: m_Name
       value: enemy range test
+      objectReference: {fileID: 0}
+    - target: {fileID: 1527598974048193402, guid: 9b378174520737248bb36053f1626362, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1622592029432521092, guid: 9b378174520737248bb36053f1626362, type: 3}
       propertyPath: m_LocalPosition.x

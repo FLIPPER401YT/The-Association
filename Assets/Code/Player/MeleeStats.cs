@@ -6,4 +6,5 @@ public class MeleeStats : ScriptableObject
     public int damage;
     public float swingRate;
     public float swingDistance;
+    public GameObject model;
 }

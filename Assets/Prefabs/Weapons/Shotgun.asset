@@ -17,6 +17,9 @@ MonoBehaviour:
   fireDistance: 20
   bloomMod: 0.2
   bullets: 200
-  ammo: 100
-  maxAmmo: 100
+  ammo: 60
+  clipSize: 6
+  clip: 6
+  maxAmmo: 60
   isAutomatic: 0
+  model: {fileID: 9091087455982598204, guid: 8705711deb539c847b057d09b8a880be, type: 3}

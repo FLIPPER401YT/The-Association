@@ -39,10 +39,22 @@ public class ButtonFunctions : MonoBehaviour
 
     public void returnToGameFromBoard()
     {
+        GameManager.instance.playerUI.SetActive(true);
         GameManager.instance.contractBoardMouseInvisibiliy();
-        GameManager.instance.contractBoardUI.SetActive(false);
+        GameManager.instance.contractBoardListUI.SetActive(false);
         GameManager.instance.player.SetActive(true);
         GameManager.instance.contractBoardCam.SetActive(false);
         GameManager.instance.interactableTextObject.SetActive(true);
+        GameManager.instance.contractBoardCurr = GameManager.ContractBoardState.None;
+    }
+
+    public void swapToBigfootPage()
+    {
+        GameManager.instance.bigfootPageOpen();
+    }
+
+    public void returnToListOfCryptids()
+    {
+        GameManager.instance.contractBoardReturn();
     }
 }

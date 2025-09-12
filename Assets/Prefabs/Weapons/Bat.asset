@@ -15,3 +15,4 @@ MonoBehaviour:
   damage: 50
   swingRate: 1
   swingDistance: 1
+  model: {fileID: 4996981283368724576, guid: 7b20b023b2c954e478b75d623b36597c, type: 3}
