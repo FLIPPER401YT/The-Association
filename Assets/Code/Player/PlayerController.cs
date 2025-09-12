@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour, IDamage
     public AudioSource audioSource;
 
     int healthMax;
+    int bloodSamples;
     bool canMove = true;
 
     void Start()
@@ -89,9 +90,14 @@ public class PlayerController : MonoBehaviour, IDamage
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.playerDamageEffect.SetActive(false);
     }
-    
+
     public void Lose()
     {
         GameManager.instance.Lose();
+    }
+
+    public void PickupBloodSample(int amount)
+    {
+        bloodSamples += amount;
     }
 }

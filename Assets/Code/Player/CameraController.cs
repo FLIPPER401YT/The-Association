@@ -26,8 +26,6 @@ public class CameraController : MonoBehaviour
             rotX = Mathf.Clamp(rotX, camLockMin, camLockMax);
             transform.localRotation = Quaternion.Euler(rotX, 0, 0);
             transform.parent.Rotate(Vector3.up * mouseX);
-            Debug.Log(Vector3.up * mouseX);
-            Debug.Log(transform.parent.gameObject);
         }
     }
 

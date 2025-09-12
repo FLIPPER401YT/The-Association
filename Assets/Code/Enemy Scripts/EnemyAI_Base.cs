@@ -96,7 +96,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         float dist = toPlayer.magnitude;
         if (dist > viewDistance) return false;
 
-        // FOV gate (flattened so vertical doesn’t matter)
+        // FOV gate (flattened so vertical doesnï¿½t matter)
         Vector3 flatTo = new Vector3(toPlayer.x, 0f, toPlayer.z);
         Vector3 flatFwd = new Vector3(transform.forward.x, 0f, transform.forward.z);
         if (flatTo.sqrMagnitude < 0.0001f) return true;
@@ -177,7 +177,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     {
         if (drops == null) return;
         
-        foreach(var item in drops)
+        foreach(DropItem item in drops)
         {
             if(item == null || item.prefab == null) continue;
             if(Random.value > item.chance) continue;

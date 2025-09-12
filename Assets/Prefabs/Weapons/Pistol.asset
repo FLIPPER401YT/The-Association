@@ -15,7 +15,7 @@ MonoBehaviour:
   damage: 15
   fireRate: 1
   fireDistance: 150
-  bloomMod: 0.05
+  bloomMod: 5
   bullets: 1
   ammo: 120
   clipSize: 30
