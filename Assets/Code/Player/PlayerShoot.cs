@@ -97,15 +97,14 @@ public class PlayerShoot : MonoBehaviour
         fireTimer += Time.deltaTime;
         if (fireTimer >= fireRate && (isMelee || gunList[gunListPos].clip > 0) && (isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1")))
         {
+            //float totalDamage = 0;
+            List<IDamage> damages = new List<IDamage>();
             for (int bullet = 0; bullet < bullets; bullet++)
             {
                 RaycastHit hit;
-                float rangeX = Random.Range(-bloomMod, bloomMod);
-                float rangeY = Random.Range(-bloomMod, bloomMod);
+                Vector3 randomSpread = Random.insideUnitSphere * (bloomMod / 100.0f);
                 if (Physics.Raycast(shootPoint.transform.position,
-                                    new Vector3(Camera.main.transform.forward.x + rangeX,
-                                                Camera.main.transform.forward.y + rangeY,
-                                                Camera.main.transform.forward.z),
+                                    (shootPoint.transform.forward + randomSpread).normalized,
                                     out hit,
                                     fireDistance,
                                     shootMask))
@@ -113,17 +112,21 @@ public class PlayerShoot : MonoBehaviour
                     IDamage dmg = hit.transform.GetComponent<IDamage>();
                     if (dmg != null)
                     {
-                        dmg.TakeDamage(damage);
+                        //totalDamage += damage;
+                        damages.Add(dmg);
                     }
                 }
                 if (!isMelee)
                 {
-                    Bullet bulletObj = Instantiate(bulletPrefab, shootPoint.transform.position, new Quaternion(Camera.main.transform.rotation.x + rangeX, Camera.main.transform.rotation.y + rangeY, Camera.main.transform.rotation.z, Camera.main.transform.rotation.w), null).GetComponent<Bullet>();
+                    Bullet bulletObj = Instantiate(bulletPrefab, shootPoint.transform.position, Quaternion.LookRotation((shootPoint.transform.forward + randomSpread).normalized), null).GetComponent<Bullet>();
                     bulletObj.targetPoint = hit.point;
                     bulletObj.distance = fireDistance;
                     bulletObj.bulletSpeed = bulletSpeed;
                 }
             }
+
+            foreach (IDamage dmg in damages) if (dmg != null) dmg.TakeDamage(damage);
+            
             if (!isMelee)
             {
                 gunList[gunListPos].clip--;
