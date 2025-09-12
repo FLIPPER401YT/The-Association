@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] StatusEffects statusEffects;
 
     public PlayerShoot shoot;
+    public AudioSource audioSource;
 
     int healthMax;
 
