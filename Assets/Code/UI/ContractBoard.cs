@@ -16,11 +16,13 @@ public class ContractBoard : MonoBehaviour
     {
         if(_boardUp)
         {
-            GameManager.instance.contractBoardUI.SetActive(true);
+            GameManager.instance.playerUI.SetActive(false);
+            GameManager.instance.contractBoardListUI.SetActive(true);
             GameManager.instance.contractBoardMouseVisibility();
             GameManager.instance.contractBoardCam.SetActive(true);
             GameManager.instance.player.SetActive(false);
             GameManager.instance.interactableTextObject.SetActive(false);
+            GameManager.instance.contractBoardActiveMenu = GameManager.instance.contractBoardListUI;
         }
         _boardUp = !_boardUp;
     }

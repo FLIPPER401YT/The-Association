@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [Header("Menu UI")]
     [SerializeField] GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuSettings;
@@ -14,10 +15,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] MenuState menuCurr;
 
     public bool isPaused;
+    public enum MenuState
+    {
+        None,
+        Pause,
+        Settings
+    }
+    public MenuState originalMenu;
 
-    [SerializeField] public GameObject interactableTextObject;
-    [SerializeField] public TMP_Text interactableText;
-
+    [Header("Player UI")]
     public GameObject player;
     public PlayerController playerScript;
     public Image playerHealthBar;
@@ -25,20 +31,28 @@ public class GameManager : MonoBehaviour
     public GameObject playerSpawnPos;
     public TMP_Text playerHealthMaxText;
     public TMP_Text playerHealthText;
+    public GameObject playerUI;
 
+    [Header("Contract Board UI")]
     public GameObject contractBoardCam;
-    public GameObject contractBoardUI;
+    public GameObject contractBoardActiveMenu;
+    public GameObject contractBoardListUI;
+    public GameObject contractBoardBigfootUI;
+    public ContractBoardState contractBoardCurr;
+
+    public enum ContractBoardState
+    {
+        None,
+        List,
+        Bigfoot
+    }
+    public ContractBoardState origContractBoardState;
+
 
     float timeScaleOriginal;
 
-    public enum MenuState
-    {
-        None,
-        Pause,
-        Settings
-    }
-
-    public MenuState originalMenu;
+    [SerializeField] public GameObject interactableTextObject;
+    [SerializeField] public TMP_Text interactableText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -76,8 +90,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         menuCurr = MenuState.Pause;
         originalMenu = MenuState.Pause;
-
-
     }
 
     public void stateUnpaused()
@@ -165,4 +177,32 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
+
+    public void bigfootPageOpen()
+    {
+        contractBoardActiveMenu.SetActive(false);
+        contractBoardActiveMenu = null;
+        contractBoardActiveMenu = contractBoardBigfootUI;
+        contractBoardActiveMenu.SetActive(true);
+        GameManager.instance.contractBoardCurr = GameManager.ContractBoardState.List;
+    }
+
+    // More will be added later but for now this is all we got
+    public void contractBoardReturn()
+    {
+        switch (contractBoardCurr)
+        {
+            case ContractBoardState.List:
+                {
+                    contractBoardActiveMenu.SetActive(false);
+                    contractBoardActiveMenu = null;
+                    contractBoardActiveMenu = contractBoardListUI;
+                    contractBoardActiveMenu.SetActive(true);
+                    break;
+                }
+            default:
+                break;
+        }
+    }
+
 }
