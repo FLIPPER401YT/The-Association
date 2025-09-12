@@ -18,6 +18,12 @@ public class PlayerController : MonoBehaviour, IDamage
     void Start()
     {
         healthMax = health;
+        if (LevelManager.Instance != null)
+        {
+            var data = LevelManager.Instance.playerData;
+            health = data.hp;
+            healthMax = data.hpMax;
+        }
         updatePlayerHealthBarUI();
     }
 
@@ -50,12 +56,13 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         health += amount;
         health = Mathf.Clamp(health, 0, healthMax);
+        if(LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
     }
 
     public void TakeDamage(int damage)
     {
         health -= damage;
-
+        if (LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
         StartCoroutine(damageScreenEffect());
 
         if (health <= 0)
