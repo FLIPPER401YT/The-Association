@@ -18,7 +18,7 @@ public class ContractBoard : MonoBehaviour
         {
             GameManager.instance.playerUI.SetActive(false);
             GameManager.instance.contractBoardListUI.SetActive(true);
-            GameManager.instance.contractBoardMouseVisibility();
+            GameManager.instance.mouseVisibility();
             GameManager.instance.contractBoardCam.SetActive(true);
             GameManager.instance.player.SetActive(false);
             GameManager.instance.interactableTextObject.SetActive(false);
