@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [Header("Menu UI")]
     [SerializeField] GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuSettings;
@@ -14,31 +15,45 @@ public class GameManager : MonoBehaviour
     [SerializeField] MenuState menuCurr;
 
     public bool isPaused;
-
-    [SerializeField] public GameObject interactableTextObject;
-    [SerializeField] public TMP_Text interactableText;
-
-    public GameObject player;
-    public PlayerController playerScript;
-    public Image playerHealthBar;
-    public GameObject playerDamageEffect;
-    public GameObject playerSpawnPos;
-    public TMP_Text playerHealthMaxText;
-    public TMP_Text playerHealthText;
-
-    public GameObject contractBoardCam;
-    public GameObject contractBoardUI;
-
-    float timeScaleOriginal;
-
     public enum MenuState
     {
         None,
         Pause,
         Settings
     }
-
     public MenuState originalMenu;
+
+    [Header("Player UI")]
+    public GameObject player;
+    public PlayerController playerScript;
+    public CameraController cameraController;
+    public Image playerHealthBar;
+    public GameObject playerDamageEffect;
+    public GameObject playerSpawnPos;
+    public TMP_Text playerHealthMaxText;
+    public TMP_Text playerHealthText;
+    public GameObject playerUI;
+
+    [Header("Contract Board UI")]
+    public GameObject contractBoardCam;
+    public GameObject contractBoardActiveMenu;
+    public GameObject contractBoardListUI;
+    public GameObject contractBoardBigfootUI;
+    public ContractBoardState contractBoardCurr;
+
+    public enum ContractBoardState
+    {
+        None,
+        List,
+        Bigfoot
+    }
+    public ContractBoardState origContractBoardState;
+
+
+    float timeScaleOriginal;
+
+    [SerializeField] public GameObject interactableTextObject;
+    [SerializeField] public TMP_Text interactableText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -48,20 +63,21 @@ public class GameManager : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
+        cameraController = Camera.main.GetComponent<CameraController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel"))
         {
-            if(menuActive == null)
+            if (menuActive == null)
             {
                 statePaused();
                 menuActive = menuPause;
                 menuActive.SetActive(true);
             }
-            else if(menuActive == menuPause)
+            else if (menuActive == menuPause)
             {
                 stateUnpaused();
             }
@@ -76,8 +92,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         menuCurr = MenuState.Pause;
         originalMenu = MenuState.Pause;
-
-
     }
 
     public void stateUnpaused()
@@ -164,5 +178,40 @@ public class GameManager : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void bigfootPageOpen()
+    {
+        contractBoardActiveMenu.SetActive(false);
+        contractBoardActiveMenu = null;
+        contractBoardActiveMenu = contractBoardBigfootUI;
+        contractBoardActiveMenu.SetActive(true);
+        GameManager.instance.contractBoardCurr = GameManager.ContractBoardState.List;
+    }
+
+    // More will be added later but for now this is all we got
+    public void contractBoardReturn()
+    {
+        switch (contractBoardCurr)
+        {
+            case ContractBoardState.List:
+                {
+                    contractBoardActiveMenu.SetActive(false);
+                    contractBoardActiveMenu = null;
+                    contractBoardActiveMenu = contractBoardListUI;
+                    contractBoardActiveMenu.SetActive(true);
+                    break;
+                }
+            default:
+                break;
+        }
+    }
+
+    public void Lose()
+    {
+        Debug.Log("Runs Lose");
+        cameraController.ResetRotation();
+        cameraController.canLook = false;
+        playerScript.enabled = false;
     }
 }

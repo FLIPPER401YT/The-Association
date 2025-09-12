@@ -47,7 +47,6 @@ public class EnemyChaseMovementRB : EnemyMovementBaseRB
         Face(dir);
         MoveHorizontal(dir);
         ApplyGravity();
-
     }
 
     void ApplyGravity()
