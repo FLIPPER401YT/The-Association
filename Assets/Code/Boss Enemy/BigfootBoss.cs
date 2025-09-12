@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class BigfootBoss : Base_Boss_AI
 {
     [Header("Ranges")]
@@ -87,6 +88,27 @@ public class BigfootBoss : Base_Boss_AI
 
     static StatusEffects FindStatus(Component c)
         => c.GetComponentInParent<StatusEffects>() ?? c.GetComponentInChildren<StatusEffects>();
+
+    // NEW: always get StatusEffects from the real player root
+    StatusEffects GetPlayerStatus()
+    {
+        if (!player) return null;
+        return player.GetComponentInChildren<StatusEffects>();
+    }
+
+    // NEW: a reliable player “center” for push direction
+    Vector3 GetPlayerCenter()
+    {
+        if (!player) return transform.position;
+
+        var cc = player.GetComponent<CharacterController>();
+        if (cc) return cc.bounds.center;
+
+        var col = player.GetComponentInChildren<Collider>();
+        if (col) return col.bounds.center;
+
+        return player.position;
+    }
 
     protected override void Awake()
     {
@@ -215,32 +237,47 @@ public class BigfootBoss : Base_Boss_AI
                     var dmg = FindDamage(c);
                     if (dmg != null) dmg.TakeDamage((int)rushDamage);
 
-                    // --- robust knockback ---
-                    var status = FindStatus(c);
-                    Vector3 hitOrigin = bodyCol ? bodyCol.ClosestPoint(c.bounds.center) : transform.position;
-                    Vector3 dir = (c.bounds.center - hitOrigin);  // away from the *closest point* on Bigfoot
+                    // --- robust, root-targeted knockback ---
+                    StatusEffects status = GetPlayerStatus();
+                    Vector3 playerCenter = GetPlayerCenter();
+                    Vector3 hitOrigin = bodyCol ? bodyCol.ClosestPoint(playerCenter) : transform.position;
+
+                    // push from Bigfoot towards the player's center (flat)
+                    Vector3 dir = playerCenter - hitOrigin;
+                    Debug.Log($"dir equals {dir}");
                     dir.y = 0f;
+                    Debug.Log($"dir equals {dir}");
                     if (dir.sqrMagnitude < 0.0001f) dir = transform.forward;
+                    Debug.Log($"dir equals {dir}");
+                    //Debug.Break();
+                    Debug.DrawLine(playerCenter, playerCenter + dir*2, Color.red);
                     dir.Normalize();
+                    Debug.Log($"dir equals {dir}");
 
                     if (status)
                     {
-                        // small upward fraction so the player doesn't glue to the floor
                         status.ApplyKnockbackDirection(dir, rushKnockback, 0.12f);
+                        Debug.Log("apply kb");
                     }
                     else
                     {
-                        var prb = c.attachedRigidbody ?? c.GetComponentInParent<Rigidbody>();
+                        var prb = player ? (player.GetComponent<Rigidbody>() ??
+                                            player.GetComponentInChildren<Rigidbody>()) : null;
+                        Debug.Log("no kb");
                         if (prb)
                         {
                             Vector3 impulse = dir * rushKnockback + Vector3.up * Mathf.Max(0.5f, rushUpwardKick);
                             prb.AddForce(impulse, ForceMode.Impulse);
+                            Debug.Log("kb 3");
                         }
                     }
 
-                    // briefly let the player slide out of Bigfoot without getting stuck inside
-                    if (bodyCol && c.TryGetComponent<Collider>(out var playerCol))
-                        StartCoroutine(TemporarilyIgnoreCollision(bodyCol, playerCol, 0.25f));
+                    // let the player slide out cleanly if overlapping
+                    if (bodyCol && player)
+                    {
+                        var pCol = player.GetComponentInChildren<Collider>();
+                        if (pCol) StartCoroutine(TemporarilyIgnoreCollision(bodyCol, pCol, 0.25f));
+                    }
 
 #if UNITY_6000_0_OR_NEWER
                     rb.linearVelocity = Vector3.zero;
@@ -373,7 +410,6 @@ public class BigfootBoss : Base_Boss_AI
             var status = FindStatus(h);
             if (status)
             {
-                // small up fraction so it feels punchy but grounded
                 Vector3 dir = (h.bounds.center - slamCenter); dir.y = 0f;
                 if (dir.sqrMagnitude < 0.0001f) dir = transform.forward;
                 dir.Normalize();
