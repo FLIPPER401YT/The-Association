@@ -61,8 +61,10 @@ MonoBehaviour:
   crouch: {fileID: 4178799075887348108}
   movement: {fileID: 4592218793867380759}
   dash: {fileID: 5762488403691970888}
-  shoot: {fileID: 8254974378684984855}
   statusEffects: {fileID: 1801471411105332039}
+  anim: {fileID: 0}
+  shoot: {fileID: 8254974378684984855}
+  audioSource: {fileID: 0}
 --- !u!114 &1801471411105332039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,6 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showDebug: 1
+  rb: {fileID: 0}
 --- !u!114 &4592218793867380759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +113,6 @@ MonoBehaviour:
   bullets: 1
   bulletSpeed: 200
   bloomMod: 0
-  ammo: 100
   isAutomatic: 0
   shootPoint: {fileID: 8937604189313975159}
   bulletPrefab: {fileID: 2146355934780771645, guid: 594ce16b677d2c049a6b86b7d5da4962, type: 3}
@@ -481,6 +483,7 @@ MonoBehaviour:
   playerCamSensitivity: 600
   camLockMax: 80
   camLockMin: -80
+  canLook: 1
 --- !u!20 &788177711427598320
 Camera:
   m_ObjectHideFlags: 0

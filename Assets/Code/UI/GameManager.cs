@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [Header("Player UI")]
     public GameObject player;
     public PlayerController playerScript;
+    public CameraController cameraController;
     public Image playerHealthBar;
     public GameObject playerDamageEffect;
     public GameObject playerSpawnPos;
@@ -62,20 +63,21 @@ public class GameManager : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
+        cameraController = Camera.main.GetComponent<CameraController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel"))
         {
-            if(menuActive == null)
+            if (menuActive == null)
             {
                 statePaused();
                 menuActive = menuPause;
                 menuActive.SetActive(true);
             }
-            else if(menuActive == menuPause)
+            else if (menuActive == menuPause)
             {
                 stateUnpaused();
             }
@@ -205,4 +207,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Lose()
+    {
+        Debug.Log("Runs Lose");
+        cameraController.ResetRotation();
+        cameraController.canLook = false;
+        playerScript.enabled = false;
+    }
 }
