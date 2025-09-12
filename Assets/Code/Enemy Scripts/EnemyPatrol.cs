@@ -3,36 +3,30 @@ using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    [SerializeField] private GameObject[] patrolPoints;
-    [SerializeField] private float delay;
-    private int pointIndex = -1;
-    public Vector3 CurrentPointTarget {  get; private set; }
-    public bool IsPatrolling { get; private set; }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Start()
+    [SerializeField] private Transform[] patrolPoints;
+    private int pointIndex = 0;
+    public Vector3 PointTarget => patrolPoints[pointIndex].position;
+    public int PatrolIndex => pointIndex;
+    public int PatrolLength => patrolPoints.Length;
+    public void NextPoint()
     {
-        if (patrolPoints.Length > 0) StartCoroutine(PatrolRoutine());
+        pointIndex = (pointIndex + 1) % patrolPoints.Length;
     }
-
-    // Update is called once per frame
-    private IEnumerator PatrolRoutine()
+    public void SetPatrolPoint(int index)
     {
-        IsPatrolling = true;
-        while (true)
+        if (index >= 0 && index < patrolPoints.Length)
         {
-            int index;
-            do
-            {
-                index = Random.Range(0, patrolPoints.Length);
-            } while (index == pointIndex && patrolPoints.Length > 1);
             pointIndex = index;
-            CurrentPointTarget = patrolPoints[pointIndex].transform.position;
-            yield return new WaitUntil(() => AtTarget());
-            yield return new WaitForSeconds(delay);
         }
     }
-    private bool AtTarget()
+    public void RandomPatrol()
     {
-        return Vector3.Distance(transform.position, CurrentPointTarget) < 0.1f;
+        if (patrolPoints.Length == 0) return;
+        int randomIndex;
+        do
+        {
+            randomIndex = Random.Range(0, patrolPoints.Length);
+        } while (randomIndex == pointIndex && patrolPoints.Length > 1);
+        pointIndex = randomIndex;
     }
 }
