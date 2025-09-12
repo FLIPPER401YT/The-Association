@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour, IDamage
 
     void FixedUpdate()
     {
-        if (!statusEffects.IsStunned)
+        if (!statusEffects.IsStunned && !statusEffects.isKnockingBack)
         {
             movement.Movement();
             dash.Dash();
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour, IDamage
         canMove = !statusEffects.IsStunned;
         updatePlayerHealthBarUI();
 
-        if (Input.GetButtonDown("KnockbackDebug")) statusEffects.ApplyKnockback(transform.position + new Vector3(0, 0, 2), 1);
+        if (Input.GetButtonDown("KnockbackDebug")) statusEffects.ApplyKnockback(transform.position + new Vector3(0, 0, 2), 5f);
 
         if (canMove)
         {
