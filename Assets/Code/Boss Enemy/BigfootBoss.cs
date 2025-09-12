@@ -34,7 +34,12 @@ public class BigfootBoss : Base_Boss_AI
     [Header("Leap Ground Pound")]
     [SerializeField] float leapForce;
     [SerializeField] float leapUpBoost;
-    [SerializeField] float slamRadius;
+
+    [Tooltip("Outer radius of the damage ring at impact.")]
+    [SerializeField] float slamOuterRadius;
+    [Tooltip("Inner radius (no damage inside this). 0 = solid disk.")]
+    [SerializeField] float slamInnerRadius;
+
     [SerializeField] float slamDamage;
     [SerializeField] float slamStunDuration;
     [SerializeField] float slamKnock;
@@ -47,8 +52,12 @@ public class BigfootBoss : Base_Boss_AI
     [SerializeField] float telegraphDuration;
     [SerializeField] GameObject landingIndicatorPrefab;
 
-    [Header("Rush Collision Layers")]
-    [SerializeField] LayerMask rushHitMask;
+    [Header("Hit Masks")]
+    [SerializeField] LayerMask rushHitMask = ~0;
+    [SerializeField] LayerMask slamHitMask = ~0;
+
+    [Header("Tags")]
+    [SerializeField] string playerTag = "Player";
 
     float swipeCD;
     float rushCD;
@@ -58,13 +67,14 @@ public class BigfootBoss : Base_Boss_AI
     // Attack guards so zeroed blocks never get picked
     bool MeleeEnabled => swipeDamage > 0f && swipeRadius > 0f;
     bool RushEnabled => rushSpeed > 0f && rushTime > 0f && rushDamage > 0f;
-    bool LeapEnabled => leapForce > 0f && leapUpBoost > 0f && slamRadius > 0f;
+    bool LeapEnabled => leapForce > 0f && leapUpBoost > 0f && slamOuterRadius > 0f;
 
-    //Helpers for reliable player hit detection 
-    bool IsPlayer(Transform t) => player && (t == player || t.IsChildOf(player));
-    static IDamage FindDamage(Component c) =>
-        c.GetComponentInParent<IDamage>() ?? c.GetComponentInChildren<IDamage>();
-   
+    // Helpers
+    bool IsPlayerObj(Transform t)
+        => (player && (t == player || t.IsChildOf(player))) || t.CompareTag(playerTag);
+
+    static IDamage FindDamage(Component c)
+        => c.GetComponentInParent<IDamage>() ?? c.GetComponentInChildren<IDamage>();
 
     protected override bool CanAttack(float distToPlayer)
     {
@@ -88,7 +98,7 @@ public class BigfootBoss : Base_Boss_AI
         if (LeapEnabled && distToPlayer >= leapMinDist && distToPlayer <= leapMaxDist && leapCD <= 0f) choices.Add(DoLeapSlam());
         if (RushEnabled && distToPlayer >= rushMinDist && rushCD <= 0f) choices.Add(DoRush());
 
-        if (choices.Count == 0) yield break; // stay in Chase
+        if (choices.Count == 0) yield break;
         yield return StartCoroutine(choices[Random.Range(0, choices.Count)]);
     }
 
@@ -103,14 +113,13 @@ public class BigfootBoss : Base_Boss_AI
         Vector3 center = attackPos ? attackPos.position
                                    : transform.position + transform.TransformVector(swipeOffset);
 
-        var hits = Physics.OverlapSphere(center, swipeRadius, ~0, QueryTriggerInteraction.Collide);
+        var hits = Physics.OverlapSphere(center, swipeRadius, slamHitMask, QueryTriggerInteraction.Collide);
         foreach (var h in hits)
         {
-            if (!IsPlayer(h.transform)) continue;
-
+            if (!IsPlayerObj(h.transform)) continue;
             var dmg = FindDamage(h);
             if (dmg != null) dmg.TakeDamage((int)swipeDamage);
-            break; // one hit is enough
+            break;
         }
 
         yield return new WaitForSeconds(swipeRecover);
@@ -147,7 +156,7 @@ public class BigfootBoss : Base_Boss_AI
                 var cols = Physics.OverlapCapsule(origin, top, radius, rushHitMask, QueryTriggerInteraction.Collide);
                 foreach (var c in cols)
                 {
-                    if (!IsPlayer(c.transform)) continue;
+                    if (!IsPlayerObj(c.transform)) continue;
 
                     rushDidHit = true;
 
@@ -186,7 +195,7 @@ public class BigfootBoss : Base_Boss_AI
         ChangeState(BossState.Recover);
     }
 
-    // --- Robust grounded helper (spherecast) ---
+    // --- grounded helper ---
     bool Grounded(float radius = 0.35f, float checkDist = 0.2f)
     {
         Vector3 origin = transform.position + Vector3.up * (radius + 0.05f);
@@ -208,7 +217,7 @@ public class BigfootBoss : Base_Boss_AI
         if (telegraphLanding && landingIndicatorPrefab)
         {
             indicator = Instantiate(landingIndicatorPrefab, target, Quaternion.identity);
-            indicator.transform.localScale = new Vector3(slamRadius * 2f, 1f, slamRadius * 2f);
+            indicator.transform.localScale = new Vector3(slamOuterRadius * 2f, 1f, slamOuterRadius * 2f);
         }
         if (telegraphLanding) yield return new WaitForSeconds(Mathf.Max(0.1f, telegraphDuration * 0.5f));
 
@@ -238,20 +247,31 @@ public class BigfootBoss : Base_Boss_AI
         if (indicator) Destroy(indicator);
         yield return new WaitForSeconds(0.12f);
 
-        // AOE
+        // AOE damage ring (inner/outer)
         Vector3 slamCenter = transform.position + Vector3.up * 0.3f;
-        var aoe = Physics.OverlapSphere(slamCenter, slamRadius, ~0, QueryTriggerInteraction.Collide);
+        var aoe = Physics.OverlapSphere(slamCenter, slamOuterRadius, slamHitMask, QueryTriggerInteraction.Collide);
         foreach (var h in aoe)
         {
-            if (IsPlayer(h.transform))
-            {
-                var dmg = FindDamage(h);
-                if (dmg != null) dmg.TakeDamage((int)slamDamage);
+            if (!IsPlayerObj(h.transform)) continue;
 
-                var status = player.GetComponentInChildren<StatusEffects>();
-                if (status) status.ApplyStun(slamStunDuration);
-            }
+            // distance in XZ for the ring test
+            Vector3 p = h.bounds.ClosestPoint(slamCenter);
+            float dx = p.x - slamCenter.x;
+            float dz = p.z - slamCenter.z;
+            float planarDist = Mathf.Sqrt(dx * dx + dz * dz);
+            if (planarDist < slamInnerRadius) continue; // inside the hole: safe
 
+            var dmg = FindDamage(h);
+            if (dmg != null) dmg.TakeDamage((int)slamDamage);
+
+            // optional: stun
+            var status = player ? player.GetComponentInChildren<StatusEffects>() : null;
+            if (status) status.ApplyStun(slamStunDuration);
+        }
+
+        // knockback any rigidbodies around (props, etc.)
+        foreach (var h in aoe)
+        {
             if (h.attachedRigidbody && h.transform != transform)
             {
                 Vector3 away = (h.transform.position - transform.position).normalized;
@@ -284,16 +304,21 @@ public class BigfootBoss : Base_Boss_AI
 #if UNITY_EDITOR
     protected override void OnDrawGizmosSelected()
     {
-        // draw the base gizmos (roam radius, aggro, current roam target, etc.)
         base.OnDrawGizmosSelected();
-
-        // draw the melee/attack position
         if (attackPos)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(attackPos.position, swipeRadius);
         }
+
+        // visualize slam ring
+        Gizmos.color = new Color(1f, 0.7f, 0f, 0.6f);
+        Gizmos.DrawWireSphere(transform.position, slamOuterRadius);
+        if (slamInnerRadius > 0f)
+        {
+            Gizmos.color = new Color(1f, 0.2f, 0f, 0.6f);
+            Gizmos.DrawWireSphere(transform.position, slamInnerRadius);
+        }
     }
 #endif
-
 }
