@@ -6,12 +6,20 @@ using System.Collections;
 public class StatusEffects : MonoBehaviour
 {
     [Header("Stun Settings")]
+    [Space(10)]
+
     [SerializeField] bool showDebug = true;
 
     public bool IsStunned => stunTimer > 0f;
     public event Action<bool> OnStunChanged; // true = stunned, false = unstunned
 
     float stunTimer;
+
+    [Space(10)]
+    [Header("Knockback")]
+    [Space(10)]
+
+    [SerializeField] Rigidbody rb;
 
     void Update()
     {
@@ -27,7 +35,7 @@ public class StatusEffects : MonoBehaviour
         }
     }
 
-    
+
     //Apply stun for a duration
     public void ApplyStun(float duration)
     {
@@ -40,11 +48,15 @@ public class StatusEffects : MonoBehaviour
         }
     }
 
-    
     //Force-remove stun immediately
     public void ClearStun()
     {
         stunTimer = 0f;
         OnStunChanged?.Invoke(false);
+    }
+
+    public void ApplyKnockback(Vector3 origin, float strength)
+    {
+        rb.AddForce((transform.position - origin) * strength, ForceMode.Impulse);
     }
 }
