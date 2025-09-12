@@ -6,8 +6,6 @@ public class LightEvent : MonoBehaviour
     Light lightController;
     [SerializeField] GameObject lightObject;
     [SerializeField] Color lightColor;
-    [SerializeField] float lightRadius;
-    Material lightMaterial;
 
     void Start()
     {
@@ -31,14 +29,11 @@ public class LightEvent : MonoBehaviour
             {
                 lightController.enabled = true;
                 lightObject.SetActive(true);
-                lightMaterial.SetColor("_EmissionColor", lightColor);
             }
         }
     }
     void LightSettings()
     {
         lightController = GetComponent<Light>();
-        lightMaterial = lightObject.GetComponent<Renderer>().material;
-        lightController.innerSpotAngle = lightRadius;
     }
 }
