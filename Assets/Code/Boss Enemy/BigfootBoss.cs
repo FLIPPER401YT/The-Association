@@ -24,8 +24,8 @@ public class BigfootBoss : Base_Boss_AI
     [SerializeField] float rushSpeed;
     [SerializeField] float rushTime;
     [SerializeField] float rushDamage;
-    [SerializeField] float rushKnockback;     // used for StatusEffects knockback strength
-    [SerializeField] float rushUpwardKick;    // only used for rigidbody fallback
+    [SerializeField] float rushKnockback;     // StatusEffects knockback strength
+    [SerializeField] float rushUpwardKick;    // physics fallback
     [SerializeField] float rushRestDuration;
     [SerializeField] float rushCooldown;
     [SerializeField] float rushShoulderCastRadius;
@@ -42,7 +42,7 @@ public class BigfootBoss : Base_Boss_AI
 
     [SerializeField] float slamDamage;
     [SerializeField] float slamStunDuration;
-    [SerializeField] float slamKnock;         // used for StatusEffects knockback strength
+    [SerializeField] float slamKnock;         // StatusEffects knockback strength
     [SerializeField] float fleeTime;
     [SerializeField] float fleeSpeed;
     [SerializeField] float leapCooldown;
@@ -59,12 +59,21 @@ public class BigfootBoss : Base_Boss_AI
     [Header("Tags")]
     [SerializeField] string playerTag = "Player";
 
+    [Header("Colliders")]
+    [Tooltip("Bigfoot's main collider (used to compute closest point for rush knockback). If null, will GetComponent at runtime.")]
+    [SerializeField] Collider bodyCol;
+
     float swipeCD;
     float rushCD;
     float leapCD;
     bool rushDidHit;
 
-    // Attack guards so zeroed blocks never get picked
+    // leap state
+    bool isLeaping;
+    bool slamTriggered;
+    GameObject currentIndicator;
+
+    // Attack guards
     bool MeleeEnabled => swipeDamage > 0f && swipeRadius > 0f;
     bool RushEnabled => rushSpeed > 0f && rushTime > 0f && rushDamage > 0f;
     bool LeapEnabled => leapForce > 0f && leapUpBoost > 0f && slamOuterRadius > 0f;
@@ -78,6 +87,12 @@ public class BigfootBoss : Base_Boss_AI
 
     static StatusEffects FindStatus(Component c)
         => c.GetComponentInParent<StatusEffects>() ?? c.GetComponentInChildren<StatusEffects>();
+
+    protected override void Awake()
+    {
+        base.Awake();                    // IMPORTANT: keep all base init
+        if (!bodyCol) bodyCol = GetComponent<Collider>();
+    }
 
     protected override bool CanAttack(float distToPlayer)
     {
@@ -96,13 +111,46 @@ public class BigfootBoss : Base_Boss_AI
 
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
-        var choices = new List<IEnumerator>();
-        if (MeleeEnabled && distToPlayer <= meleeRange && swipeCD <= 0f) choices.Add(DoSwipe());
-        if (LeapEnabled && distToPlayer >= leapMinDist && distToPlayer <= leapMaxDist && leapCD <= 0f) choices.Add(DoLeapSlam());
-        if (RushEnabled && distToPlayer >= rushMinDist && rushCD <= 0f) choices.Add(DoRush());
+        if (MeleeEnabled && distToPlayer <= meleeRange && swipeCD <= 0f)
+        {
+            Debug.Log("[Bigfoot] ATTACK: Swipe");
+            yield return StartCoroutine(DoSwipe());
+            yield break;
+        }
 
-        if (choices.Count == 0) yield break;
-        yield return StartCoroutine(choices[Random.Range(0, choices.Count)]);
+        bool canLeap = LeapEnabled && leapCD <= 0f &&
+                       distToPlayer >= leapMinDist && distToPlayer <= leapMaxDist;
+
+        bool canRush = RushEnabled && rushCD <= 0f &&
+                       distToPlayer >= rushMinDist;
+
+        if (canRush && (!canLeap || distToPlayer > (leapMaxDist + 0.5f)))
+        {
+            Debug.Log("[Bigfoot] ATTACK: Rush (outside leap range)");
+            yield return StartCoroutine(DoRush());
+            yield break;
+        }
+
+        if (canRush && canLeap)
+        {
+            bool pickRush = Random.value < 0.7f;
+            Debug.Log("[Bigfoot] ATTACK pick (both valid): " + (pickRush ? "Rush" : "Leap"));
+            yield return StartCoroutine(pickRush ? DoRush() : DoLeapSlam());
+            yield break;
+        }
+
+        if (canRush)
+        {
+            Debug.Log("[Bigfoot] ATTACK: Rush");
+            yield return StartCoroutine(DoRush());
+            yield break;
+        }
+        if (canLeap)
+        {
+            Debug.Log("[Bigfoot] ATTACK: Leap");
+            yield return StartCoroutine(DoLeapSlam());
+            yield break;
+        }
     }
 
     // ---------- SWIPE ----------
@@ -167,22 +215,32 @@ public class BigfootBoss : Base_Boss_AI
                     var dmg = FindDamage(c);
                     if (dmg != null) dmg.TakeDamage((int)rushDamage);
 
-                    // PREFERRED: status-effect knockback
+                    // --- robust knockback ---
                     var status = FindStatus(c);
+                    Vector3 hitOrigin = bodyCol ? bodyCol.ClosestPoint(c.bounds.center) : transform.position;
+                    Vector3 dir = (c.bounds.center - hitOrigin);  // away from the *closest point* on Bigfoot
+                    dir.y = 0f;
+                    if (dir.sqrMagnitude < 0.0001f) dir = transform.forward;
+                    dir.Normalize();
+
                     if (status)
                     {
-                        status.ApplyKnockback(transform.position, rushKnockback);
+                        // small upward fraction so the player doesn't glue to the floor
+                        status.ApplyKnockbackDirection(dir, rushKnockback, 0.12f);
                     }
                     else
                     {
-                        // Fallback: physics impulse if no StatusEffects found
                         var prb = c.attachedRigidbody ?? c.GetComponentInParent<Rigidbody>();
                         if (prb)
                         {
-                            Vector3 impulse = transform.forward * rushKnockback + Vector3.up * rushUpwardKick;
+                            Vector3 impulse = dir * rushKnockback + Vector3.up * Mathf.Max(0.5f, rushUpwardKick);
                             prb.AddForce(impulse, ForceMode.Impulse);
                         }
                     }
+
+                    // briefly let the player slide out of Bigfoot without getting stuck inside
+                    if (bodyCol && c.TryGetComponent<Collider>(out var playerCol))
+                        StartCoroutine(TemporarilyIgnoreCollision(bodyCol, playerCol, 0.25f));
 
 #if UNITY_6000_0_OR_NEWER
                     rb.linearVelocity = Vector3.zero;
@@ -209,11 +267,12 @@ public class BigfootBoss : Base_Boss_AI
         ChangeState(BossState.Recover);
     }
 
-    // --- grounded helper ---
-    bool Grounded(float radius = 0.35f, float checkDist = 0.2f)
+    IEnumerator TemporarilyIgnoreCollision(Collider a, Collider b, float seconds)
     {
-        Vector3 origin = transform.position + Vector3.up * (radius + 0.05f);
-        return Physics.SphereCast(origin, radius, Vector3.down, out _, checkDist + 0.05f, groundMask, QueryTriggerInteraction.Ignore);
+        if (!a || !b) yield break;
+        Physics.IgnoreCollision(a, b, true);
+        yield return new WaitForSeconds(seconds);
+        if (a && b) Physics.IgnoreCollision(a, b, false);
     }
 
     // ---------- LEAP + SLAM ----------
@@ -222,18 +281,16 @@ public class BigfootBoss : Base_Boss_AI
         ChangeState(BossState.Attack);
         FacePlayer();
 
-        // ground point under player (if any)
         Vector3 target = player ? player.position : transform.position + transform.forward * 5f;
         if (Physics.Raycast(target + Vector3.up * 10f, Vector3.down, out RaycastHit ghit, 30f, groundMask))
             target = ghit.point;
 
-        GameObject indicator = null;
         if (telegraphLanding && landingIndicatorPrefab)
         {
-            indicator = Instantiate(landingIndicatorPrefab, target, Quaternion.identity);
-            indicator.transform.localScale = new Vector3(slamOuterRadius * 2f, 1f, slamOuterRadius * 2f);
+            currentIndicator = Instantiate(landingIndicatorPrefab, target, Quaternion.identity);
+            currentIndicator.transform.localScale = new Vector3(slamOuterRadius * 2f, 1f, slamOuterRadius * 2f);
         }
-        if (telegraphLanding) yield return new WaitForSeconds(Mathf.Max(0.1f, telegraphDuration * 0.5f));
+        if (telegraphLanding) yield return new WaitForSeconds(Mathf.Max(0.05f, telegraphDuration * 0.5f));
 
         Vector3 dir = (target - transform.position); dir.y = 0f; dir.Normalize();
 #if UNITY_6000_0_OR_NEWER
@@ -243,62 +300,17 @@ public class BigfootBoss : Base_Boss_AI
 #endif
         rb.AddForce(dir * leapForce + Vector3.up * leapUpBoost, ForceMode.VelocityChange);
 
-        // wait to land (with timeout)
+        isLeaping = true;
+        slamTriggered = false;
+
         float waited = 0f, maxWait = 3f;
-        while (!Grounded() && waited < maxWait)
+        while (!slamTriggered && waited < maxWait)
         {
             waited += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
 
-#if UNITY_6000_0_OR_NEWER
-        rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
-#else
-        rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
-#endif
-        rb.angularVelocity = Vector3.zero;
-
-        if (indicator) Destroy(indicator);
-        yield return new WaitForSeconds(0.12f);
-
-        // AOE damage ring (inner/outer)
-        Vector3 slamCenter = transform.position + Vector3.up * 0.3f;
-        var aoe = Physics.OverlapSphere(slamCenter, slamOuterRadius, slamHitMask, QueryTriggerInteraction.Collide);
-        foreach (var h in aoe)
-        {
-            if (!IsPlayerObj(h.transform)) continue;
-
-            // planar distance for ring check
-            Vector3 p = h.bounds.ClosestPoint(slamCenter);
-            float dx = p.x - slamCenter.x;
-            float dz = p.z - slamCenter.z;
-            float planarDist = Mathf.Sqrt(dx * dx + dz * dz);
-            if (planarDist < slamInnerRadius) continue; // inside safe zone
-
-            // damage
-            var dmg = FindDamage(h);
-            if (dmg != null) dmg.TakeDamage((int)slamDamage);
-
-            // knockback via StatusEffects (preferred)
-            StatusEffects status = FindStatus(h);
-            if (status)
-            {
-                status.ApplyKnockback(transform.position, slamKnock);
-                if (slamStunDuration > 0f) status.ApplyStun(slamStunDuration);
-            }
-            else
-            {
-                // fallback rigidbody push
-                var prb = h.attachedRigidbody ?? h.GetComponentInParent<Rigidbody>();
-                if (prb)
-                {
-                    Vector3 away = (h.transform.position - transform.position).normalized;
-                    prb.AddForce(away * slamKnock, ForceMode.Impulse);
-                }
-            }
-        }
-
-        // flee
+        // flee after slam
         float t = 0f;
         while (t < fleeTime)
         {
@@ -320,6 +332,66 @@ public class BigfootBoss : Base_Boss_AI
         ChangeState(BossState.Recover);
     }
 
+    void OnCollisionEnter(Collision c)
+    {
+        if (!isLeaping || slamTriggered) return;
+        if (((1 << c.collider.gameObject.layer) & groundMask) == 0) return;
+
+        slamTriggered = true;
+        isLeaping = false;
+
+#if UNITY_6000_0_OR_NEWER
+        rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+#else
+        rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+#endif
+        rb.angularVelocity = Vector3.zero;
+
+        if (currentIndicator) { Destroy(currentIndicator); currentIndicator = null; }
+
+        DoSlamImpact();
+    }
+
+    void DoSlamImpact()
+    {
+        Vector3 slamCenter = transform.position + Vector3.up * 0.3f;
+
+        var aoe = Physics.OverlapSphere(slamCenter, slamOuterRadius, slamHitMask, QueryTriggerInteraction.Collide);
+        foreach (var h in aoe)
+        {
+            if (!IsPlayerObj(h.transform)) continue;
+
+            Vector3 p = h.bounds.ClosestPoint(slamCenter);
+            float dx = p.x - slamCenter.x;
+            float dz = p.z - slamCenter.z;
+            float planarDist = Mathf.Sqrt(dx * dx + dz * dz);
+            if (planarDist < slamInnerRadius) continue;
+
+            var dmg = FindDamage(h);
+            if (dmg != null) dmg.TakeDamage((int)slamDamage);
+
+            var status = FindStatus(h);
+            if (status)
+            {
+                // small up fraction so it feels punchy but grounded
+                Vector3 dir = (h.bounds.center - slamCenter); dir.y = 0f;
+                if (dir.sqrMagnitude < 0.0001f) dir = transform.forward;
+                dir.Normalize();
+                status.ApplyKnockbackDirection(dir, slamKnock, 0.12f);
+                if (slamStunDuration > 0f) status.ApplyStun(slamStunDuration);
+            }
+            else
+            {
+                var prb = h.attachedRigidbody ?? h.GetComponentInParent<Rigidbody>();
+                if (prb)
+                {
+                    Vector3 away = (h.transform.position - transform.position).normalized;
+                    prb.AddForce(away * slamKnock + Vector3.up * 0.5f, ForceMode.Impulse);
+                }
+            }
+        }
+    }
+
 #if UNITY_EDITOR
     protected override void OnDrawGizmosSelected()
     {
@@ -330,7 +402,6 @@ public class BigfootBoss : Base_Boss_AI
             Gizmos.DrawWireSphere(attackPos.position, swipeRadius);
         }
 
-        // visualize slam ring
         Gizmos.color = new Color(1f, 0.7f, 0f, 0.6f);
         Gizmos.DrawWireSphere(transform.position, slamOuterRadius);
         if (slamInnerRadius > 0f)
