@@ -41,6 +41,8 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         updatePlayerHealthBarUI();
 
+        if (Input.GetButtonDown("KnockbackDebug")) statusEffects.ApplyKnockback(transform.position + new Vector3(0, 0, 2), 1);
+
         if (!statusEffects.IsStunned)
         {
             jump.Jump();

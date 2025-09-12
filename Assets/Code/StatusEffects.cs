@@ -21,6 +21,10 @@ public class StatusEffects : MonoBehaviour
 
     [SerializeField] Rigidbody rb;
 
+    bool isKnockback = false;
+    Vector3 knockbackPos;
+    Vector3 knockbackStartPos;
+
     void Update()
     {
         if (stunTimer > 0f)
@@ -31,6 +35,15 @@ public class StatusEffects : MonoBehaviour
                 stunTimer = 0f;
                 if (showDebug) Debug.Log($"{gameObject.name} recovered from STUN");
                 OnStunChanged?.Invoke(false);
+            }
+        }
+
+        if (isKnockback)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, knockbackStartPos + knockbackPos, 30 * Time.deltaTime);
+            if (Vector3.Distance(transform.position, knockbackStartPos + knockbackPos) <= 0.01)
+            {
+                isKnockback = false;
             }
         }
     }
@@ -57,6 +70,8 @@ public class StatusEffects : MonoBehaviour
 
     public void ApplyKnockback(Vector3 origin, float strength)
     {
-        rb.AddForce((transform.position - origin) * strength, ForceMode.Impulse);
+        knockbackPos = ((transform.position - origin).normalized * 2 * strength) + (transform.up * strength / 2);
+        knockbackStartPos = transform.position;
+        isKnockback = true;
     }
 }
