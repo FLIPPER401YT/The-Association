@@ -20,3 +20,4 @@ MonoBehaviour:
   ammo: 100
   maxAmmo: 100
   isAutomatic: 1
+  model: {fileID: 9004096622392337306, guid: 83001077f5963ef4bbc461da2fb7a98a, type: 3}
