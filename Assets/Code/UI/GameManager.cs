@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject interactableTextObject;
     [SerializeField] public TMP_Text interactableText;
 
-    public GameObject spawnPoint;
+    [SerializeField] public GameObject spawnPoint;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
