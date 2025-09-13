@@ -9027,6 +9027,7 @@ MonoBehaviour:
   menuCurr: 0
   isPaused: 0
   originalMenu: 0
+  playerPrefab: {fileID: 602741367445022904, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
   player: {fileID: 0}
   playerScript: {fileID: 0}
   cameraController: {fileID: 0}

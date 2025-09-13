@@ -8050,6 +8050,14 @@ MonoBehaviour:
   avoidProbeDist: 0
   sideProbeOffset: 0
   avoidSteerStrength: 0
+  enableRoam: 1
+  roamRadius: 0
+  minHopDistance: 0
+  arriveRadius: 0
+  dwellRange: {x: 0, y: 0}
+  roamGroundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   groundMask:
     serializedVersion: 2
     m_Bits: 8
@@ -22157,24 +22165,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &1251797488 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 602741367445022904, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
-  m_PrefabInstance: {fileID: 1492833380}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1251797500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251797488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 100fda1130cb0e949aba04a234aa221b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerReachDist: 3
 --- !u!43 &1257390336
 Mesh:
   m_ObjectHideFlags: 0
@@ -22598,17 +22588,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: shopUI
-      value: 
-      objectReference: {fileID: 2024206564}
-    - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
       propertyPath: shopCam
       value: 
       objectReference: {fileID: 7498579925094411013}
-    - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: menuLose
-      value: 
-      objectReference: {fileID: 1315048182}
     - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
       propertyPath: contractBoardCam
       value: 
@@ -22662,11 +22644,6 @@ PrefabInstance:
       addedObject: {fileID: 1378715137}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
---- !u!1 &1315048182 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8055529409865644700, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-  m_PrefabInstance: {fileID: 1315048181}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1323188304
 Mesh:
   m_ObjectHideFlags: 0
@@ -24205,6 +24182,14 @@ MonoBehaviour:
   avoidProbeDist: 0
   sideProbeOffset: 0
   avoidSteerStrength: 0
+  enableRoam: 1
+  roamRadius: 0
+  minHopDistance: 0
+  arriveRadius: 0
+  dwellRange: {x: 0, y: 0}
+  roamGroundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   groundMask:
     serializedVersion: 2
     m_Bits: 8
@@ -25095,6 +25080,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 602741367445022904, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6164706744011810665, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
       propertyPath: m_Cameras.Array.size
       value: 1
@@ -25146,10 +25135,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 602741367445022904, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
-      insertIndex: 7
-      addedObject: {fileID: 1251797500}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
 --- !u!224 &1506801191 stripped
 RectTransform:
@@ -33736,11 +33722,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &2024206564 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 486238602969026977, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-  m_PrefabInstance: {fileID: 1315048181}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &2027988038
 Mesh:
   m_ObjectHideFlags: 0
@@ -39368,6 +39349,14 @@ MonoBehaviour:
   avoidProbeDist: 0
   sideProbeOffset: 0
   avoidSteerStrength: 0
+  enableRoam: 1
+  roamRadius: 0
+  minHopDistance: 0
+  arriveRadius: 0
+  dwellRange: {x: 0, y: 0}
+  roamGroundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   groundMask:
     serializedVersion: 2
     m_Bits: 8

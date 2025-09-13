@@ -1,16 +1,20 @@
 using System.Collections;
 using System.Data;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IDamage
 {
+    public static PlayerController instance;
+
     [SerializeField] int health;
     [SerializeField] PlayerJump jump;
     [SerializeField] PlayerCrouch crouch;
     [SerializeField] PlayerMovement movement;
     [SerializeField] PlayerDash dash;
     [SerializeField] StatusEffects statusEffects;
-    [SerializeField] Animator anim;
+    [SerializeField] public Animator anim;
     [SerializeField] AudioClip deathSound;
 
     public PlayerShoot shoot;
@@ -23,11 +27,19 @@ public class PlayerController : MonoBehaviour, IDamage
     private Rigidbody rigidBody;
     [SerializeField] private Transform spawnPoint;
 
+    void Awake()
+    {
+        if (instance == null) instance = this;
+        else if (instance != null && instance != this) Destroy(gameObject);
+    }
+
     void Start()
     {
         DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         rigidBody = GetComponent<Rigidbody>();
-        if(GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
+        if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
 
         healthMax = health;
         if (LevelManager.Instance != null)
@@ -124,5 +136,21 @@ public class PlayerController : MonoBehaviour, IDamage
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
         enabled = true;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Time.timeScale = 1.0f;
+        if (scene.name.Equals("MainMenu")) gameObject.SetActive(false);
+        else gameObject.SetActive(true);
+        GameManager.instance.player = gameObject;
+        GameManager.instance.playerScript = this;
+        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+    }
+
+    void OnDestroy()
+    {
+        Debug.Log("Player destroyed: " + gameObject.name);
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

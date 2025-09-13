@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8254974378684984855}
   - component: {fileID: 5762488403691970888}
   - component: {fileID: 2027198226169990103}
+  - component: {fileID: 2525092460106091568}
   - component: {fileID: 4178799075887348108}
   - component: {fileID: 2802193453196257593}
   - component: {fileID: 522231321136395076}
@@ -65,8 +66,10 @@ MonoBehaviour:
   dash: {fileID: 5762488403691970888}
   statusEffects: {fileID: 1801471411105332039}
   anim: {fileID: 1225435400628897746}
+  deathSound: {fileID: 0}
   shoot: {fileID: 8254974378684984855}
   audioSource: {fileID: 142140309991897775}
+  spawnPoint: {fileID: 0}
 --- !u!114 &1801471411105332039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,6 +163,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpHeight: 6
   jumpMax: 1
+--- !u!114 &2525092460106091568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602741367445022904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100fda1130cb0e949aba04a234aa221b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerReachDist: 3
 --- !u!114 &4178799075887348108
 MonoBehaviour:
   m_ObjectHideFlags: 0
