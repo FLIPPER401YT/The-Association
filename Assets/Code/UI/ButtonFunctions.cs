@@ -73,7 +73,7 @@ public class ButtonFunctions : MonoBehaviour
 
     public void respawn()
     {
-        LevelManager.Instance.LoadGame();
+        GameManager.instance.playerScript.SpawnPlayer();
         GameManager.instance.cameraController.canLook = true;
         GameManager.instance.playerScript.enabled = true;
         GameManager.instance.playerScript.anim.enabled = false;

@@ -140,6 +140,7 @@ public class PlayerController : MonoBehaviour, IDamage
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
         Time.timeScale = 1.0f;
         if (scene.name.Equals("MainMenu")) gameObject.SetActive(false);
         else gameObject.SetActive(true);
