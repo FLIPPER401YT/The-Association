@@ -41,11 +41,13 @@ GameObject:
   m_Component:
   - component: {fileID: 3911046518360766697}
   - component: {fileID: 327888807078103629}
+  - component: {fileID: 5465810882892512205}
   - component: {fileID: 9210168865451443306}
   - component: {fileID: 8781684977721464673}
   - component: {fileID: 5611749811243292346}
   - component: {fileID: 2029789006552911203}
   - component: {fileID: 3079060238086989650}
+  - component: {fileID: 6565079131129312314}
   m_Layer: 9
   m_Name: Bigfoot
   m_TagString: Untagged
@@ -140,9 +142,9 @@ MonoBehaviour:
   fleeTime: 10
   fleeSpeed: 30
   leapCooldown: 20
-  telegraphLanding: 0
-  telegraphDuration: 0
-  landingIndicatorPrefab: {fileID: 0}
+  telegraphLanding: 1
+  telegraphDuration: 3
+  landingIndicatorPrefab: {fileID: 4629931538718128635, guid: bb25993b4281a4e4ab657b622e0711cb, type: 3}
   rushHitMask:
     serializedVersion: 2
     m_Bits: 128
@@ -154,6 +156,18 @@ MonoBehaviour:
   minPersonalSpace: 2.5
   separationSpeed: 4
   keepSpaceWhileAttacking: 1
+--- !u!114 &5465810882892512205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2685116618366660546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94027e9b2d8c0054a873a5c2b7d8354b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &9210168865451443306
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -278,6 +292,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6565079131129312314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2685116618366660546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94027e9b2d8c0054a873a5c2b7d8354b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3302234769193554402
 GameObject:
   m_ObjectHideFlags: 0

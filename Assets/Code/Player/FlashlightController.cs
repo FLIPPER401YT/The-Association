@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class LightEvent : MonoBehaviour
+public class FlashlightController : MonoBehaviour
 {
     Light lightController;
     [SerializeField] GameObject lightObject;
