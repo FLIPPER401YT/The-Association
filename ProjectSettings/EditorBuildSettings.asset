@@ -14,15 +14,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AlphaScenes/HubArea.unity
     guid: ff801dbcd7e941f449c4bfc5d432a931
-  - enabled: 1
-    path: Assets/Scenes/Matthew_Dev/Matthew.unity
-    guid: 672ccd0b07e97cf40a2ff8cbc38a30cb
-  - enabled: 1
-    path: Assets/Scenes/Dominic_Dev/DomDev.unity
-    guid: f7040a19203aedf40a07df6ca1d0959d
-  - enabled: 1
-    path: Assets/Scenes/Nathan_Dev/Nathan.unity
-    guid: 62d62164447dfd14b9396e3de36cb8dc
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
