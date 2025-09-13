@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.22012573, g: 0.22012573, b: 0.22012573, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.1
+  m_FogDensity: 0.054
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
@@ -43712,6 +43712,10 @@ PrefabInstance:
       value: 2500
       objectReference: {fileID: 0}
     - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
+      propertyPath: roamRadius
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: obstacleMask.m_Bits
       value: 2048
       objectReference: {fileID: 0}
@@ -43784,6 +43788,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94027e9b2d8c0054a873a5c2b7d8354b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objective: {fileID: 0}
 --- !u!43 &1477936465
 Mesh:
   m_ObjectHideFlags: 0

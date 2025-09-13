@@ -60,7 +60,7 @@ public class LevelManager : MonoBehaviour
     #region WinCondition
     public void Victory()
     {
-        SceneManager.LoadScene("Victory Scene");
+        SceneManager.LoadScene("VictoryScene");
     }
     #endregion
 }
