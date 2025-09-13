@@ -70,4 +70,9 @@ public class ButtonFunctions : MonoBehaviour
     {
         GameManager.instance.contractBoardReturn();
     }
+
+    public void respawn()
+    {
+        LevelManager.Instance.LoadGame();
+    }
 }
