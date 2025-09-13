@@ -74,10 +74,11 @@ public class ButtonFunctions : MonoBehaviour
     public void respawn()
     {
         LevelManager.Instance.LoadGame();
+        GameManager.instance.cameraController.canLook = true;
         GameManager.instance.playerScript.enabled = true;
         GameManager.instance.playerScript.anim.enabled = false;
         GameManager.instance.player.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        GameManager.instance.playerScript.Heal(100);
+        GameManager.instance.playerScript.Heal(100); // REMOVE ONCE RESPAWN IS FULLY INTEGRATED.
         GameManager.instance.stateUnpaused();
         GameManager.instance.settingsClosed();
     }
