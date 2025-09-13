@@ -21,9 +21,10 @@ public class StatusEffects : MonoBehaviour
 
     [SerializeField] Rigidbody rb;
 
+    public bool isKnockingBack => isKnockback;
+
     bool isKnockback = false;
-    Vector3 knockbackPos;
-    Vector3 knockbackStartPos;
+    Vector3 knockbackDir;
 
     void Update()
     {
@@ -40,8 +41,9 @@ public class StatusEffects : MonoBehaviour
 
         if (isKnockback)
         {
-            transform.position = Vector3.MoveTowards(transform.position, knockbackStartPos + knockbackPos, 30 * Time.deltaTime);
-            if (Vector3.Distance(transform.position, knockbackStartPos + knockbackPos) <= 0.01)
+            knockbackDir = Vector3.MoveTowards(knockbackDir, Vector3.zero, 9.8f * Time.deltaTime);
+            rb.AddForce(knockbackDir, ForceMode.Force);
+            if (Vector3.Distance(knockbackDir, Vector3.zero) <= 0.01)
             {
                 isKnockback = false;
             }
@@ -70,8 +72,10 @@ public class StatusEffects : MonoBehaviour
 
     public void ApplyKnockback(Vector3 origin, float strength)
     {
-        knockbackPos = ((transform.position - origin).normalized * 2 * strength) + (transform.up * strength / 2);
-        knockbackStartPos = transform.position;
+        rb.linearVelocity = Vector3.zero;
+        knockbackDir = ((transform.position - origin).normalized * strength) + (transform.up * strength / 2);
+        rb.AddForce(knockbackDir, ForceMode.Impulse);
+        knockbackDir = new Vector3(knockbackDir.x, 0, knockbackDir.z);
         isKnockback = true;
     }
 }

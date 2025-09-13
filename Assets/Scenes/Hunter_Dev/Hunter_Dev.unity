@@ -509,6 +509,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 9003971440569338922, guid: 0d42ffeffd37700438e53b78633e7661, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -983,6 +987,10 @@ PrefabInstance:
     - target: {fileID: 602741367445022904, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1801471411105332039, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
+      propertyPath: knockbackTimeLength
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4256127293666220363, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
       propertyPath: deathSound
