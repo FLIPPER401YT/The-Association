@@ -84,7 +84,11 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         health += amount;
         health = Mathf.Clamp(health, 0, healthMax);
-        if (LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.playerData.hp = health;
+            LevelManager.Instance.SaveGame();
+        }
     }
 
     public void TakeDamage(int damage)
@@ -92,7 +96,11 @@ public class PlayerController : MonoBehaviour, IDamage
         if (enabled)
         {
             health -= damage;
-            if (LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.playerData.hp = health;
+                LevelManager.Instance.SaveGame();
+            }
             StartCoroutine(damageScreenEffect());
             updatePlayerHealthBarUI();
 
@@ -141,6 +149,13 @@ public class PlayerController : MonoBehaviour, IDamage
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
+        if (LevelManager.Instance != null)
+        {
+            var data = LevelManager.Instance.playerData;
+            health = data.hp;
+            healthMax = data.hpMax;
+            updatePlayerHealthBarUI();
+        }
         Time.timeScale = 1.0f;
         if (scene.name.Equals("MainMenu")) gameObject.SetActive(false);
         else gameObject.SetActive(true);
