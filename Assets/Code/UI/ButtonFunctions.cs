@@ -5,7 +5,10 @@ public class ButtonFunctions : MonoBehaviour
 {
     public void resume()
     {
+        
         GameManager.instance.stateUnpaused();
+        GameManager.instance.mouseInvisibility();
+        
     }
     public void settings()
     {
@@ -40,12 +43,22 @@ public class ButtonFunctions : MonoBehaviour
     public void returnToGameFromBoard()
     {
         GameManager.instance.playerUI.SetActive(true);
-        GameManager.instance.contractBoardMouseInvisibiliy();
+        GameManager.instance.mouseInvisibility();
         GameManager.instance.contractBoardListUI.SetActive(false);
         GameManager.instance.player.SetActive(true);
         GameManager.instance.contractBoardCam.SetActive(false);
         GameManager.instance.interactableTextObject.SetActive(true);
         GameManager.instance.contractBoardCurr = GameManager.ContractBoardState.None;
+    }
+
+    public void returnToGameFromShop()
+    {
+        GameManager.instance.playerUI.SetActive(true);
+        GameManager.instance.mouseInvisibility();
+        GameManager.instance.shopUI.SetActive(false);
+        GameManager.instance.player.SetActive(true);
+        GameManager.instance.shopCam.SetActive(false);
+        GameManager.instance.interactableTextObject.SetActive(true);
     }
 
     public void swapToBigfootPage()

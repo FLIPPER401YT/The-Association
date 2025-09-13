@@ -95,42 +95,55 @@ public class PlayerShoot : MonoBehaviour
     public void Shoot()
     {
         fireTimer += Time.deltaTime;
-        if (fireTimer >= fireRate && (isMelee || gunList[gunListPos].clip > 0) && (isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1")))
+        bool heavyAttack = false;
+        if (fireTimer >= fireRate)
         {
-            for (int bullet = 0; bullet < bullets; bullet++)
+            if (isMelee && Input.GetButtonDown("Fire2"))
             {
-                RaycastHit hit;
-                float rangeX = Random.Range(-bloomMod, bloomMod);
-                float rangeY = Random.Range(-bloomMod, bloomMod);
-                if (Physics.Raycast(shootPoint.transform.position,
-                                    new Vector3(Camera.main.transform.forward.x + rangeX,
-                                                Camera.main.transform.forward.y + rangeY,
-                                                Camera.main.transform.forward.z),
-                                    out hit,
-                                    fireDistance,
-                                    shootMask))
+                heavyAttack = true;
+                fireRate *= 1.5f;
+            }
+            else fireRate = meleeStats.swingRate;
+
+            if ((isMelee || gunList[gunListPos].clip > 0) && ((isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1")) || (isMelee && Input.GetButtonDown("Fire2"))))
+            {
+                Dictionary<IDamage, int> damages = new Dictionary<IDamage, int>();
+                for (int bullet = 0; bullet < bullets; bullet++)
                 {
-                    IDamage dmg = hit.transform.GetComponent<IDamage>();
-                    if (dmg != null)
+                    RaycastHit hit;
+                    Vector3 randomSpread = Random.insideUnitSphere * (bloomMod / 100.0f);
+                    if (Physics.Raycast(shootPoint.transform.position,
+                                        (shootPoint.transform.forward + randomSpread).normalized,
+                                        out hit,
+                                        fireDistance,
+                                        shootMask))
                     {
-                        dmg.TakeDamage(damage);
+                        IDamage dmg = hit.transform.GetComponent<IDamage>();
+                        if (dmg != null)
+                        {
+                            if (damages.ContainsKey(dmg)) damages[dmg] += isMelee && heavyAttack ? damage * 2 : damage;
+                            else damages.Add(dmg, isMelee && heavyAttack ? damage * 2 : damage);
+                        }
+                    }
+                    if (!isMelee)
+                    {
+                        Bullet bulletObj = Instantiate(bulletPrefab, shootPoint.transform.position, Quaternion.LookRotation((shootPoint.transform.forward + randomSpread).normalized), null).GetComponent<Bullet>();
+                        bulletObj.targetPoint = hit.point;
+                        bulletObj.distance = fireDistance;
+                        bulletObj.bulletSpeed = bulletSpeed;
                     }
                 }
+
+                foreach (KeyValuePair<IDamage, int> dmg in damages) dmg.Key.TakeDamage(dmg.Value);
+
                 if (!isMelee)
                 {
-                    Bullet bulletObj = Instantiate(bulletPrefab, shootPoint.transform.position, new Quaternion(Camera.main.transform.rotation.x + rangeX, Camera.main.transform.rotation.y + rangeY, Camera.main.transform.rotation.z, Camera.main.transform.rotation.w), null).GetComponent<Bullet>();
-                    bulletObj.targetPoint = hit.point;
-                    bulletObj.distance = fireDistance;
-                    bulletObj.bulletSpeed = bulletSpeed;
+                    gunList[gunListPos].clip--;
+                    weaponAnimator.SetTrigger("Ranged");
                 }
+                else weaponAnimator.SetTrigger("Melee");
+                fireTimer = 0;
             }
-            if (!isMelee)
-            {
-                gunList[gunListPos].clip--;
-                weaponAnimator.SetTrigger("Ranged");
-            }
-            else weaponAnimator.SetTrigger("Melee");
-            fireTimer = 0;
         }
     }
 
