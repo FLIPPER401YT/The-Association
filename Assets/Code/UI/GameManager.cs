@@ -39,6 +39,10 @@ public class GameManager : MonoBehaviour
     public TMP_Text playerHealthText;
     public GameObject playerUI;
 
+    public GameObject ammoUIObject;
+    public TMP_Text currentAmmo;
+    public TMP_Text totalAmmo;
+
     [Header("Contract Board UI")]
     public GameObject contractBoardCam;
     public GameObject contractBoardActiveMenu;

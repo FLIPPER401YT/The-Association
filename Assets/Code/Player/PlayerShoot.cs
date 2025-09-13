@@ -46,6 +46,19 @@ public class PlayerShoot : MonoBehaviour
             SwitchWeapons(meleeStats);
             isMelee = true;
         }
+        if(gunList.Count > 0)
+        {
+            if (isMelee == false)
+            {
+                GameManager.instance.ammoUIObject.SetActive(true);
+                GameManager.instance.currentAmmo.text = gunList[gunListPos].clip.ToString("F0");
+                GameManager.instance.totalAmmo.text = gunList[gunListPos].ammo.ToString("F0");
+            }
+            else
+            {
+                GameManager.instance.ammoUIObject.SetActive(false);
+            }
+        }
     }
 
     void FillAmmo(GunStats stat)
