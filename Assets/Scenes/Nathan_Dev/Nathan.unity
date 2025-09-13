@@ -556,10 +556,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1729034048794481708, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5148920938820689870, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
       propertyPath: m_Name
       value: UI
@@ -692,7 +688,7 @@ Transform:
   m_GameObject: {fileID: 3957159501313591702}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.212, z: 0.55}
+  m_LocalPosition: {x: 0, y: -0.212, z: 0.678}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -953,7 +949,7 @@ MonoBehaviour:
   leashRange: 40
   roamRadius: 50
   minHopDistance: 10
-  arriveRadius: 2
+  arriveRadius: 4
   dwellRange: {x: 0.1, y: 0.5}
   groundMask:
     serializedVersion: 2
@@ -1012,7 +1008,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   playerTag: Player
-  bodyCol: {fileID: 3773693579649468105}
+  bodyCol: {fileID: 433800073}
+  minPersonalSpace: 2.5
+  separationSpeed: 4
+  keepSpaceWhileAttacking: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-
 public class BigfootBoss : Base_Boss_AI
 {
     [Header("Ranges")]
@@ -25,8 +24,8 @@ public class BigfootBoss : Base_Boss_AI
     [SerializeField] float rushSpeed;
     [SerializeField] float rushTime;
     [SerializeField] float rushDamage;
-    [SerializeField] float rushKnockback;     // StatusEffects knockback strength
-    [SerializeField] float rushUpwardKick;    // physics fallback
+    [SerializeField] float rushKnockback;
+    [SerializeField] float rushUpwardKick; // physics fallback
     [SerializeField] float rushRestDuration;
     [SerializeField] float rushCooldown;
     [SerializeField] float rushShoulderCastRadius;
@@ -43,7 +42,7 @@ public class BigfootBoss : Base_Boss_AI
 
     [SerializeField] float slamDamage;
     [SerializeField] float slamStunDuration;
-    [SerializeField] float slamKnock;         // StatusEffects knockback strength
+    [SerializeField] float slamKnock;
     [SerializeField] float fleeTime;
     [SerializeField] float fleeSpeed;
     [SerializeField] float leapCooldown;
@@ -61,12 +60,21 @@ public class BigfootBoss : Base_Boss_AI
     [SerializeField] string playerTag = "Player";
 
     [Header("Colliders")]
-    [Tooltip("Bigfoot's main collider (used to compute closest point for rush knockback). If null, will GetComponent at runtime.")]
+    [Tooltip("Bigfoot's main collider used for closest-point rush origin. If null, will GetComponent at runtime.")]
     [SerializeField] Collider bodyCol;
 
-    float swipeCD;
-    float rushCD;
-    float leapCD;
+    // ---------------- Personal Space (NEW) ----------------
+    [Header("Separation")]
+    [SerializeField, Tooltip("Minimum XZ distance Bigfoot keeps from the player.")]
+    float minPersonalSpace;
+
+    [SerializeField, Tooltip("How fast he corrects if too close.")]
+    float separationSpeed;
+
+    [SerializeField, Tooltip("Apply separation during normal/attack updates (disabled while mid-leap).")]
+    bool keepSpaceWhileAttacking = true;
+
+    float swipeCD, rushCD, leapCD;
     bool rushDidHit;
 
     // leap state
@@ -74,12 +82,10 @@ public class BigfootBoss : Base_Boss_AI
     bool slamTriggered;
     GameObject currentIndicator;
 
-    // Attack guards
     bool MeleeEnabled => swipeDamage > 0f && swipeRadius > 0f;
     bool RushEnabled => rushSpeed > 0f && rushTime > 0f && rushDamage > 0f;
     bool LeapEnabled => leapForce > 0f && leapUpBoost > 0f && slamOuterRadius > 0f;
 
-    // Helpers
     bool IsPlayerObj(Transform t)
         => (player && (t == player || t.IsChildOf(player))) || t.CompareTag(playerTag);
 
@@ -89,30 +95,21 @@ public class BigfootBoss : Base_Boss_AI
     static StatusEffects FindStatus(Component c)
         => c.GetComponentInParent<StatusEffects>() ?? c.GetComponentInChildren<StatusEffects>();
 
-    // NEW: always get StatusEffects from the real player root
-    StatusEffects GetPlayerStatus()
-    {
-        if (!player) return null;
-        return player.GetComponentInChildren<StatusEffects>();
-    }
+    StatusEffects GetPlayerStatus() => player ? player.GetComponentInChildren<StatusEffects>() : null;
 
-    // NEW: a reliable player “center” for push direction
     Vector3 GetPlayerCenter()
     {
         if (!player) return transform.position;
-
         var cc = player.GetComponent<CharacterController>();
         if (cc) return cc.bounds.center;
-
         var col = player.GetComponentInChildren<Collider>();
         if (col) return col.bounds.center;
-
         return player.position;
     }
 
     protected override void Awake()
     {
-        base.Awake();                    // IMPORTANT: keep all base init
+        base.Awake();
         if (!bodyCol) bodyCol = GetComponent<Collider>();
     }
 
@@ -128,7 +125,38 @@ public class BigfootBoss : Base_Boss_AI
     {
         float dt = Time.fixedDeltaTime;
         swipeCD -= dt; rushCD -= dt; leapCD -= dt;
+
+        // keep a little distance whenever we can (but not mid-leap so we don't fight our jump)
+        if (keepSpaceWhileAttacking && !isLeaping) MaintainPersonalSpace();
+
         base.FixedUpdate();
+    }
+
+    // ---------------- Separation helper (NEW) ----------------
+    void MaintainPersonalSpace()
+    {
+        if (!player) return;
+
+        Vector3 playerCenter = GetPlayerCenter();
+        Vector3 delta = transform.position - playerCenter;
+        delta.y = 0f;
+        float dist = delta.magnitude;
+
+        if (dist < 0.001f) delta = -transform.forward; // fallback
+        if (dist >= minPersonalSpace) return;
+
+        Vector3 outward = delta.normalized;
+        Vector3 targetXZ = player.position + outward * minPersonalSpace;
+
+        // move only in XZ so Y/grounding stays owned by physics
+        Vector3 newPos = Vector3.MoveTowards(
+            new Vector3(transform.position.x, transform.position.y, transform.position.z),
+            new Vector3(targetXZ.x, transform.position.y, targetXZ.z),
+            separationSpeed * Time.fixedDeltaTime
+        );
+
+        if (rb) rb.MovePosition(newPos);
+        else transform.position = newPos;
     }
 
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
@@ -181,6 +209,10 @@ public class BigfootBoss : Base_Boss_AI
         ChangeState(BossState.Attack);
         FacePlayer();
         BrakePlanar();
+
+        // make sure we aren’t standing on the player before winding up
+        if (keepSpaceWhileAttacking) MaintainPersonalSpace();
+
         yield return new WaitForSeconds(swipeWindup);
 
         Vector3 center = attackPos ? attackPos.position
@@ -237,42 +269,31 @@ public class BigfootBoss : Base_Boss_AI
                     var dmg = FindDamage(c);
                     if (dmg != null) dmg.TakeDamage((int)rushDamage);
 
-                    // --- robust, root-targeted knockback ---
-                    StatusEffects status = GetPlayerStatus();
+                    // Knockback via StatusEffects (same API used by Leap)
+                    var status = GetPlayerStatus();
                     Vector3 playerCenter = GetPlayerCenter();
                     Vector3 hitOrigin = bodyCol ? bodyCol.ClosestPoint(playerCenter) : transform.position;
 
-                    // push from Bigfoot towards the player's center (flat)
-                    Vector3 dir = playerCenter - hitOrigin;
-                    Debug.Log($"dir equals {dir}");
-                    dir.y = 0f;
-                    Debug.Log($"dir equals {dir}");
-                    if (dir.sqrMagnitude < 0.0001f) dir = transform.forward;
-                    Debug.Log($"dir equals {dir}");
-                    //Debug.Break();
-                    Debug.DrawLine(playerCenter, playerCenter + dir*2, Color.red);
-                    dir.Normalize();
-                    Debug.Log($"dir equals {dir}");
-
                     if (status)
                     {
-                        status.ApplyKnockbackDirection(dir, rushKnockback, 0.12f);
-                        Debug.Log("apply kb");
+                        status.ApplyKnockback(hitOrigin, rushKnockback);
                     }
                     else
                     {
+                        // Rigidbody fallback
                         var prb = player ? (player.GetComponent<Rigidbody>() ??
                                             player.GetComponentInChildren<Rigidbody>()) : null;
-                        Debug.Log("no kb");
                         if (prb)
                         {
-                            Vector3 impulse = dir * rushKnockback + Vector3.up * Mathf.Max(0.5f, rushUpwardKick);
-                            prb.AddForce(impulse, ForceMode.Impulse);
-                            Debug.Log("kb 3");
+                            Vector3 dir = (playerCenter - hitOrigin); dir.y = 0f;
+                            if (dir.sqrMagnitude < 0.0001f) dir = transform.forward;
+                            dir.Normalize();
+                            prb.AddForce(dir * rushKnockback + Vector3.up * Mathf.Max(0.5f, rushUpwardKick),
+                                         ForceMode.Impulse);
                         }
                     }
 
-                    // let the player slide out cleanly if overlapping
+                    // brief ignore so the player can slide out if overlapping
                     if (bodyCol && player)
                     {
                         var pCol = player.GetComponentInChildren<Collider>();
@@ -297,6 +318,10 @@ public class BigfootBoss : Base_Boss_AI
 #else
         rb.velocity = Vector3.zero;
 #endif
+
+        // after rushing, ensure we aren’t resting on the player
+        if (keepSpaceWhileAttacking) MaintainPersonalSpace();
+
         yield return new WaitForSeconds(rushRestDuration);
 
         rushCD = rushCooldown;
@@ -410,10 +435,7 @@ public class BigfootBoss : Base_Boss_AI
             var status = FindStatus(h);
             if (status)
             {
-                Vector3 dir = (h.bounds.center - slamCenter); dir.y = 0f;
-                if (dir.sqrMagnitude < 0.0001f) dir = transform.forward;
-                dir.Normalize();
-                status.ApplyKnockbackDirection(dir, slamKnock, 0.12f);
+                status.ApplyKnockback(slamCenter, slamKnock); // same API as Rush
                 if (slamStunDuration > 0f) status.ApplyStun(slamStunDuration);
             }
             else
@@ -445,6 +467,10 @@ public class BigfootBoss : Base_Boss_AI
             Gizmos.color = new Color(1f, 0.2f, 0f, 0.6f);
             Gizmos.DrawWireSphere(transform.position, slamInnerRadius);
         }
+
+        // personal space radius
+        Gizmos.color = new Color(0f, 0.6f, 1f, 0.35f);
+        Gizmos.DrawWireSphere(transform.position, minPersonalSpace);
     }
 #endif
 }
