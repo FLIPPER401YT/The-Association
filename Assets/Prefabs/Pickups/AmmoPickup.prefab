@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c93e7b76c82272447b5baa0e9778fbdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupSound: {fileID: 8300000, guid: 7ff8c3bba8841004eb03c8192cd845a3, type: 3}
   ammoAmount: 20
 --- !u!33 &4406026903701735748
 MeshFilter:

@@ -8157,6 +8157,7 @@ MonoBehaviour:
   shopUI: {fileID: 0}
   interactableTextObject: {fileID: 3939103504561941264}
   interactableText: {fileID: 5493160636063152871}
+  spawnPoint: {fileID: 0}
 --- !u!1 &8631771684390888766
 GameObject:
   m_ObjectHideFlags: 0

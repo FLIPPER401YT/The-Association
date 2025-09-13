@@ -959,14 +959,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4639029372485927137, guid: d6fdf5f2770771c428b0b4eb6129be4f, type: 3}
-      propertyPath: source
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4639029372485927137, guid: d6fdf5f2770771c428b0b4eb6129be4f, type: 3}
-      propertyPath: pickupSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 7ff8c3bba8841004eb03c8192cd845a3, type: 3}
     - target: {fileID: 8785546810196909131, guid: d6fdf5f2770771c428b0b4eb6129be4f, type: 3}
       propertyPath: m_Name
       value: AmmoPickup

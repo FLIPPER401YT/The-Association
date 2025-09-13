@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         rigidBody = GetComponent<Rigidbody>();
         if(GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
-        SpawnPlayer();
 
         healthMax = health;
         if (LevelManager.Instance != null)
@@ -36,6 +35,7 @@ public class PlayerController : MonoBehaviour, IDamage
             health = data.hp;
             healthMax = data.hpMax;
         }
+        SpawnPlayer();
         updatePlayerHealthBarUI();
     }
 
