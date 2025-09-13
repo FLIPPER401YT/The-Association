@@ -22467,17 +22467,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: shopUI
-      value: 
-      objectReference: {fileID: 2024206564}
-    - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
       propertyPath: shopCam
       value: 
       objectReference: {fileID: 7498579925094411013}
-    - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: menuLose
-      value: 
-      objectReference: {fileID: 1315048182}
     - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
       propertyPath: contractBoardCam
       value: 
@@ -22531,11 +22523,6 @@ PrefabInstance:
       addedObject: {fileID: 1378715137}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
---- !u!1 &1315048182 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8055529409865644700, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-  m_PrefabInstance: {fileID: 1315048181}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1323188304
 Mesh:
   m_ObjectHideFlags: 0
@@ -33606,11 +33593,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &2024206564 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 486238602969026977, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-  m_PrefabInstance: {fileID: 1315048181}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &2027988038
 Mesh:
   m_ObjectHideFlags: 0

@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     public MenuState originalMenu;
 
     [Header("Player UI")]
+    [SerializeField] GameObject playerPrefab;
+
     public GameObject player;
     public PlayerController playerScript;
     public CameraController cameraController;
@@ -69,7 +71,12 @@ public class GameManager : MonoBehaviour
         timeScaleOriginal = Time.timeScale;
 
         player = GameObject.FindWithTag("Player");
-        playerScript = player.GetComponent<PlayerController>();
+        if (player == null)
+        {
+            player = Instantiate(playerPrefab, null);
+            playerScript = player.GetComponent<PlayerController>();
+        }
+
         cameraController = Camera.main.GetComponent<CameraController>();
         spawnPoint = GameObject.FindWithTag("Respawn");
     }
