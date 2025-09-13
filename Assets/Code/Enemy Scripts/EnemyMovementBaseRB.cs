@@ -22,6 +22,24 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
     [SerializeField] protected float sideProbeOffset;
     [SerializeField] protected float avoidSteerStrength;
 
+
+    [Header("Roam (when no target)")]
+    [SerializeField] protected bool enableRoam = true;
+    [SerializeField] protected float roamRadius;
+    [SerializeField] protected float minHopDistance;
+    [SerializeField] protected float arriveRadius;
+    [SerializeField] protected Vector2 dwellRange = new Vector2();
+    [SerializeField] protected LayerMask roamGroundMask = ~0;
+
+    // stuck/progress tracking 
+    Vector3 spawn;
+    Vector3 roamTarget;
+    float dwellTimer;
+    float timeSincePick;
+    float repickCooldown;
+    Vector3 lastProgressPos;
+    float progressSampleT;
+
     protected Rigidbody rb;
 
     protected virtual void Awake()
@@ -30,26 +48,156 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.constraints = RigidbodyConstraints.FreezeRotation; // rotate via code
+
+        spawn = transform.position;
+
+        // init roam
+        ResetRoam(true);
     }
 
     protected virtual void FixedUpdate()
     {
-        if (!target) { BrakeToStop(); return; }
-        TickMovement(); // child class drives movement each physics step
+        if (!target)
+        {
+            if (enableRoam) RoamStep();
+            else BrakeToStop();
+
+            // Gravity handling is left to derived classes via ApplyGravity() if they want it.
+            ApplyGravity();
+            return;
+        }
+
+        // When a target exists, child class drives movement each physics step
+        TickMovement();
+        ApplyGravity();
     }
 
-    // Child movers implement their behavior here
+    // ---------------- CHILD OVERRIDES ----------------
+    // Child movers implement their chase/leap behavior here (only called when target != null)
     protected abstract void TickMovement();
 
-    // Slerp face toward a direction
+    // derived movers can apply gravity here (base does nothing)
+    protected virtual void ApplyGravity() { /* no-op by default */ }
+
+    // ---------------- ROAM CORE ----------------
+    void RoamStep()
+    {
+        // timers
+        timeSincePick += Time.fixedDeltaTime;
+        if (repickCooldown > 0f) repickCooldown -= Time.fixedDeltaTime;
+
+        // sample progress every ~0.4s
+        progressSampleT += Time.fixedDeltaTime;
+        if (progressSampleT >= 0.4f)
+        {
+            Vector2 now = new Vector2(transform.position.x, transform.position.z);
+            Vector2 was = new Vector2(lastProgressPos.x, lastProgressPos.z);
+            if ((now - was).sqrMagnitude > 0.04f) lastProgressPos = transform.position; // ~0.2m
+            progressSampleT = 0f;
+        }
+
+        // dwell before moving
+        if (dwellTimer > 0f)
+        {
+            dwellTimer -= Time.fixedDeltaTime;
+            BrakeToStop();
+            Face(rb.linearVelocity.sqrMagnitude > 0.01f ? rb.linearVelocity : transform.forward);
+            return;
+        }
+
+        bool reached = Reached(roamTarget);
+        bool reallyStuck = false;
+
+        if (!reached && timeSincePick > 0.6f && repickCooldown <= 0f)
+        {
+            Vector3 pv = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            bool slow = pv.sqrMagnitude < 0.0025f; // ~0.05m/s
+            float prog = (new Vector2(transform.position.x, transform.position.z) -
+                          new Vector2(lastProgressPos.x, lastProgressPos.z)).sqrMagnitude;
+            bool noProgress = prog < 0.04f;       // ~0.2m travel
+            reallyStuck = slow && noProgress;
+        }
+
+        if (reached || reallyStuck)
+        {
+            BeginDwell();
+            PickRoamTarget(false);
+            return;
+        }
+
+        // move toward roam target with avoidance
+        Vector3 to = roamTarget - transform.position; to.y = 0f;
+        Vector3 dir = to.sqrMagnitude > 0.01f ? to.normalized : Vector3.zero;
+        dir = ApplyAvoidance(dir);
+
+        Face(dir);
+        MoveHorizontal(dir);
+    }
+
+    void ResetRoam(bool firstPick)
+    {
+        PickRoamTarget(firstPick);
+        BeginDwell();
+
+        lastProgressPos = transform.position;
+        timeSincePick = 0f;
+        repickCooldown = 0f;
+        progressSampleT = 0f;
+    }
+
+    void BeginDwell() => dwellTimer = Random.Range(dwellRange.x, dwellRange.y);
+
+    void PickRoamTarget(bool firstPick)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            Vector2 r = Random.insideUnitCircle * roamRadius;
+            Vector3 probe = spawn + new Vector3(r.x, 10f, r.y);
+
+            if (Physics.Raycast(probe, Vector3.down, out RaycastHit hit, 50f, roamGroundMask))
+            {
+                float planar = Vector2.Distance(
+                    new Vector2(transform.position.x, transform.position.z),
+                    new Vector2(hit.point.x, hit.point.z));
+
+                if (firstPick || planar >= minHopDistance)
+                {
+                    roamTarget = hit.point;
+
+                    timeSincePick = 0f;
+                    repickCooldown = 0.4f;
+                    lastProgressPos = transform.position;
+                    progressSampleT = 0f;
+                    return;
+                }
+            }
+        }
+
+        // fallback if no ground hit
+        Vector2 rf = Random.insideUnitCircle * roamRadius;
+        roamTarget = spawn + new Vector3(rf.x, 0f, rf.y);
+
+        timeSincePick = 0f;
+        repickCooldown = 0.4f;
+        lastProgressPos = transform.position;
+        progressSampleT = 0f;
+    }
+
+    bool Reached(Vector3 worldpos)
+    {
+        Vector2 a = new Vector2(transform.position.x, transform.position.z);
+        Vector2 b = new Vector2(worldpos.x, worldpos.z);
+        return Vector2.Distance(a, b) <= arriveRadius;
+    }
+
+    // ---------------- SHARED UTILS ----------------
     protected void Face(Vector3 dir)
     {
         if (dir.sqrMagnitude < 0.0001f) return;
-        Quaternion targetRot = Quaternion.LookRotation(dir, Vector3.up);
+        Quaternion targetRot = Quaternion.LookRotation(new Vector3(dir.x, 0f, dir.z), Vector3.up);
         rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRot, turnSpeed * Time.fixedDeltaTime));
     }
 
-    // Gradually reduce current velocity to zero.
     protected void BrakeToStop()
     {
         Vector3 v = rb.linearVelocity;
@@ -58,7 +206,6 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
         rb.linearVelocity = (mag <= drop) ? Vector3.zero : v * ((mag - drop) / Mathf.Max(mag, 0.0001f));
     }
 
-    // Naive raycast-based avoidance, returns adjusted direction.
     protected Vector3 ApplyAvoidance(Vector3 dirWorld)
     {
         Vector3 origin = transform.position + Vector3.up * 0.2f;
@@ -82,7 +229,6 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
         return dirWorld;
     }
 
-    // Accelerate toward desired horizontal (XZ) direction, keeps current Y velocity
     protected void MoveHorizontal(Vector3 desiredDirXZ)
     {
         Vector3 vel = rb.linearVelocity;
@@ -97,7 +243,6 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
         rb.linearVelocity = new Vector3(newHoriz.x, vel.y, newHoriz.z);
     }
 
-    // Accelerate in full 3D
     protected void MoveFree(Vector3 desiredDir3D)
     {
         Vector3 vel = rb.linearVelocity;
@@ -114,4 +259,28 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
 
     public float GetStopDistance() => stopDistance;
     public void SetStopDistance(float v) => stopDistance = Mathf.Max(0f, v);
+
+
+#if UNITY_EDITOR
+    protected virtual void OnDrawGizmosSelected()
+    {
+        if (!enableRoam) return;
+
+        // draw circle at spawn position if in play mode,
+        // otherwise at current transform position in editor
+        Vector3 center = Application.isPlaying ? spawn : transform.position;
+
+        // roam radius
+        Gizmos.color = new Color(0.2f, 0.7f, 1f, 0.25f);
+        Gizmos.DrawWireSphere(center, roamRadius);
+
+        // arrive radius at current target
+        if (Application.isPlaying)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(roamTarget, arriveRadius);
+        }
+    }
+#endif
+
 }

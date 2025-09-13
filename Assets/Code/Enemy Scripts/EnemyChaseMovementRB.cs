@@ -49,7 +49,7 @@ public class EnemyChaseMovementRB : EnemyMovementBaseRB
         ApplyGravity();
     }
 
-    void ApplyGravity()
+    protected override void ApplyGravity()
     {
         Vector3 v = rb.linearVelocity;
         if (grounded && v.y < 0f) v.y = -2f;

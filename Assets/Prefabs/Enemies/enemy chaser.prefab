@@ -356,6 +356,14 @@ MonoBehaviour:
   avoidProbeDist: 1
   sideProbeOffset: 0.5
   avoidSteerStrength: 5
+  enableRoam: 1
+  roamRadius: 5
+  minHopDistance: 10
+  arriveRadius: 0.5
+  dwellRange: {x: 0.1, y: 0.5}
+  roamGroundMask:
+    serializedVersion: 2
+    m_Bits: 8
   groundMask:
     serializedVersion: 2
     m_Bits: 8
