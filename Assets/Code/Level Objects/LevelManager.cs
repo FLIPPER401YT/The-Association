@@ -9,6 +9,7 @@ public class LevelManager : MonoBehaviour
     private List<GameObject> objects = new List<GameObject>();
     public delegate void OnAllObjectsDestroyed();
     public event OnAllObjectsDestroyed ObjectsDestroyed;
+    public PlayerController player;
 
     private void Awake()
     {
@@ -20,6 +21,10 @@ public class LevelManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
+    private void Start()
+    {
+        player = GameManager.instance.playerScript;
+    }
     #region Persistence
     public void SaveGame()
     {
@@ -28,8 +33,8 @@ public class LevelManager : MonoBehaviour
         PlayerPrefs.Save();
     }
     public void LoadGame() {
-        playerData.hp = PlayerPrefs.GetInt("Health", playerData.hp);
-        playerData.hpMax = PlayerPrefs.GetInt("HealthMax", playerData.hpMax);
+        playerData.hp = PlayerPrefs.GetInt("Health", player.health);
+        playerData.hpMax = PlayerPrefs.GetInt("HealthMax", player.healthMax);
     }
     public void LoadScene(string sceneName)
     {

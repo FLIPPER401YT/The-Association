@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour, IDamage
 {
     public static PlayerController instance;
 
-    [SerializeField] int health;
+    [SerializeField] public int health;
     [SerializeField] PlayerJump jump;
     [SerializeField] PlayerCrouch crouch;
     [SerializeField] PlayerMovement movement;
@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour, IDamage
     public PlayerShoot shoot;
     public AudioSource audioSource;
 
-    int healthMax;
+    public int healthMax;
     int bloodSamples;
     bool canMove = true;
 
@@ -137,13 +137,6 @@ public class PlayerController : MonoBehaviour, IDamage
     }
     public void SpawnPlayer()
     {
-        if(LevelManager.Instance != null)
-        {
-            var data = LevelManager.Instance.playerData;
-            health = data.hp;
-            healthMax = data.hpMax;
-        }
-        updatePlayerHealthBarUI();
         rigidBody.linearVelocity = Vector3.zero;
         rigidBody.angularVelocity = Vector3.zero;
         transform.position = spawnPoint.position;
@@ -157,8 +150,6 @@ public class PlayerController : MonoBehaviour, IDamage
         if (LevelManager.Instance != null)
         {
             var data = LevelManager.Instance.playerData;
-            health = data.hp;
-            healthMax = data.hpMax;
             updatePlayerHealthBarUI();
         }
         Time.timeScale = 1.0f;
