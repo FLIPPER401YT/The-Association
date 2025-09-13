@@ -52,7 +52,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
 
     // --- Stuck / progress tracking ---
     protected float timeSincePick;     // time since current roam target chosen
-    protected float repickCooldown;    // small delay before we’re allowed to repick
+    protected float repickCooldown;    // small delay before weï¿½re allowed to repick
     protected Vector3 lastProgressPos; // last sampled position for progress check
     protected float progressSampleT;   // timer for sampling progress
 
@@ -76,6 +76,11 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
         progressSampleT = 0f;
     }
 
+    void Start()
+    {
+        player = GameManager.instance.player.transform;
+    }
+
     protected virtual void FixedUpdate()
     {
         if (state == BossState.Dead) return;
@@ -85,7 +90,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
         timeSincePick += Time.fixedDeltaTime;
         if (repickCooldown > 0f) repickCooldown -= Time.fixedDeltaTime;
 
-        // sample “real progress” every ~0.4s
+        // sample ï¿½real progressï¿½ every ~0.4s
         progressSampleT += Time.fixedDeltaTime;
         if (progressSampleT >= 0.4f)
         {
@@ -172,7 +177,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
 
         bool reached = Reached(roamTarget);
 
-        // “Really stuck” only after a short grace period & when no progress is detected
+        // ï¿½Really stuckï¿½ only after a short grace period & when no progress is detected
         bool reallyStuck = false;
         if (!reached && timeSincePick > 0.6f && repickCooldown <= 0f)
         {
@@ -233,7 +238,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
 
     protected virtual Vector3 Avoidance()
     {
-        // Casts start slightly forward and up so we don’t hit our own capsule/ground
+        // Casts start slightly forward and up so we donï¿½t hit our own capsule/ground
         Vector3 forward = GetPlanarVel().sqrMagnitude > 0.01f ? GetPlanarVel().normalized : transform.forward;
         Vector3 origin = transform.position + Vector3.up * 0.4f + forward * 0.6f;
         Vector3 acc = Vector3.zero;
