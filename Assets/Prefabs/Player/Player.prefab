@@ -68,7 +68,7 @@ MonoBehaviour:
   dash: {fileID: 5762488403691970888}
   statusEffects: {fileID: 1801471411105332039}
   anim: {fileID: 1225435400628897746}
-  deathSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
   shoot: {fileID: 8254974378684984855}
   audioSource: {fileID: 142140309991897775}
   spawnPoint: {fileID: 0}
@@ -1018,7 +1018,7 @@ Camera:
   m_GameObject: {fileID: 9157520814089914763}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.012578547, g: 0.012578547, b: 0.012578547, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
