@@ -24,10 +24,12 @@ public class LevelManager : MonoBehaviour
     public void SaveGame()
     {
         PlayerPrefs.SetInt("Health", playerData.hp);
+        PlayerPrefs.SetInt("HealthMax", playerData.hpMax);
         PlayerPrefs.Save();
     }
     public void LoadGame() {
-        playerData.hp = PlayerPrefs.GetInt("Health", 100);
+        playerData.hp = PlayerPrefs.GetInt("Health", playerData.hp);
+        playerData.hpMax = PlayerPrefs.GetInt("HealthMax", playerData.hpMax);
     }
     public void LoadScene(string sceneName)
     {

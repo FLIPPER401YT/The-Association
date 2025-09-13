@@ -137,7 +137,12 @@ public class PlayerController : MonoBehaviour, IDamage
     }
     public void SpawnPlayer()
     {
-        health = healthMax;
+        if(LevelManager.Instance != null)
+        {
+            var data = LevelManager.Instance.playerData;
+            health = data.hp;
+            healthMax = data.hpMax;
+        }
         updatePlayerHealthBarUI();
         rigidBody.linearVelocity = Vector3.zero;
         rigidBody.angularVelocity = Vector3.zero;
