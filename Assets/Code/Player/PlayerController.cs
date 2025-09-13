@@ -20,8 +20,15 @@ public class PlayerController : MonoBehaviour, IDamage
     int bloodSamples;
     bool canMove = true;
 
+    private Rigidbody rigidBody;
+    [SerializeField] private Transform spawnPoint;
+
     void Start()
     {
+        rigidBody = GetComponent<Rigidbody>();
+        if(GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
+        SpawnPlayer();
+
         healthMax = health;
         if (LevelManager.Instance != null)
         {
@@ -106,5 +113,15 @@ public class PlayerController : MonoBehaviour, IDamage
     public void PickupBloodSample(int amount)
     {
         bloodSamples += amount;
+    }
+    public void SpawnPlayer()
+    {
+        health = healthMax;
+        updatePlayerHealthBarUI();
+        rigidBody.linearVelocity = Vector3.zero;
+        rigidBody.angularVelocity = Vector3.zero;
+        transform.position = spawnPoint.position;
+        transform.rotation = spawnPoint.rotation;
+        enabled = true;
     }
 }

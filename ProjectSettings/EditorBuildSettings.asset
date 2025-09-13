@@ -11,12 +11,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Dominic_Dev/MainMenu.unity
     guid: 4ef26287825f0034ab21c719514a8fc8
-  - enabled: 0
-    path: Assets/Scenes/Dominic_Dev/DomDev.unity
-    guid: f7040a19203aedf40a07df6ca1d0959d
   - enabled: 1
     path: Assets/Scenes/Dominic_Dev/HubArea.unity
     guid: ff801dbcd7e941f449c4bfc5d432a931
+  - enabled: 1
+    path: Assets/Scenes/Matthew_Dev/Matthew.unity
+    guid: 672ccd0b07e97cf40a2ff8cbc38a30cb
+  - enabled: 1
+    path: Assets/Scenes/Dominic_Dev/DomDev.unity
+    guid: f7040a19203aedf40a07df6ca1d0959d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
