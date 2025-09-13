@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 2d056ac30ecc9e542b26e06133f23602, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -14391,7 +14391,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2701893839414878446, guid: 6c05fc834725d8c4fb0f4a79247a2ea0, type: 3}
       propertyPath: sceneToLoad
-      value: DomDev
+      value: Level_Test
       objectReference: {fileID: 0}
     - target: {fileID: 3104668967448551598, guid: 6c05fc834725d8c4fb0f4a79247a2ea0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -25092,6 +25092,10 @@ PrefabInstance:
     - target: {fileID: 602741367445022904, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 788177711427598320, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
+      propertyPath: m_ClearFlags
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8635141838717556200, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
       propertyPath: m_LocalPosition.x
