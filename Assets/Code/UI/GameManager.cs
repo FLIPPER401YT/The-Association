@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [Header("Menu UI")]
     [SerializeField] public GameObject menuActive;
     [SerializeField] public GameObject menuPause;
+    [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuSettings;
     [SerializeField] GameObject menuControlSettings;
     [SerializeField] GameObject menuAudioSettings;
@@ -19,6 +21,7 @@ public class GameManager : MonoBehaviour
     {
         None,
         Pause,
+        Lose,
         Settings
     }
     public MenuState originalMenu;
@@ -111,6 +114,16 @@ public class GameManager : MonoBehaviour
         originalMenu = 0;
     }
 
+    public void updateToLoseScreen()
+    {
+        statePaused();
+        menuActive = menuLose;
+        menuActive.SetActive(true);
+        menuCurr = MenuState.Lose;
+        originalMenu = MenuState.Lose;
+
+    }
+
     public void settingsOpen()
     {
         menuActive.SetActive(false);
@@ -145,6 +158,14 @@ public class GameManager : MonoBehaviour
                     menuActive.SetActive(false);
                     menuActive = null;
                     menuActive = menuPause;
+                    menuActive.SetActive(true);
+                    break;
+                }
+            case MenuState.Lose:
+                {
+                    menuActive.SetActive(false);
+                    menuActive = null;
+                    menuActive = menuLose;
                     menuActive.SetActive(true);
                     break;
                 }
@@ -216,6 +237,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Runs Lose");
         cameraController.ResetRotation();
+        updateToLoseScreen();
         cameraController.canLook = false;
         playerScript.enabled = false;
     }
