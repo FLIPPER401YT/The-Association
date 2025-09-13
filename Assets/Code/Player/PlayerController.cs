@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour, IDamage
 
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
         rigidBody = GetComponent<Rigidbody>();
         if(GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
 

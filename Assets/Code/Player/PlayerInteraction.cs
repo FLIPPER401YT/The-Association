@@ -26,6 +26,8 @@ public class PlayerInteraction : MonoBehaviour
             if(hit.collider.tag == "Interactable")
             {
                 Interactable newInteractable = hit.collider.GetComponent<Interactable>();
+                
+                if (!newInteractable) return;
 
                 if (newInteractable.enabled)
                 {
