@@ -528,13 +528,25 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 144090326}
+    - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
+      propertyPath: telegraphLanding
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
+      propertyPath: telegraphDuration
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
+      propertyPath: landingIndicatorPrefab
+      value: 
+      objectReference: {fileID: 4629931538718128635, guid: bb25993b4281a4e4ab657b622e0711cb, type: 3}
     - target: {fileID: 2685116618366660546, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_Name
       value: Bigfoot
       objectReference: {fileID: 0}
     - target: {fileID: 3911046518360766697, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3911046518360766697, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -542,7 +554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3911046518360766697, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 11.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3911046518360766697, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_LocalRotation.w
