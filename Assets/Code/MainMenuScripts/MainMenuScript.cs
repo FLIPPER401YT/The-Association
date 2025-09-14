@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuScript : MonoBehaviour
 {
 
     public void StartGame()
     {
+        ButtonFunctions.quitingToMain = false;
         SceneManager.LoadScene("HubArea");
     }
 

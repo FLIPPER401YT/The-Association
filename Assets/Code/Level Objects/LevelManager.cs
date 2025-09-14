@@ -92,7 +92,7 @@ public class LevelManager : MonoBehaviour
         if(objects.Contains(Object))
         {
             objects.Remove(Object);
-            if (objects.Count == 0) ObjectsDestroyed?.Invoke();
+            if (objects.Count == 0 && !ButtonFunctions.quitingToMain) ObjectsDestroyed?.Invoke();
         }
     }
     #endregion
@@ -101,6 +101,7 @@ public class LevelManager : MonoBehaviour
     public void Victory()
     {
         isVictoryScene = true;
+        Destroy(GameManager.instance.player);
         SceneManager.LoadScene("VictoryScene");
         GameManager.instance?.mouseVisibility();
     }

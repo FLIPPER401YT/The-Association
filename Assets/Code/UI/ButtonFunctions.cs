@@ -3,12 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class ButtonFunctions : MonoBehaviour
 {
+    public static bool quitingToMain = false;
+
     public void resume()
     {
-        
+
         GameManager.instance.stateUnpaused();
         GameManager.instance.mouseInvisibility();
-        
+
     }
     public void settings()
     {
@@ -37,6 +39,7 @@ public class ButtonFunctions : MonoBehaviour
 
     public void quitToMainMenu()
     {
+        quitingToMain = true;
         SceneManager.LoadScene("MainMenu");
     }
 
