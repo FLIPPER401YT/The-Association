@@ -22462,10 +22462,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 486238602969026977, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
+      propertyPath: samples
+      value: 
+      objectReference: {fileID: 1567034739}
     - target: {fileID: 796951371848545876, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
       propertyPath: shopCam
       value: 
@@ -22474,49 +22474,16 @@ PrefabInstance:
       propertyPath: contractBoardCam
       value: 
       objectReference: {fileID: 4193501109408988115}
-    - target: {fileID: 1729034048794481708, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2202727152837209390, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5037163744635624976, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5148920938820689870, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
       propertyPath: m_Name
       value: UI
-      objectReference: {fileID: 0}
-    - target: {fileID: 5148920938820689870, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5542426132645496481, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5829438063056143424, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: returnToGameFromShop
       objectReference: {fileID: 0}
-    - target: {fileID: 8055529409865644700, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8631771684390888766, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8847545214563455429, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 8261054357230613292, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
@@ -26447,6 +26414,17 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &1567034739 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5567600669904641108, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
+  m_PrefabInstance: {fileID: 1315048181}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &1578421592
 Mesh:
   m_ObjectHideFlags: 0

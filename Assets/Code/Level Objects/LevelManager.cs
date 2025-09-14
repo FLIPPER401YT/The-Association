@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,8 @@ public class LevelManager : MonoBehaviour
     private List<GameObject> objects = new List<GameObject>();
     public delegate void OnAllObjectsDestroyed();
     public event OnAllObjectsDestroyed ObjectsDestroyed;
+    public PlayerController player;
+    public bool isVictoryScene = false;
 
     private void Awake()
     {
@@ -19,15 +22,50 @@ public class LevelManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnLoaded;
+    }
+    private void Start()
+    {
+        player = GameManager.instance.playerScript;
+        ObjectsDestroyed += Victory;
+        if (LevelManager.Instance != null && LevelManager.Instance.isVictoryScene)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnLoaded;
+    }
+    private IEnumerator DelayedUnlock()
+    {
+        yield return new WaitForEndOfFrame();
+        GameManager.instance?.mouseVisibility();
+    }
+    private void OnLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "VictoryScene")
+        {
+            StartCoroutine(DelayedUnlock());
+            isVictoryScene = true;
+        }
+        else
+        {
+            GameManager.instance?.mouseInvisibility();
+            isVictoryScene= false;
+        }
     }
     #region Persistence
     public void SaveGame()
     {
         PlayerPrefs.SetInt("Health", playerData.hp);
+        PlayerPrefs.SetInt("HealthMax", playerData.hpMax);
         PlayerPrefs.Save();
     }
     public void LoadGame() {
-        playerData.hp = PlayerPrefs.GetInt("Health", 100);
+        playerData.hp = PlayerPrefs.GetInt("Health", player.health);
+        playerData.hpMax = PlayerPrefs.GetInt("HealthMax", player.healthMax);
     }
     public void LoadScene(string sceneName)
     {
@@ -60,7 +98,9 @@ public class LevelManager : MonoBehaviour
     #region WinCondition
     public void Victory()
     {
-        SceneManager.LoadScene("Victory Scene");
+        isVictoryScene = true;
+        SceneManager.LoadScene("VictoryScene");
+        GameManager.instance?.mouseVisibility();
     }
     #endregion
 }

@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour, IDamage
 {
     public static PlayerController instance;
 
-    [SerializeField] int health;
+    [SerializeField] public int health;
     [SerializeField] PlayerJump jump;
     [SerializeField] PlayerCrouch crouch;
     [SerializeField] PlayerMovement movement;
@@ -20,13 +20,12 @@ public class PlayerController : MonoBehaviour, IDamage
     public PlayerShoot shoot;
     public AudioSource audioSource;
 
-    int healthMax;
-    int bloodSamples;
+    public int healthMax;
+    public int bloodSamples;
     bool canMove = true;
 
     private Rigidbody rigidBody;
     [SerializeField] private Transform spawnPoint;
-
     void Awake()
     {
         if (instance == null) instance = this;
@@ -84,7 +83,11 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         health += amount;
         health = Mathf.Clamp(health, 0, healthMax);
-        if (LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.playerData.hp = health;
+            LevelManager.Instance.SaveGame();
+        }
     }
 
     public void TakeDamage(int damage)
@@ -92,7 +95,11 @@ public class PlayerController : MonoBehaviour, IDamage
         if (enabled)
         {
             health -= damage;
-            if (LevelManager.Instance != null) LevelManager.Instance.playerData.hp = health;
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.playerData.hp = health;
+                LevelManager.Instance.SaveGame();
+            }
             StartCoroutine(damageScreenEffect());
             updatePlayerHealthBarUI();
 
@@ -126,11 +133,10 @@ public class PlayerController : MonoBehaviour, IDamage
     public void PickupBloodSample(int amount)
     {
         bloodSamples += amount;
+        UpdateSampleCount(bloodSamples);
     }
     public void SpawnPlayer()
     {
-        health = healthMax;
-        updatePlayerHealthBarUI();
         rigidBody.linearVelocity = Vector3.zero;
         rigidBody.angularVelocity = Vector3.zero;
         transform.position = spawnPoint.position;
@@ -141,6 +147,11 @@ public class PlayerController : MonoBehaviour, IDamage
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
+        if (LevelManager.Instance != null)
+        {
+            var data = LevelManager.Instance.playerData;
+            updatePlayerHealthBarUI();
+        }
         Time.timeScale = 1.0f;
         if (scene.name.Equals("MainMenu")) gameObject.SetActive(false);
         else gameObject.SetActive(true);
@@ -153,5 +164,10 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         Debug.Log("Player destroyed: " + gameObject.name);
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    public void UpdateSampleCount(int count)
+    {
+        bloodSamples = count;
+        GameManager.instance?.SampleCount(bloodSamples);
     }
 }

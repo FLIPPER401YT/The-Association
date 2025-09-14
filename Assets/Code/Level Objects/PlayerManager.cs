@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerManager
 {
     public int hp, hpMax;
+    public PlayerController controller;
     public PlayerManager()
     {
         hp = 100;

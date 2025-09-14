@@ -39,6 +39,10 @@ public class GameManager : MonoBehaviour
     public TMP_Text playerHealthText;
     public GameObject playerUI;
 
+    public GameObject ammoUIObject;
+    public TMP_Text currentAmmo;
+    public TMP_Text totalAmmo;
+
     [Header("Contract Board UI")]
     public GameObject contractBoardCam;
     public GameObject contractBoardActiveMenu;
@@ -64,6 +68,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public TMP_Text interactableText;
 
     [SerializeField] public GameObject spawnPoint;
+    [SerializeField] public TMP_Text samples;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -247,5 +252,9 @@ public class GameManager : MonoBehaviour
         updateToLoseScreen();
         cameraController.canLook = false;
         playerScript.enabled = false;
+    }
+    public void SampleCount(int count)
+    {
+        if (samples != null) samples.text = $"{count}";
     }
 }
