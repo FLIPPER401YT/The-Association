@@ -8289,6 +8289,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1509558964888871198, guid: 9b378174520737248bb36053f1626362, type: 3}
+      propertyPath: drops.Array.data[1].chance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1527598974048193402, guid: 9b378174520737248bb36053f1626362, type: 3}
       propertyPath: m_Name
       value: enemy range test (1)
@@ -29600,6 +29604,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1509558964888871198, guid: 9b378174520737248bb36053f1626362, type: 3}
+      propertyPath: drops.Array.data[1].chance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1527598974048193402, guid: 9b378174520737248bb36053f1626362, type: 3}
       propertyPath: m_Name
       value: enemy range test (3)
@@ -30298,6 +30306,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1509558964888871198, guid: 9b378174520737248bb36053f1626362, type: 3}
+      propertyPath: drops.Array.data[1].chance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1527598974048193402, guid: 9b378174520737248bb36053f1626362, type: 3}
       propertyPath: m_Name
       value: enemy range test
@@ -38680,6 +38692,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1509558964888871198, guid: 9b378174520737248bb36053f1626362, type: 3}
+      propertyPath: drops.Array.data[1].chance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1527598974048193402, guid: 9b378174520737248bb36053f1626362, type: 3}
       propertyPath: m_Name
       value: enemy range test (2)

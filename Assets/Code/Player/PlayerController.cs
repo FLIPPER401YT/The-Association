@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour, IDamage
     public AudioSource audioSource;
 
     public int healthMax;
-    int bloodSamples;
+    public int bloodSamples;
     bool canMove = true;
 
     private Rigidbody rigidBody;
@@ -134,6 +134,7 @@ public class PlayerController : MonoBehaviour, IDamage
     public void PickupBloodSample(int amount)
     {
         bloodSamples += amount;
+        UpdateSampleCount(bloodSamples);
     }
     public void SpawnPlayer()
     {
@@ -164,5 +165,10 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         Debug.Log("Player destroyed: " + gameObject.name);
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    public void UpdateSampleCount(int count)
+    {
+        bloodSamples = count;
+        GameManager.instance?.SampleCount(bloodSamples);
     }
 }

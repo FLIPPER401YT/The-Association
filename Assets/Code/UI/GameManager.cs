@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public TMP_Text interactableText;
 
     [SerializeField] public GameObject spawnPoint;
+    [SerializeField] public TMP_Text samples;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -251,5 +252,9 @@ public class GameManager : MonoBehaviour
         updateToLoseScreen();
         cameraController.canLook = false;
         playerScript.enabled = false;
+    }
+    public void SampleCount(int count)
+    {
+        if (samples != null) samples.text = $"{count}";
     }
 }
