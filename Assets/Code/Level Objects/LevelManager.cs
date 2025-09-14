@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,7 @@ public class LevelManager : MonoBehaviour
     public delegate void OnAllObjectsDestroyed();
     public event OnAllObjectsDestroyed ObjectsDestroyed;
     public PlayerController player;
+    public bool isVictoryScene = false;
 
     private void Awake()
     {
@@ -20,10 +22,39 @@ public class LevelManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnLoaded;
     }
     private void Start()
     {
         player = GameManager.instance.playerScript;
+        ObjectsDestroyed += Victory;
+        if (LevelManager.Instance != null && LevelManager.Instance.isVictoryScene)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnLoaded;
+    }
+    private IEnumerator DelayedUnlock()
+    {
+        yield return new WaitForEndOfFrame();
+        GameManager.instance?.mouseVisibility();
+    }
+    private void OnLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "VictoryScene")
+        {
+            StartCoroutine(DelayedUnlock());
+            isVictoryScene = true;
+        }
+        else
+        {
+            GameManager.instance?.mouseInvisibility();
+            isVictoryScene= false;
+        }
     }
     #region Persistence
     public void SaveGame()
@@ -67,6 +98,7 @@ public class LevelManager : MonoBehaviour
     #region WinCondition
     public void Victory()
     {
+        isVictoryScene = true;
         SceneManager.LoadScene("VictoryScene");
     }
     #endregion
