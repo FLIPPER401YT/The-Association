@@ -15,11 +15,17 @@ EditorBuildSettings:
     path: Assets/Scenes/AlphaScenes/HubArea.unity
     guid: ff801dbcd7e941f449c4bfc5d432a931
   - enabled: 1
+    path: Assets/Scenes/AlphaScenes/Level_Test.unity
+    guid: 1711f707f0e32bb478be2ff3a13fab28
+  - enabled: 1
     path: Assets/Scenes/AlphaScenes/BigFoot.unity
     guid: a2b805b90616bde45a33b3ccb3096155
   - enabled: 1
-    path: Assets/Scenes/AlphaScenes/Level_Test.unity
-    guid: 1711f707f0e32bb478be2ff3a13fab28
+    path: Assets/Scenes/AlphaScenes/VictoryScene.unity
+    guid: 0005eba96bedb6143b3cbbc306214683
+  - enabled: 1
+    path: Assets/Scenes/AlphaScenes/Showcase.unity
+    guid: b78d164cd80027f418fc5190c14ede26
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
