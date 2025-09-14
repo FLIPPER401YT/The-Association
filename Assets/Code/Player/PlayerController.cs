@@ -56,7 +56,6 @@ public class PlayerController : MonoBehaviour, IDamage
         if (!statusEffects.IsStunned && !statusEffects.isKnockingBack)
         {
             movement.Movement();
-            dash.Dash();
         }
     }
 
@@ -69,6 +68,7 @@ public class PlayerController : MonoBehaviour, IDamage
 
         if (canMove)
         {
+            dash.Dash();
             jump.Jump();
             crouch.Crouch();
             shoot.Shoot();
