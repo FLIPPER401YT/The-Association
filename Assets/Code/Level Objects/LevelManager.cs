@@ -100,6 +100,7 @@ public class LevelManager : MonoBehaviour
     {
         isVictoryScene = true;
         SceneManager.LoadScene("VictoryScene");
+        GameManager.instance?.mouseVisibility();
     }
     #endregion
 }
