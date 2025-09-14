@@ -152,6 +152,8 @@ public class PlayerController : MonoBehaviour, IDamage
         if (LevelManager.Instance != null)
         {
             var data = LevelManager.Instance.playerData;
+            health = data.hp;
+            bloodSamples = data.bloodSample;
             updatePlayerHealthBarUI();
             UpdateSampleCount(bloodSamples);
         }
