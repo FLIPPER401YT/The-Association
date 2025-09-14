@@ -61,11 +61,13 @@ public class LevelManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("Health", playerData.hp);
         PlayerPrefs.SetInt("HealthMax", playerData.hpMax);
+        PlayerPrefs.SetInt("BloodSamples", playerData.bloodSample);
         PlayerPrefs.Save();
     }
     public void LoadGame() {
         playerData.hp = PlayerPrefs.GetInt("Health", player.health);
         playerData.hpMax = PlayerPrefs.GetInt("HealthMax", player.healthMax);
+        playerData.bloodSample = PlayerPrefs.GetInt("BloodSamples", playerData.bloodSample);
     }
     public void LoadScene(string sceneName)
     {

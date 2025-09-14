@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour, IDamage
         }
         SpawnPlayer();
         updatePlayerHealthBarUI();
+        UpdateSampleCount(bloodSamples);
     }
 
     void FixedUpdate()
@@ -64,6 +65,7 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         canMove = !statusEffects.IsStunned;
         updatePlayerHealthBarUI();
+        UpdateSampleCount(bloodSamples);
 
         if (Input.GetButtonDown("KnockbackDebug")) statusEffects.ApplyKnockback(transform.position + new Vector3(0, 0, 2), 5f);
 
@@ -151,6 +153,7 @@ public class PlayerController : MonoBehaviour, IDamage
         {
             var data = LevelManager.Instance.playerData;
             updatePlayerHealthBarUI();
+            UpdateSampleCount(bloodSamples);
         }
         Time.timeScale = 1.0f;
         if (scene.name.Equals("MainMenu")) gameObject.SetActive(false);
@@ -169,5 +172,10 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         bloodSamples = count;
         GameManager.instance?.SampleCount(bloodSamples);
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.playerData.bloodSample = bloodSamples;
+            LevelManager.Instance.SaveGame();
+        }
     }
 }
