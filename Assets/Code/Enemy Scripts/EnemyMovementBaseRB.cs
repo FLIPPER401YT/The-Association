@@ -59,10 +59,8 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
     {
         if (!target)
         {
-            if (enableRoam) RoamStep();
-            else BrakeToStop();
 
-            // Gravity handling is left to derived classes via ApplyGravity() if they want it.
+            NoTargetStep();
             ApplyGravity();
             return;
         }
@@ -78,6 +76,13 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
 
     // derived movers can apply gravity here (base does nothing)
     protected virtual void ApplyGravity() { /* no-op by default */ }
+
+    protected virtual void NoTargetStep()
+    {
+        // default: the old behavior (roam if enabled)
+        if (enableRoam) RoamStep();
+        else BrakeToStop();
+    }
 
     // ---------------- ROAM CORE ----------------
     void RoamStep()
