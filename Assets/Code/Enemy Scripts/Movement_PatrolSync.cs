@@ -4,7 +4,7 @@ using System.Collections;
 public class Movement_PatrolSync : EnemyMovementBaseRB
 {
     [SerializeField] private EnemyPatrol patrol;
-    [SerializeField] private float pause = 0.8f;
+    [SerializeField] private float pause;
     private bool isPaused;
 
     protected override void Awake()
