@@ -8,12 +8,13 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance {  get; private set; }
     public PlayerManager playerData = new PlayerManager();
     private List<GameObject> objects = new List<GameObject>();
-
+    private Dictionary<string, bool> objectsDestroyed = new Dictionary<string, bool>();
     public delegate void OnAllObjectsDestroyed();
     public event OnAllObjectsDestroyed ObjectsDestroyed;
     public PlayerController player;
     public bool isVictoryScene = false;
 
+    #region Awake and Start
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -35,28 +36,7 @@ public class LevelManager : MonoBehaviour
             Cursor.visible = true;
         }
     }
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnLoaded;
-    }
-    private IEnumerator DelayedUnlock()
-    {
-        yield return new WaitForEndOfFrame();
-        GameManager.instance?.mouseVisibility();
-    }
-    private void OnLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if(scene.name == "VictoryScene")
-        {
-            StartCoroutine(DelayedUnlock());
-            isVictoryScene = true;
-        }
-        else
-        {
-            GameManager.instance?.mouseInvisibility();
-            isVictoryScene= false;
-        }
-    }
+    #endregion
     #region Persistence
     public void SaveGame()
     {
@@ -79,8 +59,24 @@ public class LevelManager : MonoBehaviour
         LoadGame();
         SceneManager.sceneLoaded -= OnScene;
     }
+    private void OnLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "VictoryScene")
+        {
+            StartCoroutine(DelayedUnlock());
+            isVictoryScene = true;
+        }
+        else
+        {
+            GameManager.instance?.mouseInvisibility();
+            isVictoryScene= false;
+        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnLoaded;
+    }
     #endregion
-
     #region ObjectTracking
     public void RegisterTrackable(GameObject Object)
     {
@@ -95,13 +91,17 @@ public class LevelManager : MonoBehaviour
         }
     }
     #endregion
-
     #region WinCondition
     public void Victory()
     {
         isVictoryScene = true;
         Destroy(GameManager.instance.player);
         SceneManager.LoadScene("VictoryScene");
+        GameManager.instance?.mouseVisibility();
+    }
+    private IEnumerator DelayedUnlock()
+    {
+        yield return new WaitForEndOfFrame();
         GameManager.instance?.mouseVisibility();
     }
     #endregion
