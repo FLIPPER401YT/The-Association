@@ -98,6 +98,20 @@ public class PlayerShoot : MonoBehaviour
         }
     }
 
+    public void AddAmmoAll(int amount)
+    {
+        foreach (GunStats gun in gunList)
+        {
+            if (gun.clip < gun.clipSize)
+            {
+                amount -= gun.clipSize - gun.clip;
+                gun.clip = gun.clipSize;
+            }
+            gun.ammo += amount;
+            gun.ammo = Mathf.Clamp(gun.ammo, 0, gun.maxAmmo);
+        }
+    }
+
     public void Reload()
     {
         if (!isMelee && Input.GetButtonDown("Reload"))
