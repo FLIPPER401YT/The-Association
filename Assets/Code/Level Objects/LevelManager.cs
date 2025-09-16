@@ -8,6 +8,7 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance {  get; private set; }
     public PlayerManager playerData = new PlayerManager();
     private List<GameObject> objects = new List<GameObject>();
+
     public delegate void OnAllObjectsDestroyed();
     public event OnAllObjectsDestroyed ObjectsDestroyed;
     public PlayerController player;
