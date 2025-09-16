@@ -136,7 +136,7 @@ MonoBehaviour:
   slamOuterRadius: 15
   slamInnerRadius: 0
   slamDamage: 10
-  slamStunDuration: 2
+  slamStunDuration: 5
   slamKnock: 20
   fleeTime: 10
   fleeSpeed: 30
@@ -291,6 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94027e9b2d8c0054a873a5c2b7d8354b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objective: {fileID: 0}
 --- !u!1 &3302234769193554402
 GameObject:
   m_ObjectHideFlags: 0
