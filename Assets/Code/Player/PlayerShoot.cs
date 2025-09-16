@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
+
     [SerializeField] int damage;
     [SerializeField] float fireRate;
     [SerializeField] float fireDistance;
@@ -14,15 +15,16 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] GameObject shootPoint;
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] LayerMask shootMask;
-    [SerializeField] List<GunStats> gunList;
+    [SerializeField] public List<GunStats> gunList;
     [SerializeField] MeleeStats meleeStats;
     [SerializeField] MeshFilter weaponMesh;
     [SerializeField] Renderer weaponRenderer;
     [SerializeField] Animator weaponAnimator;
+    [SerializeField] AudioSource weaponAudioSource;
 
     float fireTimer = 0;
     bool isMelee = false;
-    int gunListPos = 0;
+    public int gunListPos = 0;
 
     void Start()
     {
@@ -98,6 +100,20 @@ public class PlayerShoot : MonoBehaviour
         }
     }
 
+    public void AddAmmoAll(int amount)
+    {
+        foreach (GunStats gun in gunList)
+        {
+            if (gun.clip < gun.clipSize)
+            {
+                amount -= gun.clipSize - gun.clip;
+                gun.clip = gun.clipSize;
+            }
+            gun.ammo += amount;
+            gun.ammo = Mathf.Clamp(gun.ammo, 0, gun.maxAmmo);
+        }
+    }
+
     public void Reload()
     {
         if (!isMelee && Input.GetButtonDown("Reload"))
@@ -119,46 +135,57 @@ public class PlayerShoot : MonoBehaviour
             }
             else fireRate = meleeStats.swingRate;
 
-            if ((isMelee || gunList[gunListPos].clip > 0) && ((isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1")) || (isMelee && Input.GetButtonDown("Fire2"))))
+            if ((isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1")) || (isMelee && Input.GetButtonDown("Fire2")))
             {
-                Dictionary<IDamage, int> damages = new Dictionary<IDamage, int>();
-                for (int bullet = 0; bullet < bullets; bullet++)
-                {
-                    RaycastHit hit;
-                    Vector3 randomSpread = Random.insideUnitSphere * (bloomMod / 100.0f);
-                    if (Physics.Raycast(shootPoint.transform.position,
-                                        (shootPoint.transform.forward + randomSpread).normalized,
-                                        out hit,
-                                        fireDistance,
-                                        shootMask))
-                    {
-                        IDamage dmg = hit.transform.GetComponent<IDamage>();
-                        if (dmg != null)
-                        {
-                            if (damages.ContainsKey(dmg)) damages[dmg] += isMelee && heavyAttack ? damage * 2 : damage;
-                            else damages.Add(dmg, isMelee && heavyAttack ? damage * 2 : damage);
-                            Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
-                        }
-
-                    }
-                    if (!isMelee)
-                    {
-                        Bullet bulletObj = Instantiate(bulletPrefab, shootPoint.transform.position, Quaternion.LookRotation((shootPoint.transform.forward + randomSpread).normalized), null).GetComponent<Bullet>();
-                        bulletObj.targetPoint = hit.point;
-                        bulletObj.distance = fireDistance;
-                        bulletObj.bulletSpeed = bulletSpeed;
-                    }
-                }
-
-                foreach (KeyValuePair<IDamage, int> dmg in damages) dmg.Key.TakeDamage(dmg.Value);
-
                 if (!isMelee)
                 {
-                    gunList[gunListPos].clip--;
-                    weaponAnimator.SetTrigger("Ranged");
+                    weaponAudioSource.pitch = Random.Range(1f, 2f);
+                    if (gunList[gunListPos].clip > 0) weaponAudioSource.PlayOneShot(gunList[gunListPos].shootSound);
+                    else weaponAudioSource.PlayOneShot(gunList[gunListPos].shootNoAmmoSound);
+                    //GameManager.instance.playerScript.audioSource.pitch = 1;
                 }
-                else weaponAnimator.SetTrigger("Melee");
-                fireTimer = 0;
+
+                if (isMelee || gunList[gunListPos].clip > 0)
+                {
+                    Dictionary<IDamage, int> damages = new Dictionary<IDamage, int>();
+                    for (int bullet = 0; bullet < bullets; bullet++)
+                    {
+                        RaycastHit hit;
+                        Vector3 randomSpread = Random.insideUnitSphere * (bloomMod / 100.0f);
+                        if (Physics.Raycast(shootPoint.transform.position,
+                                            (shootPoint.transform.forward + randomSpread).normalized,
+                                            out hit,
+                                            fireDistance,
+                                            shootMask))
+                        {
+                            IDamage dmg = hit.transform.GetComponent<IDamage>();
+                            if (dmg != null)
+                            {
+                                if (damages.ContainsKey(dmg)) damages[dmg] += isMelee && heavyAttack ? damage * 2 : damage;
+                                else damages.Add(dmg, isMelee && heavyAttack ? damage * 2 : damage);
+                                Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                            }
+
+                        }
+                        if (!isMelee)
+                        {
+                            Bullet bulletObj = Instantiate(bulletPrefab, shootPoint.transform.position, Quaternion.LookRotation((shootPoint.transform.forward + randomSpread).normalized), null).GetComponent<Bullet>();
+                            bulletObj.targetPoint = hit.point;
+                            bulletObj.distance = fireDistance;
+                            bulletObj.bulletSpeed = bulletSpeed;
+                        }
+                    }
+
+                    foreach (KeyValuePair<IDamage, int> dmg in damages) dmg.Key.TakeDamage(dmg.Value);
+
+                    if (!isMelee)
+                    {
+                        gunList[gunListPos].clip--;
+                        weaponAnimator.SetTrigger("Ranged");
+                    }
+                    else weaponAnimator.SetTrigger("Melee");
+                    fireTimer = 0;
+                }
             }
         }
     }

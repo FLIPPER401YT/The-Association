@@ -14,4 +14,6 @@ public class GunStats : ScriptableObject
     public int maxAmmo;
     public bool isAutomatic;
     public GameObject model;
+    public AudioClip shootSound;
+    public AudioClip shootNoAmmoSound;
 }
