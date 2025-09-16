@@ -54,6 +54,8 @@ public class MothmanBoss : Base_Boss_AI
     [SerializeField] float separationSpeed;
     [SerializeField] bool keepSpaceWhileAttacking = true;
 
+    [Header("Debug")]
+    [SerializeField] bool logAttacks = true;   // <--- NEW: toggle logging
     [Header("Debug Gizmos")]
     [SerializeField] int ringSegments;
 
@@ -125,45 +127,46 @@ public class MothmanBoss : Base_Boss_AI
     //3. Else whichever is valid
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
-        //1.
         if (blindCD <= 0f)
         {
+            if (logAttacks) Debug.Log($"[Mothman] Pick: Shriek (dist {distToPlayer:F2})");
             yield return StartCoroutine(DoBlindingShriek());
             yield break;
         }
 
-        //check validities for melee/ranged
         bool inSwoopRange = distToPlayer <= swoopTriggerRange;
         bool canRanged = (rangedCD <= 0f) && (distToPlayer <= rangedRange);
 
         if (inSwoopRange && canRanged)
         {
-            //2.
             bool pickMelee = Random.value < meleeBiasWhenBothValid;
+            if (logAttacks) Debug.Log($"[Mothman] Pick (both valid): {(pickMelee ? "Swoop" : "SpitBolt")}  dist={distToPlayer:F2}");
             if (pickMelee) yield return StartCoroutine(DoSwoopClaw());
             else yield return StartCoroutine(DoSpitBolt());
             yield break;
         }
         else if (inSwoopRange)
         {
+            if (logAttacks) Debug.Log($"[Mothman] Pick: Swoop (dist {distToPlayer:F2})");
             yield return StartCoroutine(DoSwoopClaw());
             yield break;
         }
         else if (canRanged)
         {
+            if (logAttacks) Debug.Log($"[Mothman] Pick: SpitBolt (dist {distToPlayer:F2})");
             yield return StartCoroutine(DoSpitBolt());
             yield break;
         }
 
-        //Otherwise keep cashing this tick
+        //Otherwise keep chasing this tick
         yield return null;
-
     }
 
     //-------- Attacks --------
 
     IEnumerator DoSpitBolt()
     {
+        if (logAttacks) Debug.Log("[Mothman] Start SpitBolt");
         // small hover brake + face
         FacePlayer();
         rb.AddForce(-GetPlanarVel(), ForceMode.VelocityChange);
@@ -188,14 +191,16 @@ public class MothmanBoss : Base_Boss_AI
                 proj.owner = transform;    // so it won't hit the boss
             }
             rangedCD = rangedCooldown;
+            if (logAttacks) Debug.Log("[Mothman] SpitBolt fired");
         }
 
         yield return null;
-
     }
 
     IEnumerator DoSwoopClaw()
     {
+        if (logAttacks) Debug.Log("[Mothman] Start Swoop");
+
         float t = 0f;
 
         // brief rise for telegraph
@@ -207,36 +212,45 @@ public class MothmanBoss : Base_Boss_AI
             yield return new WaitForFixedUpdate();
         }
 
-        //Dive window
+        // --- Deal damage at most once for this entire swoop ---
+        bool dealtDamageThisSwoop = false;
+
+        // Dive window
         t = 0f;
         while (t < diveTime)
         {
             t += Time.fixedDeltaTime;
+
             Vector3 to = (player.position - transform.position); to.y = 0f;
             Vector3 desired = (to.sqrMagnitude > 0.1f ? to.normalized : transform.forward) * diveSpeed;
             Vector3 accel = Vector3.ClampMagnitude(desired - GetPlanarVel(), maxAccel * 1.2f);
             rb.AddForce(new Vector3(accel.x, -verticalAccel, accel.z), ForceMode.Acceleration);
 
-            // ---- Damage bubble at claws (now uses explicit attack point)
-            Vector3 center = swoopAttackPos
-                ? swoopAttackPos.position
-                : transform.position + transform.TransformVector(clawOffset);
-
-            var hits = Physics.OverlapSphere(center, clawRadius, meleeHitMask, QueryTriggerInteraction.Ignore);
-            foreach (var h in hits)
+            // Damage bubble at claws (uses explicit attack point)
+            if (!dealtDamageThisSwoop)
             {
-                // skip self/same-rigidbody to avoid self-damage
-                if (h.transform == transform || h.transform.IsChildOf(transform)) continue;
-                if (h.attachedRigidbody && h.attachedRigidbody == rb) continue;
+                Vector3 center = swoopAttackPos
+                    ? swoopAttackPos.position
+                    : transform.position + transform.TransformVector(clawOffset);
 
-                // (optional guard) only hit the player hierarchy if assigned
-                if (player && !(h.transform == player || h.transform.IsChildOf(player))) continue;
-
-                var dmg = FindDamage(h);
-                if (dmg != null)
+                var hits = Physics.OverlapSphere(center, clawRadius, meleeHitMask, QueryTriggerInteraction.Ignore);
+                foreach (var h in hits)
                 {
-                    dmg.TakeDamage((int)clawDamage);
-                    break; // hit one target per frame; remove if you want multi-hit
+                    // skip self/same-rigidbody
+                    if (h.transform == transform || h.transform.IsChildOf(transform)) continue;
+                    if (h.attachedRigidbody && h.attachedRigidbody == rb) continue;
+
+                    // only hit the player hierarchy (optional guard)
+                    if (player && !(h.transform == player || h.transform.IsChildOf(player))) continue;
+
+                    var dmg = FindDamage(h);
+                    if (dmg != null)
+                    {
+                        dmg.TakeDamage((int)clawDamage);
+                        if (logAttacks) Debug.Log($"[Mothman] Swoop HIT for {clawDamage} at {center}");
+                        dealtDamageThisSwoop = true;
+                        break;
+                    }
                 }
             }
 
@@ -244,12 +258,14 @@ public class MothmanBoss : Base_Boss_AI
             yield return new WaitForFixedUpdate();
         }
 
+        if (logAttacks) Debug.Log("[Mothman] End Swoop (recover)");
         yield return new WaitForSeconds(postSwoopRecover);
-
     }
 
     IEnumerator DoBlindingShriek()
     {
+        if (logAttacks) Debug.Log("[Mothman] Start Shriek");
+
         // Play sound
         if (shriekClip) AudioSource.PlayClipAtPoint(shriekClip, transform.position, shriekVolume);
 
@@ -269,12 +285,13 @@ public class MothmanBoss : Base_Boss_AI
             {
                 var status = player.GetComponentInChildren<StatusEffects>();
                 if (status) status.ApplyBlind(blindDuration);
+                if (logAttacks) Debug.Log($"[Mothman] Shriek applied BLIND for {blindDuration:F2}s");
             }
         }
 
         blindCD = blindCooldown;
+        if (logAttacks) Debug.Log("[Mothman] End Shriek");
         yield return new WaitForSeconds(0.2f); //tiny post cast hover
-
     }
 
     // Helper: MaintainPersonalSpace

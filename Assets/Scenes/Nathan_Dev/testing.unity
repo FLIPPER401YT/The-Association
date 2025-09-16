@@ -1033,15 +1033,20 @@ MonoBehaviour:
   clawDamage: 20
   clawRadius: 2
   postSwoopRecover: 0.6
+  swoopAttackPos: {fileID: 0}
+  clawOffset: {x: 0, y: -0.2, z: 1.2}
+  meleeHitMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   blindRadius: 50
   blindDuration: 5
   blindCooldown: 10
   shriekClip: {fileID: 8300000, guid: f6ba0790873842b408ccdae135222584, type: 3}
   shriekVolume: 1
   meleeBiasWhenBothValid: 0.6
-  minPersonalSpace: 6
-  separationSpeed: 8
-  keepSpaceWhileAttacking: 1
+  minPersonalSpace: 0
+  separationSpeed: 0
+  keepSpaceWhileAttacking: 0
   ringSegments: 48
 --- !u!1001 &1871020279
 PrefabInstance:
