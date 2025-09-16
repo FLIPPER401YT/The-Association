@@ -124,6 +124,7 @@ MonoBehaviour:
   bulletSpeed: 200
   bloomMod: 0
   isAutomatic: 0
+  hitEffect: {fileID: 2156521725812720333, guid: 5ce5286334da1a840824a8425542b79f, type: 3}
   shootPoint: {fileID: 8937604189313975159}
   bulletPrefab: {fileID: 2146355934780771645, guid: 594ce16b677d2c049a6b86b7d5da4962, type: 3}
   shootMask:
