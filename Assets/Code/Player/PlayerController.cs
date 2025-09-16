@@ -78,6 +78,8 @@ public class PlayerController : MonoBehaviour, IDamage
 
         GameManager.instance.playerHealthText.text = health.ToString("F0");
         GameManager.instance.playerHealthMaxText.text = healthMax.ToString("F0");
+
+
     }
 
     public void Heal(int amount)
