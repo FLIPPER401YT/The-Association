@@ -258,6 +258,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7951363960414340280}
+  - component: {fileID: 4515978701193151024}
+  - component: {fileID: 2593919024262050588}
+  - component: {fileID: 6943266280159979868}
   - component: {fileID: 916949143658799426}
   - component: {fileID: 8776218185966148276}
   - component: {fileID: 6083961624674747043}
@@ -290,6 +293,92 @@ Transform:
   - {fileID: 8703031273531149841}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4515978701193151024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9003971440569338922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 182b66c3e456bdd49910ca023c6ab0a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  maxSpeed: 0
+  acceleration: 0
+  decel: 0
+  turnSpeed: 0
+  stopDistance: 0
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  avoidProbeDist: 0
+  sideProbeOffset: 0
+  avoidSteerStrength: 0
+  enableRoam: 1
+  roamRadius: 0
+  minHopDistance: 0
+  arriveRadius: 0
+  dwellRange: {x: 0, y: 0}
+  roamGroundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  patrolMover: {fileID: 6943266280159979868}
+  aggroMover: {fileID: 8776218185966148276}
+  startWithPatrol: 1
+--- !u!114 &2593919024262050588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9003971440569338922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceae4072c750f1942be9596ad7558545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &6943266280159979868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9003971440569338922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d7c5f500b0fc443b2e7b5e44f1cde6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  maxSpeed: 10
+  acceleration: 20
+  decel: 25
+  turnSpeed: 10
+  stopDistance: 1.4
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  avoidProbeDist: 1
+  sideProbeOffset: 0.5
+  avoidSteerStrength: 5
+  enableRoam: 0
+  roamRadius: 0
+  minHopDistance: 0
+  arriveRadius: 0
+  dwellRange: {x: 0, y: 0}
+  roamGroundMask:
+    serializedVersion: 2
+    m_Bits: 8
+  patrol: {fileID: 2593919024262050588}
+  pause: 1
 --- !u!114 &916949143658799426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,7 +401,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 137
   aggroMemorySeconds: 4
-  mover: {fileID: 8776218185966148276}
+  mover: {fileID: 4515978701193151024}
   enableDrops: 1
   drops:
   - prefab: {fileID: 8785546810196909131, guid: d6fdf5f2770771c428b0b4eb6129be4f, type: 3}
@@ -356,11 +445,11 @@ MonoBehaviour:
   avoidProbeDist: 1
   sideProbeOffset: 0.5
   avoidSteerStrength: 5
-  enableRoam: 1
-  roamRadius: 5
-  minHopDistance: 10
-  arriveRadius: 0.5
-  dwellRange: {x: 0.1, y: 0.5}
+  enableRoam: 0
+  roamRadius: 0
+  minHopDistance: 0
+  arriveRadius: 0
+  dwellRange: {x: 0, y: 0}
   roamGroundMask:
     serializedVersion: 2
     m_Bits: 8
