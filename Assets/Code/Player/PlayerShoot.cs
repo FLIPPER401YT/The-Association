@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    public static PlayerShoot instance;
 
     [SerializeField] int damage;
     [SerializeField] float fireRate;

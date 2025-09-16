@@ -87,10 +87,36 @@ public class ButtonFunctions : MonoBehaviour
         GameManager.instance.settingsClosed();
     }
 
-    public void buyAmmo(int ammoAmount)
+    public void buyAmmo()
     {
-        ammoAmount = 1;
-        GameManager player = new GameManager();
-        PlayerShoot.instance.AddAmmo(ammoAmount);
+        int price = 1;
+        int ammoAmount = 10;
+        if(GameManager.instance.playerScript.bloodSamples > 0)
+        {
+            GameManager.instance.playerScript.shoot.AddAmmoAll(ammoAmount);
+            GameManager.instance.playerScript.bloodSamples -= price;
+            GameManager.instance.playerScript.UpdateSampleCount(GameManager.instance.playerScript.bloodSamples);
+        }
+        else
+        {
+            return;
+        }
+        
+    }
+
+    public void buyHealth()
+    {
+        int price = 1;
+        int healthAmount = 10;
+        if (GameManager.instance.playerScript.bloodSamples > 0 && GameManager.instance.playerScript.health < 100)
+        {
+            GameManager.instance.playerScript.Heal(healthAmount);
+            GameManager.instance.playerScript.bloodSamples -= price;
+            GameManager.instance.playerScript.UpdateSampleCount(GameManager.instance.playerScript.bloodSamples);
+        }
+        else
+        {
+            return;
+        }
     }
 }
