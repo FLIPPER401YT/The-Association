@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
+    public static PlayerShoot instance;
+
     [SerializeField] int damage;
     [SerializeField] float fireRate;
     [SerializeField] float fireDistance;
@@ -14,7 +16,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] GameObject shootPoint;
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] LayerMask shootMask;
-    [SerializeField] List<GunStats> gunList;
+    [SerializeField] public List<GunStats> gunList;
     [SerializeField] MeleeStats meleeStats;
     [SerializeField] MeshFilter weaponMesh;
     [SerializeField] Renderer weaponRenderer;
@@ -22,7 +24,7 @@ public class PlayerShoot : MonoBehaviour
 
     float fireTimer = 0;
     bool isMelee = false;
-    int gunListPos = 0;
+    public int gunListPos = 0;
 
     void Start()
     {

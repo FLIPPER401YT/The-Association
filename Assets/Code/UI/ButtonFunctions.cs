@@ -86,4 +86,11 @@ public class ButtonFunctions : MonoBehaviour
         GameManager.instance.stateUnpaused();
         GameManager.instance.settingsClosed();
     }
+
+    public void buyAmmo(int ammoAmount)
+    {
+        ammoAmount = 1;
+        GameManager player = new GameManager();
+        PlayerShoot.instance.AddAmmo(ammoAmount);
+    }
 }
