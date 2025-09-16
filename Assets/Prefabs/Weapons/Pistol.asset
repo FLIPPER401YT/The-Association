@@ -23,3 +23,5 @@ MonoBehaviour:
   maxAmmo: 120
   isAutomatic: 1
   model: {fileID: 9004096622392337306, guid: 83001077f5963ef4bbc461da2fb7a98a, type: 3}
+  shootSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
+  shootNoAmmoSound: {fileID: 8300000, guid: 7ff8c3bba8841004eb03c8192cd845a3, type: 3}
