@@ -71,6 +71,8 @@ MonoBehaviour:
   deathSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
   shoot: {fileID: 8254974378684984855}
   audioSource: {fileID: 142140309991897775}
+  healthMax: 0
+  bloodSamples: 0
   spawnPoint: {fileID: 0}
 --- !u!114 &1801471411105332039
 MonoBehaviour:
@@ -310,7 +312,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!82 &142140309991897775
 AudioSource:
   m_ObjectHideFlags: 0

@@ -33,6 +33,7 @@ public class ButtonFunctions : MonoBehaviour
 
     public void restart()
     {
+        quitingToMain = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         GameManager.instance.stateUnpaused();
     }

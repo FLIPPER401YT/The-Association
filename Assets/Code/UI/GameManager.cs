@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+        ButtonFunctions.quitingToMain = false;
         timeScaleOriginal = Time.timeScale;
 
         player = GameObject.FindWithTag("Player");
