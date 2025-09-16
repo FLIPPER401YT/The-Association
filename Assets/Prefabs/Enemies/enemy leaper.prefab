@@ -103,7 +103,7 @@ MonoBehaviour:
   stopDistance: 1.4
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 2048
   avoidProbeDist: 1
   sideProbeOffset: 0.5
   avoidSteerStrength: 5

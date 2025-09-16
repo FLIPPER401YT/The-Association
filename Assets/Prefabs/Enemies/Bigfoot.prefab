@@ -103,7 +103,7 @@ MonoBehaviour:
   turnLerp: 8
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   avoidStrength: 0
   lookAhead: 2
   whiskerAngle: 30
