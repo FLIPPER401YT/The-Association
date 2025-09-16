@@ -45,11 +45,11 @@ public class EnemyFlyingMovementRB : EnemyMovementBaseRB
     float strafeTimer;
     int strafeSign = 1;
 
-    // roam state (when not engaged)
-    Vector3 roamCenter;
-    Vector3 roamTarget;
-    float roamTimer;
-    bool hasRoamTarget;
+    // roam state
+    Vector3 flyRoamCenter;
+    Vector3 flyRoamTarget;
+    float flyRoamTimer;
+    bool hasFlyRoamTarget;
 
     // avoidance memory
     int avoidSign = 0;
@@ -63,8 +63,8 @@ public class EnemyFlyingMovementRB : EnemyMovementBaseRB
         rb.useGravity = false;
 
         startY = transform.position.y;
-        roamCenter = transform.position;
-        PickNewRoamTarget();
+        flyRoamCenter = transform.position;
+        PickNewFlyRoamTarget();
 
         // init smoothing dirs
         smoothPlanarDir = transform.forward; smoothPlanarDir.y = 0f;
@@ -109,17 +109,17 @@ public class EnemyFlyingMovementRB : EnemyMovementBaseRB
         if (!engaged)
         {
             // roaming flight (XZ) with pause
-            if (!hasRoamTarget || Vector3.Distance(transform.position, roamTarget) <= arriveRadius)
+            if (!hasFlyRoamTarget || Vector3.Distance(transform.position, flyRoamTarget) <= arriveRadius)
             {
-                roamTimer += Time.fixedDeltaTime;
-                if (roamTimer >= roamPause)
+                flyRoamTimer += Time.fixedDeltaTime;
+                if (flyRoamTimer >= roamPause)
                 {
-                    roamTimer = 0f;
-                    PickNewRoamTarget();
+                    flyRoamTimer = 0f;
+                    PickNewFlyRoamTarget();
                 }
             }
 
-            Vector3 toTarget = roamTarget - transform.position; toTarget.y = 0f;
+            Vector3 toTarget = flyRoamTarget - transform.position; toTarget.y = 0f;
             if (toTarget.sqrMagnitude > 0.001f)
             {
                 targetPlanarDir = toTarget.normalized;
@@ -179,7 +179,7 @@ public class EnemyFlyingMovementRB : EnemyMovementBaseRB
         // Face the player (or roam direction if not engaged)
         Vector3 faceDir = engaged
             ? (target.position - transform.position)
-            : (hasRoamTarget ? (roamTarget - transform.position) : smoothPlanarDir);
+            : (hasFlyRoamTarget ? (flyRoamTarget - transform.position) : smoothPlanarDir);
 
         faceDir.y = 0f; if (faceDir.sqrMagnitude < 0.0001f) faceDir = smoothPlanarDir;
         smoothFaceDir = Vector3.Slerp(smoothFaceDir, faceDir.normalized, Time.fixedDeltaTime * faceSmoothing);
@@ -189,22 +189,25 @@ public class EnemyFlyingMovementRB : EnemyMovementBaseRB
     // --- Flying roam used when no target ---
     void FlyingRoamStep()
     {
-        if (!hasRoamTarget || Vector3.Distance(transform.position, roamTarget) <= arriveRadius)
+        if (!hasFlyRoamTarget || Vector3.Distance(transform.position, flyRoamTarget) <= arriveRadius)
         {
-            roamTimer += Time.fixedDeltaTime;
-            if (roamTimer >= roamPause)
+            flyRoamTimer += Time.fixedDeltaTime;
+            if (flyRoamTimer >= roamPause)
             {
-                roamTimer = 0f;
-                PickNewRoamTarget();
+                flyRoamTimer = 0f;
+                PickNewFlyRoamTarget();
             }
         }
 
-        Vector3 to = roamTarget - transform.position; to.y = 0f;
+        Vector3 to = flyRoamTarget - transform.position; to.y = 0f;
         Vector3 dir = to.sqrMagnitude > 0.01f ? to.normalized : Vector3.zero;
 
         // smooth plan, compute altitude
-        smoothPlanarDir = Vector3.Slerp(smoothPlanarDir, (dir == Vector3.zero ? smoothPlanarDir : dir),
-                                        Time.fixedDeltaTime * planSmoothing);
+        smoothPlanarDir = Vector3.Slerp(
+            smoothPlanarDir,
+            (dir == Vector3.zero ? smoothPlanarDir : dir),
+            Time.fixedDeltaTime * planSmoothing
+        );
 
         float targetY = lockToStartAltitude ? startY : transform.position.y; // hold current if no target
         float vy = Mathf.Clamp((targetY - transform.position.y) * altitudeLerp, -acceleration, acceleration);
@@ -219,7 +222,7 @@ public class EnemyFlyingMovementRB : EnemyMovementBaseRB
         MoveFree(wanted.normalized * Mathf.Min(maxSpeed > 0 ? maxSpeed : speedCap, wanted.magnitude));
 
         // face roam direction
-        Vector3 faceDir = (roamTarget - transform.position); faceDir.y = 0f;
+        Vector3 faceDir = (flyRoamTarget - transform.position); faceDir.y = 0f;
         if (faceDir.sqrMagnitude < 0.0001f) faceDir = smoothPlanarDir;
         smoothFaceDir = Vector3.Slerp(smoothFaceDir, faceDir.normalized, Time.fixedDeltaTime * faceSmoothing);
         Face(smoothFaceDir);
@@ -288,24 +291,24 @@ public class EnemyFlyingMovementRB : EnemyMovementBaseRB
 #endif
 
     // --- Roam picker for flyers (XZ), uses base obstacleMask/roamRadius ---
-    void PickNewRoamTarget()
+    void PickNewFlyRoamTarget()
     {
         for (int i = 0; i < 6; i++)
         {
             Vector3 offset = Random.insideUnitSphere * roamRadius; offset.y = 0f;
-            Vector3 p = roamCenter + offset;
+            Vector3 p = flyRoamCenter + offset;
 
             Vector3 dir = (p - transform.position); dir.y = 0f;
             if (dir.sqrMagnitude < 1f) continue;
 
             if (!Physics.SphereCast(transform.position, avoidRadius, dir.normalized, out _, dir.magnitude, obstacleMask, QueryTriggerInteraction.Ignore))
             {
-                roamTarget = p;
-                hasRoamTarget = true;
+                flyRoamTarget = p;
+                hasFlyRoamTarget = true;
                 return;
             }
         }
-        roamTarget = roamCenter;
-        hasRoamTarget = true;
+        flyRoamTarget = flyRoamCenter;
+        hasFlyRoamTarget = true;
     }
 }
