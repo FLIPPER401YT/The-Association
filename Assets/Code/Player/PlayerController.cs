@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour, IDamage
     public static PlayerController instance;
 
     [SerializeField] public int health;
+    [SerializeField] int lastBitOfLifeDamageAmount;
     [SerializeField] PlayerJump jump;
     [SerializeField] PlayerCrouch crouch;
     [SerializeField] PlayerMovement movement;
@@ -94,7 +95,9 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         if (enabled)
         {
-            health -= damage;
+            if (damage >= lastBitOfLifeDamageAmount && health - damage <= 0) health = 1;
+            else health -= damage;
+            
             if (LevelManager.Instance != null)
             {
                 LevelManager.Instance.playerData.hp = health;

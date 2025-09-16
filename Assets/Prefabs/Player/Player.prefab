@@ -62,6 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  lastBitOfLifeDamageAmount: 30
   jump: {fileID: 2027198226169990103}
   crouch: {fileID: 4178799075887348108}
   movement: {fileID: 4592218793867380759}
