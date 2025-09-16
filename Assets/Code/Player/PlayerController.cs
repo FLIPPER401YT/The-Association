@@ -44,12 +44,13 @@ public class PlayerController : MonoBehaviour, IDamage
         healthMax = health;
         if (LevelManager.Instance != null)
         {
-            var data = LevelManager.Instance.playerData;
-            health = data.hp;
-            healthMax = data.hpMax;
+            var data = LevelManager.Instance.currentSave;
+            health = data.health;
+            healthMax = data.healthMax;
         }
         SpawnPlayer();
         updatePlayerHealthBarUI();
+        UpdateSampleCount(bloodSamples);
     }
 
     void FixedUpdate()
@@ -84,11 +85,7 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         health += amount;
         health = Mathf.Clamp(health, 0, healthMax);
-        if (LevelManager.Instance != null)
-        {
-            LevelManager.Instance.playerData.hp = health;
-            LevelManager.Instance.SaveGame();
-        }
+        SavePlayerStats();
     }
 
     public void TakeDamage(int damage)
@@ -97,12 +94,7 @@ public class PlayerController : MonoBehaviour, IDamage
         {
             if (damage >= lastBitOfLifeDamageAmount && health - damage <= 0) health = 1;
             else health -= damage;
-            
-            if (LevelManager.Instance != null)
-            {
-                LevelManager.Instance.playerData.hp = health;
-                LevelManager.Instance.SaveGame();
-            }
+            SavePlayerStats();
             StartCoroutine(damageScreenEffect());
             updatePlayerHealthBarUI();
 
@@ -137,6 +129,7 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         bloodSamples += amount;
         UpdateSampleCount(bloodSamples);
+        SavePlayerStats();
     }
     public void SpawnPlayer()
     {
@@ -152,8 +145,11 @@ public class PlayerController : MonoBehaviour, IDamage
         if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
         if (LevelManager.Instance != null)
         {
-            var data = LevelManager.Instance.playerData;
+            var data = LevelManager.Instance.currentSave;
+            health = data.health;
+            bloodSamples = data.bloodSamples;
             updatePlayerHealthBarUI();
+            UpdateSampleCount(bloodSamples);
         }
         Time.timeScale = 1.0f;
         if (scene.name.Equals("MainMenu")) gameObject.SetActive(false);
@@ -172,5 +168,14 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         bloodSamples = count;
         GameManager.instance?.SampleCount(bloodSamples);
+    }
+    void SavePlayerStats()
+    {
+        if(LevelManager.Instance != null)
+        {
+            LevelManager.Instance.currentSave.health = health;
+            LevelManager.Instance.currentSave.bloodSamples = bloodSamples;
+            LevelManager.Instance.SaveGame();
+        }
     }
 }

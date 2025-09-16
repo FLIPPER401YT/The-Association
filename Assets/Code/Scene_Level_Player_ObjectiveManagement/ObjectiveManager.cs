@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class ObjectiveManager : MonoBehaviour
 {
-    [SerializeField] GameObject objective;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private string bossName;
+    [SerializeField] private GameObject bossPrefab;
+    private void Start()
     {
-        LevelManager.Instance.RegisterTrackable(objective);
+        LevelManager.Instance?.RegisterTrackable(bossPrefab);
     }
-
-    // Update is called once per frame
-    void OnDestroy()
+    private void OnDestroy()
     {
-        if(LevelManager.Instance != null) LevelManager.Instance.UnregisterTrackable(objective);
+        if(LevelManager.Instance != null)
+        {
+            LevelManager.Instance.UnregisterTrackable(bossPrefab);
+            if (!string.IsNullOrEmpty(bossName)) LevelManager.Instance.MarkBossDefeated(bossName);
+        }
     }
 }
