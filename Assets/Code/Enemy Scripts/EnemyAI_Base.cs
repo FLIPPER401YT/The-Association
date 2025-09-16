@@ -129,7 +129,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
             aggro = true;
             if (mover && player) mover.SetTarget(player);
 
-            StartCoroutine(flashRed());
+            //StartCoroutine(flashRed());
         }
 
         if (HP <= 0)

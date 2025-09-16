@@ -10,6 +10,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] float bulletSpeed;
     [SerializeField] float bloomMod;
     [SerializeField] bool isAutomatic;
+    [SerializeField] GameObject hitEffect;
     [SerializeField] GameObject shootPoint;
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] LayerMask shootMask;
@@ -136,7 +137,9 @@ public class PlayerShoot : MonoBehaviour
                         {
                             if (damages.ContainsKey(dmg)) damages[dmg] += isMelee && heavyAttack ? damage * 2 : damage;
                             else damages.Add(dmg, isMelee && heavyAttack ? damage * 2 : damage);
+                            Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
                         }
+
                     }
                     if (!isMelee)
                     {
