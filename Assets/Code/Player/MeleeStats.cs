@@ -7,4 +7,6 @@ public class MeleeStats : ScriptableObject
     public float swingRate;
     public float swingDistance;
     public GameObject model;
+    public AudioClip attackSound;
+    public AudioClip heavyAttackSound;
 }

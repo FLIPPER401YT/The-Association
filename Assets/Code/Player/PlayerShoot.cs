@@ -137,12 +137,17 @@ public class PlayerShoot : MonoBehaviour
 
             if ((isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1")) || (isMelee && Input.GetButtonDown("Fire2")))
             {
+                weaponAudioSource.pitch = Random.Range(1f, 2f);
                 if (!isMelee)
                 {
-                    weaponAudioSource.pitch = Random.Range(1f, 2f);
                     if (gunList[gunListPos].clip > 0) weaponAudioSource.PlayOneShot(gunList[gunListPos].shootSound);
                     else weaponAudioSource.PlayOneShot(gunList[gunListPos].shootNoAmmoSound);
                     //GameManager.instance.playerScript.audioSource.pitch = 1;
+                }
+                else
+                {
+                    if (!heavyAttack) weaponAudioSource.PlayOneShot(meleeStats.attackSound);
+                    else weaponAudioSource.PlayOneShot(meleeStats.heavyAttackSound);
                 }
 
                 if (isMelee || gunList[gunListPos].clip > 0)
