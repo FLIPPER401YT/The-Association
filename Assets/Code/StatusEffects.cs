@@ -26,6 +26,15 @@ public class StatusEffects : MonoBehaviour
     bool isKnockback = false;
     Vector3 knockbackDir;
 
+    // ---------------------- BLIND ----------------------
+    public bool IsBlinded => blindTimer > 0f;
+
+    //Raised when blindness starts (true) or ends (false).
+    public event Action<bool> OnBlindChanged;
+
+    float blindTimer;
+    
+
     void Update()
     {
         if (stunTimer > 0f)
@@ -48,6 +57,19 @@ public class StatusEffects : MonoBehaviour
                 isKnockback = false;
             }
         }
+
+        // ---------------- BLIND TICK ----------------
+        if (blindTimer > 0f)
+        {
+            blindTimer -= Time.deltaTime;
+            if (blindTimer <= 0f)
+            {
+                blindTimer = 0f;
+                if (showDebug) Debug.Log($"{gameObject.name} recovered from BLIND");
+                OnBlindChanged?.Invoke(false);
+            }
+        }
+        
     }
 
 
@@ -78,4 +100,33 @@ public class StatusEffects : MonoBehaviour
         knockbackDir = new Vector3(knockbackDir.x, 0, knockbackDir.z);
         isKnockback = true;
     }
+
+    // -------------------- BLIND API --------------------
+    
+    //Apply or refresh blind on THIS actor. Uses the max of remaining vs new duration.
+    
+    public void ApplyBlind(float duration)
+    {
+        bool wasBlinded = IsBlinded;
+        blindTimer = Mathf.Max(blindTimer, duration);
+
+        if (showDebug) Debug.Log($"{gameObject.name} is BLINDED for {duration:F1}s (remaining: {blindTimer:F1}s)");
+
+        if (!wasBlinded)
+        {
+            OnBlindChanged?.Invoke(true);
+        }
+    }
+
+    
+    //Clear blindness immediately.
+    
+    public void ClearBlind()
+    {
+        if (blindTimer <= 0f) return;
+        blindTimer = 0f;
+        if (showDebug) Debug.Log($"{gameObject.name} BLIND cleared");
+        OnBlindChanged?.Invoke(false);
+    }
+   
 }
