@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
@@ -70,6 +71,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public GameObject spawnPoint;
     [SerializeField] public TMP_Text samples;
+
+    [SerializeField] private GameObject pauseFirst;
+    [SerializeField] private GameObject loseFirst;
+    [SerializeField] private GameObject settingsFirst;
+    [SerializeField] private GameObject audioSettingsFirst;
+    [SerializeField] private GameObject controlsSettingsFirst;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -114,6 +121,8 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         menuCurr = MenuState.Pause;
         originalMenu = MenuState.Pause;
+
+        EventSystem.current.SetSelectedGameObject(pauseFirst);
     }
 
     public void stateUnpaused()
@@ -126,6 +135,7 @@ public class GameManager : MonoBehaviour
         menuActive = null;
         menuCurr = 0;
         originalMenu = 0;
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     public void updateToLoseScreen()
@@ -144,6 +154,7 @@ public class GameManager : MonoBehaviour
         menuActive = null;
         menuActive = menuSettings;
         menuActive.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(settingsFirst);
     }
 
     public void controlSettingsOpen()
@@ -153,6 +164,7 @@ public class GameManager : MonoBehaviour
         menuActive = menuControlSettings;
         menuActive.SetActive(true);
         menuCurr = MenuState.Settings;
+        EventSystem.current.SetSelectedGameObject(controlsSettingsFirst);
     }
 
     public void audioSettingsOpen()
@@ -162,6 +174,7 @@ public class GameManager : MonoBehaviour
         menuActive = menuAudioSettings;
         menuActive.SetActive(true);
         menuCurr = MenuState.Settings;
+        EventSystem.current.SetSelectedGameObject(audioSettingsFirst);
     }
     public void settingsClosed()
     {
@@ -173,6 +186,7 @@ public class GameManager : MonoBehaviour
                     menuActive = null;
                     menuActive = menuPause;
                     menuActive.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(pauseFirst);
                     break;
                 }
             case MenuState.Lose:
@@ -190,6 +204,7 @@ public class GameManager : MonoBehaviour
                     menuActive = null;
                     menuActive = menuSettings;
                     menuActive.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(settingsFirst);
                     break;
                 }
             default:
