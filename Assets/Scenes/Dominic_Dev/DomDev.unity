@@ -586,6 +586,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: enemy range test
       objectReference: {fileID: 0}
+    - target: {fileID: 1527598974048193402, guid: 9b378174520737248bb36053f1626362, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1622592029432521092, guid: 9b378174520737248bb36053f1626362, type: 3}
       propertyPath: m_LocalPosition.x
       value: -18
@@ -864,6 +868,10 @@ PrefabInstance:
     - target: {fileID: 2944074325720338504, guid: c11c942aa63cf564ea4f5a8a4e65b8d3, type: 3}
       propertyPath: m_Name
       value: Mothman
+      objectReference: {fileID: 0}
+    - target: {fileID: 2944074325720338504, guid: c11c942aa63cf564ea4f5a8a4e65b8d3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6654097013363482160, guid: c11c942aa63cf564ea4f5a8a4e65b8d3, type: 3}
       propertyPath: m_LocalPosition.x
