@@ -9,11 +9,11 @@ public class MothmanBoss : Base_Boss_AI
     [SerializeField] float verticalAccel;
 
     [Header("Ranges")]
-    [SerializeField] float rangedRange;      // Spit Bolt
+    [SerializeField] float rangedRange;          // Spit Bolt
     [SerializeField] float swoopTriggerRange;
 
     [Header("Ranged: Spit Bolt")]
-    [SerializeField] GameObject spitBoltPrefab;     // has Rigidbody + trigger collider + SpitBoltProjectile
+    [SerializeField] GameObject spitBoltPrefab;  // has Rigidbody + trigger collider + SpitBoltProjectile
     [SerializeField] Transform castMuzzle;
     [SerializeField] float boltSpeed;
     [SerializeField] float boltDamage;
@@ -26,7 +26,7 @@ public class MothmanBoss : Base_Boss_AI
     [SerializeField] float clawRadius;
     [SerializeField] float postSwoopRecover;
 
-    //explicit attack position support
+    // explicit attack position support
     [Tooltip("If set, swoop uses this position instead of the offset below.")]
     [SerializeField] Transform swoopAttackPos;
     [Tooltip("Local-space offset used when no attack Transform is assigned.")]
@@ -39,33 +39,40 @@ public class MothmanBoss : Base_Boss_AI
     [SerializeField] float blindDuration;
     [SerializeField] float blindCooldown;
     [SerializeField] AudioClip shriekClip;
-    [SerializeField] float shriekVolume;
+    [SerializeField, Range(0f, 1f)] float shriekVolume = 1f;
+
+    [Header("Audio")]
+    [SerializeField] AudioSource sfx;                    // assign in inspector (3D, routed to your mixer)
+    [SerializeField, Tooltip("Small random pitch variance per shriek.")]
+    float shriekPitchJitter = 0.05f;
 
     // Random choice weight when both melee & ranged are valid
     [Header("Attack Selection")]
     [SerializeField, Range(0f, 1f)]
-    float meleeBiasWhenBothValid; // 60% chance to favor Swoop if both valid
+    float meleeBiasWhenBothValid = 0.6f; // e.g. 60% chance to favor Swoop if both valid
 
     float rangedCD;
     float blindCD;
 
     [Header("Separation")]
-    [SerializeField] float minPersonalSpace;
-    [SerializeField] float separationSpeed;
+    [SerializeField] float minPersonalSpace = 3f;
+    [SerializeField] float separationSpeed = 6f;
     [SerializeField] bool keepSpaceWhileAttacking = true;
 
     [Header("Debug")]
-    [SerializeField] bool logAttacks = true;   // <--- NEW: toggle logging
+    [SerializeField] bool logAttacks = true;
+
     [Header("Debug Gizmos")]
-    [SerializeField] int ringSegments;
+    [SerializeField] int ringSegments = 24;
 
     protected override void Awake()
     {
         base.Awake();
         if (rb) rb.useGravity = false; // always flying
+        if (!sfx) sfx = GetComponent<AudioSource>(); // convenience fallback
     }
 
-    //Flying movement overrides
+    // ------------ Flying movement overrides ------------
     protected override Vector3 DesiredRoamVelocity()
     {
         Vector3 targetXZ = roamTarget; targetXZ.y = spawn.y + cruiseAltitude;
@@ -117,14 +124,14 @@ public class MothmanBoss : Base_Boss_AI
 
     protected override bool CanAttack(float dist)
     {
-        //allow considering an attack if within outer ranged band of Shriek is ready
+        // allow considering an attack if within outer ranged band OR Shriek is ready
         return dist <= rangedRange + 2f || blindCD <= 0f;
     }
 
-    //Priority + Random:
-    //1. Shriek when off cooldown
-    //2. If both melee and ranged valid -> random pick with melee bias
-    //3. Else whichever is valid
+    // Priority + Random:
+    // 1. Shriek when off cooldown
+    // 2. If both melee and ranged valid -> random pick with melee bias
+    // 3. Else whichever is valid
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
         if (blindCD <= 0f)
@@ -158,15 +165,16 @@ public class MothmanBoss : Base_Boss_AI
             yield break;
         }
 
-        //Otherwise keep chasing this tick
+        // Otherwise keep chasing this tick
         yield return null;
     }
 
-    //-------- Attacks --------
+    // ---------------- Attacks ----------------
 
     IEnumerator DoSpitBolt()
     {
         if (logAttacks) Debug.Log("[Mothman] Start SpitBolt");
+
         // small hover brake + face
         FacePlayer();
         rb.AddForce(-GetPlanarVel(), ForceMode.VelocityChange);
@@ -176,7 +184,7 @@ public class MothmanBoss : Base_Boss_AI
             Vector3 dir = (player.position + Vector3.up * 1.2f - castMuzzle.position).normalized;
             var go = Instantiate(spitBoltPrefab, castMuzzle.position, Quaternion.LookRotation(dir, Vector3.up));
 
-            // initial velocity (unchanged)
+            // initial velocity (keep your preferred API)
             var rbProj = go.GetComponent<Rigidbody>();
             if (rbProj) rbProj.linearVelocity = dir * boltSpeed;
 
@@ -190,6 +198,7 @@ public class MothmanBoss : Base_Boss_AI
                 proj.player = player;      // optional gentle homing
                 proj.owner = transform;    // so it won't hit the boss
             }
+
             rangedCD = rangedCooldown;
             if (logAttacks) Debug.Log("[Mothman] SpitBolt fired");
         }
@@ -212,7 +221,7 @@ public class MothmanBoss : Base_Boss_AI
             yield return new WaitForFixedUpdate();
         }
 
-        // --- Deal damage at most once for this entire swoop ---
+        // Deal damage at most once for this entire swoop
         bool dealtDamageThisSwoop = false;
 
         // Dive window
@@ -266,8 +275,14 @@ public class MothmanBoss : Base_Boss_AI
     {
         if (logAttacks) Debug.Log("[Mothman] Start Shriek");
 
-        // Play sound
-        if (shriekClip) AudioSource.PlayClipAtPoint(shriekClip, transform.position, shriekVolume);
+        // Play sound from attached AudioSource instead of one-shot
+        if (sfx && shriekClip)
+        {
+            sfx.clip = shriekClip;
+            sfx.volume = shriekVolume;
+            sfx.pitch = 1f + Random.Range(-shriekPitchJitter, shriekPitchJitter);
+            sfx.Play();
+        }
 
         // brief windup hover
         FacePlayer();
@@ -275,12 +290,11 @@ public class MothmanBoss : Base_Boss_AI
         yield return new WaitForSeconds(0.25f);
 
         // Global AOE via distance (line-of-sight ignored)
-        Vector3 center = transform.position; //sonic origin
+        Vector3 center = transform.position;
         var hits = Physics.OverlapSphere(center, blindRadius, ~0, QueryTriggerInteraction.Ignore);
 
         foreach (var h in hits)
         {
-            // Apply Blind to the player
             if (player && (h.transform == player || h.transform.IsChildOf(player)))
             {
                 var status = player.GetComponentInChildren<StatusEffects>();
@@ -291,10 +305,10 @@ public class MothmanBoss : Base_Boss_AI
 
         blindCD = blindCooldown;
         if (logAttacks) Debug.Log("[Mothman] End Shriek");
-        yield return new WaitForSeconds(0.2f); //tiny post cast hover
+        yield return new WaitForSeconds(0.2f);
     }
 
-    // Helper: MaintainPersonalSpace
+    // ---------------- Helpers ----------------
     void MaintainPersonalSpace()
     {
         if (!keepSpaceWhileAttacking || !player) return;
@@ -322,7 +336,6 @@ public class MothmanBoss : Base_Boss_AI
         else transform.position = newPos;
     }
 
-    // Helper: FindDamage
     static IDamage FindDamage(Component c)
         => c.GetComponentInParent<IDamage>() ?? c.GetComponentInChildren<IDamage>();
 
@@ -389,5 +402,5 @@ public class MothmanBoss : Base_Boss_AI
             prev = next;
         }
     }
-#endif 
+#endif
 }
