@@ -140,7 +140,6 @@ MonoBehaviour:
   weaponAnimator: {fileID: 1791555417311272528}
   weaponOverrideController: {fileID: 22100000, guid: e58692d71d26ef749a3aaa28fa586ad3, type: 2}
   equipAnimation: {fileID: 7400000, guid: 4795c80d35ed4284eac1fbb657cc6a9d, type: 2}
-  unequipAnimation: {fileID: 7400000, guid: 25b743fdc2678644fa9d890da517bdef, type: 2}
   weaponAudioSource: {fileID: 2031874675255346090}
   reloadAudioSource: {fileID: 8424887044624441054}
   isReloading: 0
@@ -333,7 +332,7 @@ AudioSource:
   m_GameObject: {fileID: 602741367445022904}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7347046352254174284, guid: f010d9a09ea138343845d132a496cf57, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
