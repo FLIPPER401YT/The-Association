@@ -47,6 +47,8 @@ public class EnemyMeleeAI : EnemyAI_Base
 
     void DoMeleeAttack()
     {
+        anim.SetTrigger("Attack");
+        
         IDamage dmg = player.GetComponent<IDamage>();
         if (dmg != null)
         {

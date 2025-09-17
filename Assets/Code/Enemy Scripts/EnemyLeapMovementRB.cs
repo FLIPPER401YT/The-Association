@@ -27,6 +27,8 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
 
     protected override void TickMovement()
     {
+        anim.SetBool("Running", true);
+
         GroundCheckAndGravity();
 
         if (!target) { BrakeToStop(); return; }
@@ -37,6 +39,8 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
         // stop if close
         if (stopDistance > 0f && dist <= stopDistance)
         {
+            anim.SetBool("Running", false);
+
             BrakeToStop();
             if (dist > 0.001f) Face(new Vector3(to.x, 0f, to.z).normalized);
             return;
@@ -52,6 +56,9 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
 
         if (canLeap)
         {
+            anim.SetBool("Running", false);
+            anim.SetTrigger("Leap");
+
             DoBallisticLeap(target.position);
             return;
         }
@@ -66,6 +73,8 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
         }
         else
         {
+            anim.SetBool("Running", false);
+
             BrakeToStop();
         }
     }
@@ -85,7 +94,7 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
         float dXZ = toXZ.magnitude;
         float dY = to.y;
 
-        if (dXZ < 0.01f) // basically on top—nudge forward a bit
+        if (dXZ < 0.01f) // basically on topï¿½nudge forward a bit
         {
             toXZ = transform.forward;
             dXZ = 1f;
