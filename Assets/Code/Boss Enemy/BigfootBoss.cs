@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 
 public class BigfootBoss : Base_Boss_AI
 {
@@ -161,6 +162,8 @@ public class BigfootBoss : Base_Boss_AI
 
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
+        anim.SetBool("Running", false);
+        
         if (MeleeEnabled && distToPlayer <= meleeRange && swipeCD <= 0f)
         {
             Debug.Log("[Bigfoot] ATTACK: Swipe");
@@ -210,10 +213,19 @@ public class BigfootBoss : Base_Boss_AI
         FacePlayer();
         BrakePlanar();
 
-        // make sure we aren’t standing on the player before winding up
+        // make sure we arenï¿½t standing on the player before winding up
         if (keepSpaceWhileAttacking) MaintainPersonalSpace();
 
-        yield return new WaitForSeconds(swipeWindup);
+        anim.SetTrigger("Swipe");
+        AnimationClip clip = null;
+        if (anim.runtimeAnimatorController is AnimatorController controller)
+        {
+            foreach (ChildAnimatorState state in controller.layers[0].stateMachine.states)
+                if (state.state.name.Equals("Swipe Attack")) clip = state.state.motion as AnimationClip;
+        }
+        float attackCheckTime = clip != null ? clip.length / 3f : swipeWindup;
+
+        yield return new WaitForSeconds(attackCheckTime);
 
         Vector3 center = attackPos ? attackPos.position
                                    : transform.position + transform.TransformVector(swipeOffset);
@@ -238,6 +250,8 @@ public class BigfootBoss : Base_Boss_AI
     {
         ChangeState(BossState.Attack);
         rushDidHit = false;
+
+        anim.SetBool("Rushing", true);
 
         float t = 0f;
         while (t < rushTime)
@@ -319,7 +333,10 @@ public class BigfootBoss : Base_Boss_AI
         rb.velocity = Vector3.zero;
 #endif
 
-        // after rushing, ensure we aren’t resting on the player
+        anim.SetBool("Rushing", false);
+        anim.SetBool("Stunned", true);
+
+        // after rushing, ensure we arenï¿½t resting on the player
         if (keepSpaceWhileAttacking) MaintainPersonalSpace();
 
         yield return new WaitForSeconds(rushRestDuration);
@@ -327,6 +344,8 @@ public class BigfootBoss : Base_Boss_AI
         rushCD = rushCooldown;
         attackLockout = globalAttackCooldown;
         ChangeState(BossState.Recover);
+
+        anim.SetBool("Stunned", false);
     }
 
     IEnumerator TemporarilyIgnoreCollision(Collider a, Collider b, float seconds)
@@ -342,6 +361,8 @@ public class BigfootBoss : Base_Boss_AI
     {
         ChangeState(BossState.Attack);
         FacePlayer();
+
+        anim.SetTrigger("Slam");
 
         Vector3 target = player ? player.position : transform.position + transform.forward * 5f;
         if (Physics.Raycast(target + Vector3.up * 10f, Vector3.down, out RaycastHit ghit, 30f, groundMask))
@@ -373,6 +394,9 @@ public class BigfootBoss : Base_Boss_AI
         }
 
         // flee after slam
+
+        anim.SetBool("Running", true);
+
         float t = 0f;
         while (t < fleeTime)
         {
@@ -388,6 +412,8 @@ public class BigfootBoss : Base_Boss_AI
             }
             yield return new WaitForFixedUpdate();
         }
+
+        anim.SetBool("Running", false);
 
         leapCD = leapCooldown;
         attackLockout = globalAttackCooldown;

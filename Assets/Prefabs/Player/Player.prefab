@@ -139,8 +139,11 @@ MonoBehaviour:
   weaponRenderer: {fileID: 5752301431851993854}
   weaponAnimator: {fileID: 1791555417311272528}
   weaponOverrideController: {fileID: 22100000, guid: e58692d71d26ef749a3aaa28fa586ad3, type: 2}
+  equipAnimation: {fileID: 7400000, guid: 4795c80d35ed4284eac1fbb657cc6a9d, type: 2}
   weaponAudioSource: {fileID: 2031874675255346090}
   reloadAudioSource: {fileID: 8424887044624441054}
+  isReloading: 0
+  changingWeapons: 0
   gunListPos: 0
 --- !u!114 &5762488403691970888
 MonoBehaviour:
@@ -154,12 +157,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8e81b0a98118643abd8941a3978ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashMax: 1
+  dashMax: 3
   dashDistance: 1000
   dashReloadTime: 1
   dashTimeLength: 0.2
+  fovChangeSpeed: 240
+  fovChangeAmount: 20
   rb: {fileID: 3717102040862646966}
   movement: {fileID: 4592218793867380759}
+  dashSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
 --- !u!114 &2027198226169990103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,7 +335,7 @@ AudioSource:
   m_GameObject: {fileID: 602741367445022904}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7347046352254174284, guid: f010d9a09ea138343845d132a496cf57, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1

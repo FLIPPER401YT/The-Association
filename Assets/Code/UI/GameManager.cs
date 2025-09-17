@@ -253,7 +253,7 @@ public class GameManager : MonoBehaviour
         cameraController.ResetRotation();
         updateToLoseScreen();
         cameraController.canLook = false;
-        playerScript.enabled = false;
+        if (playerScript) playerScript.enabled = false;
     }
     public void SampleCount(int count)
     {
