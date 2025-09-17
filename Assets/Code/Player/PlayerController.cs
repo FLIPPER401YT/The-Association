@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour, IDamage
             dash.Dash();
             jump.Jump();
             crouch.Crouch();
-            if (!shoot.isReloading)
+            if (!shoot.isReloading && !shoot.changingWeapons)
             {
                 shoot.Shoot();
                 shoot.Reload();

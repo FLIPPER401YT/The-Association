@@ -126,7 +126,6 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
                 break;
 
             case BossState.Recover:
-                anim.SetBool("Running", false);
                 RecoverStep(distToPlayer);
                 break;
         }
@@ -144,7 +143,10 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
     {
         if (state == BossState.Dead) return;
         state = BossState.Dead;
-        
+
+        anim.SetBool("Running", false);
+        anim.SetBool("Rushing", false);
+        anim.SetBool("Stunned", false);
         anim.SetTrigger("Death");
 
         StopAllCoroutines();
@@ -163,7 +165,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
             rb.detectCollisions = false;
         }
 
-        Destroy(gameObject, 0f);
+        //Destroy(gameObject, 0f);
     }
 
     // State helpers

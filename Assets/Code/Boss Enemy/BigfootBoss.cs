@@ -162,6 +162,8 @@ public class BigfootBoss : Base_Boss_AI
 
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
+        anim.SetBool("Running", false);
+        
         if (MeleeEnabled && distToPlayer <= meleeRange && swipeCD <= 0f)
         {
             Debug.Log("[Bigfoot] ATTACK: Swipe");
