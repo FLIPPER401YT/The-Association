@@ -138,6 +138,7 @@ MonoBehaviour:
   weaponRenderer: {fileID: 5752301431851993854}
   weaponAnimator: {fileID: 1791555417311272528}
   weaponAudioSource: {fileID: 2031874675255346090}
+  gunListPos: 0
 --- !u!114 &5762488403691970888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,7 +480,7 @@ AudioSource:
   m_GameObject: {fileID: 657781728651742014}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7347046352254174284, guid: f010d9a09ea138343845d132a496cf57, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
