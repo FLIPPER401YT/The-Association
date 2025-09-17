@@ -77,8 +77,12 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
+  - guid: fc194dea4ee521d4cba7b5f831f6f5b8
+    name: MenuSoundEffects
   - guid: 7af6d011a17df9d4f92c1578ac94f798
     name: Music
+  - guid: 6a199bcca5057214eaf2bae17bc5543d
+    name: SoundEffects
   m_AudioMixerGroupViews:
   - guids:
     - 414c160268c913847af6eb3c68a28d0e
