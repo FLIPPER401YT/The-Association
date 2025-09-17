@@ -122,6 +122,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
                 break;
 
             case BossState.Attack:
+                anim.SetBool("Running", false);
                 AttackStepWhileActive();
                 break;
 
@@ -144,7 +145,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
     {
         if (state == BossState.Dead) return;
         state = BossState.Dead;
-        
+
         anim.SetTrigger("Death");
 
         StopAllCoroutines();

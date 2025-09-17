@@ -141,6 +141,7 @@ MonoBehaviour:
   weaponOverrideController: {fileID: 22100000, guid: e58692d71d26ef749a3aaa28fa586ad3, type: 2}
   weaponAudioSource: {fileID: 2031874675255346090}
   reloadAudioSource: {fileID: 8424887044624441054}
+  isReloading: 0
   gunListPos: 0
 --- !u!114 &5762488403691970888
 MonoBehaviour:
