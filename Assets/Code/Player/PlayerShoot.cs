@@ -25,7 +25,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] Animator weaponAnimator;
     [SerializeField] AnimatorOverrideController weaponOverrideController;
     [SerializeField] AnimationClip equipAnimation;
-    [SerializeField] AnimationClip unequipAnimation;
+    //[SerializeField] AnimationClip unequipAnimation;
     [SerializeField] AudioSource weaponAudioSource;
     [SerializeField] AudioSource reloadAudioSource;
 
@@ -45,7 +45,7 @@ public class PlayerShoot : MonoBehaviour
 
     void Update()
     {
-        if (isReloading) return;
+        if (isReloading || changingWeapons) return;
 
         if (Input.GetButtonDown("Weapon1"))
         {
@@ -235,6 +235,7 @@ public class PlayerShoot : MonoBehaviour
         weaponOverrideController["TempShoot"] = stats.shootAnimation;
         weaponOverrideController["TempShootNoAmmo"] = stats.shootNoAmmoAnimation;
         reloadTime = stats.reloadAnimation.length;
+        StartCoroutine(EquipWeapon());
     }
 
     void SwitchWeapons(MeleeStats stats)
@@ -246,6 +247,7 @@ public class PlayerShoot : MonoBehaviour
         bloomMod = 0;
         weaponMesh.sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
         weaponRenderer.sharedMaterial = stats.model.GetComponent<Renderer>().sharedMaterial;
+        StartCoroutine(EquipWeapon());
     }
 
     IEnumerator EquipWeapon()
