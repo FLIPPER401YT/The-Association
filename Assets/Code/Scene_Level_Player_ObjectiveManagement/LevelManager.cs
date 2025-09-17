@@ -14,6 +14,8 @@ public class LevelManager : MonoBehaviour
     public event AllBossesDestroyed BossesDestroyed;
     public bool isVictoryScene = false;
     public PlayerController player;
+    public Transform spawnPoint;
+
     #region Persistance
     [Serializable]
     public class SaveData
@@ -67,6 +69,12 @@ public class LevelManager : MonoBehaviour
     #region Scene Handler
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        spawnPoint = SpawnPoint(scene.name);
+        if(player != null && spawnPoint != null)
+        {
+            player.spawnPoint = spawnPoint;
+            player.SpawnPlayer();
+        }
         if (scene.name.Equals("VictoryScene"))
         {
             StartCoroutine(DelayedCursorUnlock());
@@ -84,6 +92,12 @@ public class LevelManager : MonoBehaviour
             player.updatePlayerHealthBarUI();
             player.UpdateSampleCount(player.bloodSamples);
         }
+    }
+    private Transform SpawnPoint(string sceneName)
+    {
+        GameObject spawnObject = GameObject.FindGameObjectWithTag("Respawn");
+        if (spawnObject != null) return spawnObject.transform;
+        return null;
     }
     private IEnumerator DelayedCursorUnlock()
     {
@@ -115,7 +129,7 @@ public class LevelManager : MonoBehaviour
                     currentSave.bossesDefeated = new Dictionary<string, bool>();
                 }
             }
-            catch (Exception except)
+            catch (Exception)
             {
                 currentSave = new SaveData();
             }
@@ -143,21 +157,23 @@ public class LevelManager : MonoBehaviour
     }
     public void UnregisterTrackable(GameObject boss)
     {
-        if(bosses.Contains(boss))
-        {
-            bosses.Remove(boss);
-            if (bosses.Count == 0 && !ButtonFunctions.quitingToMain) BossesDestroyed?.Invoke();
-        }
+        if(bosses.Contains(boss)) bosses.Remove(boss);
     }
     #endregion
     #region Boss Tracking
     public void MarkBossDefeated(string bossName)
     {
+        Debug.Log("Boss defeated: " +  bossName);
         if (!currentSave.bossesDefeated.ContainsKey(bossName))
         {
             currentSave.bossesDefeated[bossName] = true;
         }
         SaveGame();
+        if(bossName == "Bigfoot" || bossName == "Mothman")
+        {
+            LoadScene("HubArea");
+            return;
+        }
         CheckVictoryCondition();
     }
     private void CheckVictoryCondition()

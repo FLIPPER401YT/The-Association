@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour, IDamage
     bool canMove = true;
 
     private Rigidbody rigidBody;
-    [SerializeField] private Transform spawnPoint;
+    [SerializeField] public Transform spawnPoint;
     void Awake()
     {
         if (instance == null) instance = this;

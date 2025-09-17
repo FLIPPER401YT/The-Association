@@ -10,6 +10,7 @@ public class ObjectiveManager : MonoBehaviour
     }
     private void OnDestroy()
     {
+        Debug.Log("Boss defeated: " +  bossName);
         if(LevelManager.Instance != null)
         {
             LevelManager.Instance.UnregisterTrackable(bossPrefab);

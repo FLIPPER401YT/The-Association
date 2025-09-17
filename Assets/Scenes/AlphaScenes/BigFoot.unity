@@ -43788,7 +43788,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94027e9b2d8c0054a873a5c2b7d8354b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objective: {fileID: 0}
+  bossName: Wendigo
+  bossPrefab: {fileID: 1467187458}
 --- !u!43 &1477936465
 Mesh:
   m_ObjectHideFlags: 0
