@@ -162,8 +162,10 @@ MonoBehaviour:
   dashReloadTime: 1
   dashTimeLength: 0.2
   fovChangeSpeed: 240
+  fovChangeAmount: 20
   rb: {fileID: 3717102040862646966}
   movement: {fileID: 4592218793867380759}
+  dashSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
 --- !u!114 &2027198226169990103
 MonoBehaviour:
   m_ObjectHideFlags: 0
