@@ -8,6 +8,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
     [Header("Refs")]
     [SerializeField] protected Transform player;
     [SerializeField] protected Rigidbody rb;
+    [SerializeField] protected Animator anim;
 
     [Header("Health")]
     [SerializeField] protected int maxHP;
@@ -108,11 +109,13 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
         {
             case BossState.Roam:
                 if (distToPlayer <= aggroRange) ChangeState(BossState.Chase);
+                anim.SetBool("Running", true);
                 RoamStep();
                 break;
 
             case BossState.Chase:
                 if (!player || distToPlayer > leashRange) { ChangeState(BossState.Roam); break; }
+                anim.SetBool("Running", true);
                 ChaseStep();
                 if (attackLockout <= 0f && CanAttack(distToPlayer))
                     StartCoroutine(DoAttackEntry(distToPlayer));
@@ -123,6 +126,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
                 break;
 
             case BossState.Recover:
+                anim.SetBool("Running", false);
                 RecoverStep(distToPlayer);
                 break;
         }
@@ -140,6 +144,8 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
     {
         if (state == BossState.Dead) return;
         state = BossState.Dead;
+        
+        anim.SetTrigger("Death");
 
         StopAllCoroutines();
         enabled = false;
