@@ -47,7 +47,6 @@ GameObject:
   - component: {fileID: 2029789006552911203}
   - component: {fileID: 3079060238086989650}
   - component: {fileID: 7967269147866786050}
-  - component: {fileID: 5621397383544572204}
   m_Layer: 9
   m_Name: Bigfoot
   m_TagString: Untagged
@@ -86,7 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   rb: {fileID: 5611749811243292346}
-  anim: {fileID: 5621397383544572204}
+  anim: {fileID: 9108339018958933876}
   maxHP: 50
   currentHP: 50
   aggroRange: 25
@@ -294,28 +293,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bossName: 
   bossPrefab: {fileID: 0}
---- !u!95 &5621397383544572204
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2685116618366660546}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 019b4d632fe16fa4689df5811b71894c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &3390585711678730981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -439,5 +416,10 @@ CapsuleCollider:
 --- !u!4 &2920442250290615566 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 818861e3c6e1b0a40a02d911557e4d6e, type: 3}
+  m_PrefabInstance: {fileID: 3390585711678730981}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &9108339018958933876 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 818861e3c6e1b0a40a02d911557e4d6e, type: 3}
   m_PrefabInstance: {fileID: 3390585711678730981}
   m_PrefabAsset: {fileID: 0}
