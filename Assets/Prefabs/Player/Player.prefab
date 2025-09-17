@@ -157,10 +157,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8e81b0a98118643abd8941a3978ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashMax: 1
+  dashMax: 3
   dashDistance: 1000
   dashReloadTime: 1
   dashTimeLength: 0.2
+  fovChangeSpeed: 240
   rb: {fileID: 3717102040862646966}
   movement: {fileID: 4592218793867380759}
 --- !u!114 &2027198226169990103
