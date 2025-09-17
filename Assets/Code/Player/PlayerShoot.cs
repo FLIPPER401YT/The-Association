@@ -1,10 +1,13 @@
+using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
 
     [SerializeField] int damage;
+    [SerializeField] float reloadTime;
     [SerializeField] float fireRate;
     [SerializeField] float fireDistance;
     [SerializeField] int bullets;
@@ -20,7 +23,11 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] MeshFilter weaponMesh;
     [SerializeField] Renderer weaponRenderer;
     [SerializeField] Animator weaponAnimator;
+    [SerializeField] AnimatorOverrideController weaponOverrideController;
     [SerializeField] AudioSource weaponAudioSource;
+    [SerializeField] AudioSource reloadAudioSource;
+
+    public bool isReloading = false;
 
     float fireTimer = 0;
     bool isMelee = false;
@@ -30,10 +37,13 @@ public class PlayerShoot : MonoBehaviour
     {
         foreach (GunStats stat in gunList) FillAmmo(stat);
         SwitchWeapons(gunList[0], 0);
+        weaponAnimator.runtimeAnimatorController = weaponOverrideController;
     }
 
     void Update()
     {
+        if (isReloading) return;
+
         if (Input.GetButtonDown("Weapon1"))
         {
             SwitchWeapons(gunList[0], 0);
@@ -70,8 +80,17 @@ public class PlayerShoot : MonoBehaviour
         stat.clip = stat.clipSize;
     }
 
-    void ReloadGun(GunStats stat)
+    IEnumerator ReloadGun(GunStats stat)
     {
+        if (!stat) yield return null;
+
+        reloadAudioSource.pitch = 1;
+        reloadAudioSource.PlayOneShot(stat.reloadSound);
+
+        yield return new WaitForSeconds(reloadTime);
+
+        if (!stat) yield return null;
+
         int reloadAmount = stat.clipSize - stat.clip;
         if (stat.ammo >= reloadAmount)
         {
@@ -83,7 +102,8 @@ public class PlayerShoot : MonoBehaviour
             stat.clip += stat.ammo;
             stat.ammo = 0;
         }
-        
+
+        isReloading = false;
     }
 
     public void AddAmmo(int amount)
@@ -116,9 +136,11 @@ public class PlayerShoot : MonoBehaviour
 
     public void Reload()
     {
-        if (!isMelee && Input.GetButtonDown("Reload"))
+        if (!isMelee && gunList[gunListPos].clip != gunList[gunListPos].clipSize && Input.GetButtonDown("Reload"))
         {
-            ReloadGun(gunList[gunListPos]);
+            isReloading = true;
+            weaponAnimator.SetTrigger("Reload");
+            StartCoroutine(ReloadGun(gunList[gunListPos]));
         }
     }
 
@@ -142,7 +164,6 @@ public class PlayerShoot : MonoBehaviour
                 {
                     if (gunList[gunListPos].clip > 0) weaponAudioSource.PlayOneShot(gunList[gunListPos].shootSound);
                     else weaponAudioSource.PlayOneShot(gunList[gunListPos].shootNoAmmoSound);
-                    //GameManager.instance.playerScript.audioSource.pitch = 1;
                 }
                 else
                 {
@@ -191,6 +212,7 @@ public class PlayerShoot : MonoBehaviour
                     else weaponAnimator.SetTrigger("Melee");
                     fireTimer = 0;
                 }
+                else if (!isMelee && gunList[gunListPos].clip == 0) weaponAnimator.SetTrigger("ShootNoAmmo");
             }
         }
     }
@@ -206,6 +228,10 @@ public class PlayerShoot : MonoBehaviour
         weaponMesh.sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
         weaponRenderer.sharedMaterial = stats.model.GetComponent<Renderer>().sharedMaterial;
         gunListPos = pos;
+        weaponOverrideController["GunReload"] = stats.reloadAnimation;
+        weaponOverrideController["TempShoot"] = stats.shootAnimation;
+        weaponOverrideController["TempShootNoAmmo"] = stats.shootNoAmmoAnimation;
+        reloadTime = stats.reloadAnimation.length;
     }
 
     void SwitchWeapons(MeleeStats stats)
