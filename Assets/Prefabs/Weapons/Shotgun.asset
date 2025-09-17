@@ -17,11 +17,16 @@ MonoBehaviour:
   fireDistance: 20
   bloomMod: 20
   bullets: 200
+  reloadTime: 2
   ammo: 60
   clipSize: 6
-  clip: 1
+  clip: 6
   maxAmmo: 60
   isAutomatic: 0
   model: {fileID: 9091087455982598204, guid: 8705711deb539c847b057d09b8a880be, type: 3}
   shootSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
   shootNoAmmoSound: {fileID: 8300000, guid: 7ff8c3bba8841004eb03c8192cd845a3, type: 3}
+  reloadSound: {fileID: 8300000, guid: 7ff8c3bba8841004eb03c8192cd845a3, type: 3}
+  reloadAnimation: {fileID: 7400000, guid: bdfeca5e9b4ff64478bf4fea09c22d5d, type: 2}
+  shootAnimation: {fileID: 7400000, guid: c49139c99200de8418860c5cdd17128e, type: 2}
+  shootNoAmmoAnimation: {fileID: 7400000, guid: 68a58a261c703454ea62cb227ad8fa2b, type: 2}
