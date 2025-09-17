@@ -73,12 +73,17 @@ public class PlayerController : MonoBehaviour, IDamage
             dash.Dash();
             jump.Jump();
             crouch.Crouch();
-            shoot.Shoot();
-            shoot.Reload();
+            if (!shoot.isReloading)
+            {
+                shoot.Shoot();
+                shoot.Reload();
+            }
         }
 
         GameManager.instance.playerHealthText.text = health.ToString("F0");
         GameManager.instance.playerHealthMaxText.text = healthMax.ToString("F0");
+
+
     }
 
     public void Heal(int amount)

@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
     public GameObject shopCam;
     public GameObject shopUI;
 
+    [Header("Miscellaneous stuff")]
     float timeScaleOriginal;
 
     [SerializeField] public GameObject interactableTextObject;
