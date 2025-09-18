@@ -60,6 +60,7 @@ public class LevelManager : MonoBehaviour
         if(player != null)
         {
             player.health = currentSave.health;
+            player.healthMax = currentSave.healthMax;
             player.bloodSamples = currentSave.bloodSamples;
             player.updatePlayerHealthBarUI();
             player.UpdateSampleCount(player.bloodSamples);
@@ -94,6 +95,7 @@ public class LevelManager : MonoBehaviour
         player = GameManager.instance?.playerScript;
         if (player != null) {
             player.health = currentSave.health;
+            player.healthMax = currentSave.healthMax;
             player.bloodSamples= currentSave.bloodSamples;
             player.updatePlayerHealthBarUI();
             player.UpdateSampleCount(player.bloodSamples);
@@ -117,30 +119,31 @@ public class LevelManager : MonoBehaviour
         if (player != null)
         {
             currentSave.health = player.health;
+            currentSave.healthMax = player.healthMax;
             currentSave.bloodSamples = player.bloodSamples;
         }
-        string jsonFile = JsonUtility.ToJson(currentSave, true);
-        PlayerPrefs.SetString(saveData, jsonFile);
+        PlayerPrefs.SetInt("Health", currentSave.health);
+        PlayerPrefs.SetInt("BloodSamples", currentSave.bloodSamples);
+        PlayerPrefs.SetInt("DefeatedBossesCount", currentSave.defeatedBosses.Count);
+        for (int index = 0; index < currentSave.defeatedBosses.Count; index++)
+        {
+            PlayerPrefs.SetString("DefeatedBoss_" + index, currentSave.defeatedBosses[index]);
+        }
         PlayerPrefs.Save();
     }
     public void LoadGame()
     {
-        if(PlayerPrefs.HasKey(saveData))
+        currentSave = new SaveData();
+        if (PlayerPrefs.HasKey("Health")) currentSave.health = PlayerPrefs.GetInt("Health");
+        if (PlayerPrefs.HasKey("HealthMax")) currentSave.healthMax = PlayerPrefs.GetInt("HealthMax");
+        if (PlayerPrefs.HasKey("BloodSamples")) currentSave.bloodSamples = PlayerPrefs.GetInt("BloodSamples");
+        currentSave.defeatedBosses.Clear();
+        int count = PlayerPrefs.GetInt("DefeatedBossesCount", 0);
+        for (int index = 0; index < count; index++)
         {
-            string jsonFile = PlayerPrefs.GetString(saveData);
-            try
-            {
-                currentSave = JsonUtility.FromJson<SaveData>(jsonFile);
-                if (currentSave.defeatedBosses == null) currentSave.defeatedBosses = new List<string>();
-            }
-            catch (Exception)
-            {
-                currentSave = new SaveData();
-            }
-        }
-        else
-        {
-            currentSave = new SaveData();
+            string bossName = PlayerPrefs.GetString("DefeatedBoss_" + index, "");
+            if (!string.IsNullOrEmpty(bossName))
+                currentSave.defeatedBosses.Add(bossName);
         }
     }
     private void OnEnable()
