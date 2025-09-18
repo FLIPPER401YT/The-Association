@@ -48,7 +48,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     protected virtual void Start()
     {
         player = GameManager.instance.player.transform;
-        colorOrig = model.material.color;
+        //colorOrig = model.material.color;
 
         //GameManager.instance.updateGameGoal(1);
 
