@@ -12930,8 +12930,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuButtonFunctions, Assembly-CSharp
+      - m_Target: {fileID: 2175702527842295433}
+        m_TargetAssemblyTypeName: ButtonFunctions, Assembly-CSharp
         m_MethodName: back
         m_Mode: 1
         m_Arguments:
