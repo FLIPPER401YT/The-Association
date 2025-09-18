@@ -102,9 +102,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 750
+  timeBetweenSteps: 0.5
   rb: {fileID: 3717102040862646966}
-  moveDir: {x: 0, y: 0, z: 0}
+  walkStepSound: {fileID: 8300000, guid: efa6087edd982ad41a68581bdd3b98e0, type: 3}
+  crouchStepSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
   speedOriginal: 0
+  moveDir: {x: 0, y: 0, z: 0}
 --- !u!114 &8254974378684984855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,6 +169,7 @@ MonoBehaviour:
   rb: {fileID: 3717102040862646966}
   movement: {fileID: 4592218793867380759}
   dashSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
+  dashing: 0
 --- !u!114 &2027198226169990103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,6 +184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpHeight: 6
   jumpMax: 1
+  jumpSound: {fileID: 8300000, guid: 7ff8c3bba8841004eb03c8192cd845a3, type: 3}
 --- !u!114 &273020321637315286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,6 +215,9 @@ MonoBehaviour:
   crouchDownSpeed: 3
   col: {fileID: 3282056699460555531}
   movement: {fileID: 4592218793867380759}
+  crouchSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
+  uncrouchSound: {fileID: 8300000, guid: efa6087edd982ad41a68581bdd3b98e0, type: 3}
+  isCrouching: 0
 --- !u!114 &2802193453196257593
 MonoBehaviour:
   m_ObjectHideFlags: 0
