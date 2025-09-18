@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class MainMenuScript : MonoBehaviour
 {
@@ -21,6 +22,11 @@ public class MainMenuScript : MonoBehaviour
     }
     public MenuState originalMenu;
 
+    [SerializeField] private GameObject titleFirst;
+    [SerializeField] private GameObject settingsFirst;
+    [SerializeField] private GameObject audioSettingsFirst;
+    [SerializeField] private GameObject controlsSettingsFirst;
+
     void Awake()
     {
         instance = this;
@@ -33,6 +39,7 @@ public class MainMenuScript : MonoBehaviour
         activeMenu.SetActive(true);
         menuCurr = MenuState.Title;
         originalMenu = MenuState.Title;
+        EventSystem.current.SetSelectedGameObject(titleFirst);
     }
 
     public void settingsOpen()
@@ -41,6 +48,7 @@ public class MainMenuScript : MonoBehaviour
         activeMenu = null;
         activeMenu = settingsMenu;
         activeMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(settingsFirst);
     }
 
     public void controlSettingsOpen()
@@ -50,6 +58,7 @@ public class MainMenuScript : MonoBehaviour
         activeMenu = menuControlSettings;
         activeMenu.SetActive(true);
         menuCurr = MenuState.Settings;
+        EventSystem.current.SetSelectedGameObject(controlsSettingsFirst);
     }
 
     public void audioSettingsOpen()
@@ -59,6 +68,7 @@ public class MainMenuScript : MonoBehaviour
         activeMenu = menuAudioSettings;
         activeMenu.SetActive(true);
         menuCurr = MenuState.Settings;
+        EventSystem.current.SetSelectedGameObject(audioSettingsFirst);
     }
 
     public void settingsClosed()
@@ -71,6 +81,7 @@ public class MainMenuScript : MonoBehaviour
                     activeMenu = null;
                     activeMenu = titleScreen;
                     activeMenu.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(titleFirst);
                     break;
                 }
             case MenuState.Settings:
@@ -80,6 +91,7 @@ public class MainMenuScript : MonoBehaviour
                     activeMenu = null;
                     activeMenu = settingsMenu;
                     activeMenu.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(settingsFirst);
                     break;
                 }
             default:
