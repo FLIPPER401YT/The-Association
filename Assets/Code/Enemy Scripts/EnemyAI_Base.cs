@@ -4,7 +4,9 @@ using System.Collections;
 
 [RequireComponent(typeof(Collider))]
 public class EnemyAI_Base : MonoBehaviour, IDamage
-{ 
+{
+    [Header("References")]
+    [SerializeField] protected Animator anim;
     [Header("Visuals & Stats")]
     [SerializeField] protected Renderer model;
     [SerializeField] public int HP;
@@ -46,7 +48,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     protected virtual void Start()
     {
         player = GameManager.instance.player.transform;
-        colorOrig = model.material.color;
+        //colorOrig = model.material.color;
 
         //GameManager.instance.updateGameGoal(1);
 
@@ -96,7 +98,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         float dist = toPlayer.magnitude;
         if (dist > viewDistance) return false;
 
-        // FOV gate (flattened so vertical doesn�t matter)
+        // FOV gate (flattened so vertical doesn't matter)
         Vector3 flatTo = new Vector3(toPlayer.x, 0f, toPlayer.z);
         Vector3 flatFwd = new Vector3(transform.forward.x, 0f, transform.forward.z);
         if (flatTo.sqrMagnitude < 0.0001f) return true;
@@ -112,11 +114,22 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
 
     public void FaceTarget()
     {
-        if (playerDir.sqrMagnitude < 0.0001f) return;
+        // Use only XZ so we never pitch/roll the model.
+        Vector3 flat = new Vector3(playerDir.x, 0f, playerDir.z);
+        if (flat.sqrMagnitude < 0.0001f) return;
 
-        Quaternion rot = Quaternion.LookRotation(playerDir);
-        transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
+        // Yaw-only target rotation (keeps the character perfectly upright).
+        float yaw = Mathf.Atan2(flat.x, flat.z) * Mathf.Rad2Deg;
+        Quaternion target = Quaternion.Euler(0f, yaw, 0f);
+
+        // Smoothly rotate toward target.
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            target,
+            Mathf.Clamp01(Time.deltaTime * faceTargetSpeed)
+        );
     }
+
 
     public void TakeDamage(int amount)
     {
@@ -136,9 +149,13 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         {
             //GameManger.instance.updateGameGoal(-1);
 
+            anim.SetBool("Running", false);
+            anim.SetBool("Walking", false);
+            anim.SetBool("Death", true);
+
             if (enableDrops) DropLoot();
 
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
 
     }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-class PlayerDash : MonoBehaviour
+public class PlayerDash : MonoBehaviour
 {
     [SerializeField] int dashMax;
     [SerializeField] float dashDistance;
@@ -12,11 +12,12 @@ class PlayerDash : MonoBehaviour
     [SerializeField] PlayerMovement movement;
     [SerializeField] AudioClip dashSound;
 
+    public bool dashing = false;
+
     int dashes = 0;
     float dashTimer = 0;
     float dashingTimer = 0;
     float camFovOriginal;
-    bool dashing = false;
 
     void Start()
     {

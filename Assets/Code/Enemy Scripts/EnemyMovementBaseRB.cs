@@ -4,6 +4,8 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class EnemyMovementBaseRB : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] protected Animator anim;
     [Header("Target")]
     [SerializeField] protected Transform target;
 
@@ -59,7 +61,6 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
     {
         if (!target)
         {
-
             NoTargetStep();
             ApplyGravity();
             return;

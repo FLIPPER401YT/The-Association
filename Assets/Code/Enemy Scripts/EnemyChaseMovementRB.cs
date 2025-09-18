@@ -13,6 +13,8 @@ public class EnemyChaseMovementRB : EnemyMovementBaseRB
 
     protected override void TickMovement()
     {
+        anim.SetBool("Running", true);
+
         grounded = Physics.SphereCast(
             transform.position + Vector3.up * 0.1f,
             groundCheckRadius,
@@ -30,6 +32,8 @@ public class EnemyChaseMovementRB : EnemyMovementBaseRB
         float dist = to .magnitude;
         if(stopDistance > 0f && dist <= stopDistance )
         {
+            anim.SetBool("Running",  false);
+
             BrakeToStop();
             if (dist > 0.001f) Face(to.normalized);
             ApplyGravity();
@@ -38,6 +42,8 @@ public class EnemyChaseMovementRB : EnemyMovementBaseRB
 
         if(dist <= 0.001f)
         {
+            anim.SetBool("Running", false);
+
             BrakeToStop();
             ApplyGravity();
             return;

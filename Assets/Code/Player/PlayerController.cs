@@ -11,9 +11,9 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] public int health;
     [SerializeField] int lastBitOfLifeDamageAmount;
     [SerializeField] PlayerJump jump;
-    [SerializeField] PlayerCrouch crouch;
+    [SerializeField] public PlayerCrouch crouch;
     [SerializeField] PlayerMovement movement;
-    [SerializeField] PlayerDash dash;
+    [SerializeField] public PlayerDash dash;
     [SerializeField] StatusEffects statusEffects;
     [SerializeField] public Animator anim;
     [SerializeField] AudioClip deathSound;
