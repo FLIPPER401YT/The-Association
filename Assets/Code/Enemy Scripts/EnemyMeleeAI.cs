@@ -1,3 +1,5 @@
+using System.Collections;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class EnemyMeleeAI : EnemyAI_Base
@@ -39,16 +41,25 @@ public class EnemyMeleeAI : EnemyAI_Base
             if(attackTimer >= attackCooldown)
             {
                 attackTimer = 0f;
-                DoMeleeAttack();
+                StartCoroutine(DoMeleeAttack());
             }
         } 
         
     }
 
-    void DoMeleeAttack()
+    IEnumerator DoMeleeAttack()
     {
         anim.SetTrigger("Attack");
-        
+        AnimationClip clip = null;
+        if (anim.runtimeAnimatorController is AnimatorController controller)
+        {
+            foreach (ChildAnimatorState state in controller.layers[0].stateMachine.states)
+                if (state.state.name.Equals("Melee Attack")) clip = state.state.motion as AnimationClip;
+        }
+        float attackCheckTime = clip != null ? clip.length / 2.5f : 0;
+
+        yield return new WaitForSeconds(attackCheckTime);
+
         IDamage dmg = player.GetComponent<IDamage>();
         if (dmg != null)
         {

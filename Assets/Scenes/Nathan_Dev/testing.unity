@@ -258,7 +258,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8635141838717556200, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -72.4
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 8635141838717556200, guid: b2b772ffa3fe74141a5ca3c2e8a7161e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -548,10 +548,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: enemy leaper
       objectReference: {fileID: 0}
-    - target: {fileID: 1728491905800200378, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2287390096332775899, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
@@ -562,15 +558,15 @@ PrefabInstance:
       objectReference: {fileID: 2004514254}
     - target: {fileID: 4589358039285968700, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 25.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4589358039285968700, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.482
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4589358039285968700, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 26.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4589358039285968700, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: m_LocalRotation.w
@@ -599,6 +595,10 @@ PrefabInstance:
     - target: {fileID: 4589358039285968700, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5805952579697768189, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
+      propertyPath: leapCooldown
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -954,11 +954,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5358450991188932811, guid: ba72dff7553e3d24584252a2256e12a9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -801
+      value: -661.4
       objectReference: {fileID: 0}
     - target: {fileID: 5358450991188932811, guid: ba72dff7553e3d24584252a2256e12a9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -388
+      value: -451.7
       objectReference: {fileID: 0}
     - target: {fileID: 7083121960470542249, guid: ba72dff7553e3d24584252a2256e12a9, type: 3}
       propertyPath: m_Name
@@ -966,15 +966,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7083121960470542249, guid: ba72dff7553e3d24584252a2256e12a9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7440484894626259988, guid: ba72dff7553e3d24584252a2256e12a9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -914
+      value: -725.1
       objectReference: {fileID: 0}
     - target: {fileID: 7440484894626259988, guid: ba72dff7553e3d24584252a2256e12a9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -399
+      value: -441
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
