@@ -25,7 +25,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4589358039285968700
 Transform:
   m_ObjectHideFlags: 0
@@ -142,7 +142,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 1282637923724305406}
-  model: {fileID: 5504131051465912177}
+  scripts:
+  - {fileID: 5679441561071170207}
+  - {fileID: 2287390096332775899}
+  - {fileID: 3444607142118704350}
+  - {fileID: 5805952579697768189}
+  - {fileID: 5694067082883110077}
+  deathClip: {fileID: 7400000, guid: 1bf07a92e9145d949b037195b72359ab, type: 2}
+  model: {fileID: 0}
   HP: 50
   faceTargetSpeed: 10
   FOV: 90
@@ -507,10 +514,5 @@ Animator:
 --- !u!4 &628015525986624167 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 49f252edd91564c44a91ab1f0e16cc8a, type: 3}
-  m_PrefabInstance: {fileID: 1098194096585016652}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &5504131051465912177 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -4368760257972590019, guid: 49f252edd91564c44a91ab1f0e16cc8a, type: 3}
   m_PrefabInstance: {fileID: 1098194096585016652}
   m_PrefabAsset: {fileID: 0}
