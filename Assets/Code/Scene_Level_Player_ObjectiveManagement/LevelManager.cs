@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,18 +19,27 @@ public class LevelManager : MonoBehaviour
     public class SaveData
     {
         public int health, healthMax, bloodSamples;
-        public Dictionary<string, bool> bossesDefeated = new Dictionary<string, bool>();
-
-        public SaveData()
+        public List<string> defeatedBosses = new List<string>();
+        public Dictionary<string, bool> GetBossesDefeatedDict()
         {
-            health = 100;
-            healthMax = 100;
-            bloodSamples = 0;
-            bossesDefeated = new Dictionary<string, bool>();
+            var dictionary = new Dictionary<string, bool>();
+            foreach (var name in defeatedBosses)
+            {
+                dictionary[name] = true;
+            }
+            return dictionary;
+        }
+        public void DefeatedBossesDictionary(Dictionary<string, bool> dict)
+        {
+            defeatedBosses.Clear();
+            foreach (var keyPair in dict)
+            {
+                if (keyPair.Value) defeatedBosses.Add(keyPair.Key);
+            }
         }
     }
     public SaveData currentSave = new SaveData();
-    private string saveFile;
+    private const string saveData = "SaveData";
     #endregion
     #region Unity
     private void Awake()
@@ -44,7 +51,6 @@ public class LevelManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        saveFile = Path.Combine(Application.persistentDataPath, "save.json");
         SceneManager.sceneLoaded += OnSceneLoaded;
         LoadGame();
     }
@@ -113,34 +119,46 @@ public class LevelManager : MonoBehaviour
             currentSave.health = player.health;
             currentSave.bloodSamples = player.bloodSamples;
         }
-        string jsonFile = JsonUtility.ToJson(currentSave, prettyPrint: true);
-        File.WriteAllText(saveFile, jsonFile);
+        string jsonFile = JsonUtility.ToJson(currentSave, true);
+        PlayerPrefs.SetString(saveData, jsonFile);
+        PlayerPrefs.Save();
     }
     public void LoadGame()
     {
-        if (File.Exists(saveFile))
+        if(PlayerPrefs.HasKey(saveData))
         {
+            string jsonFile = PlayerPrefs.GetString(saveData);
             try
             {
-                string jsonFile = File.ReadAllText(saveFile);
                 currentSave = JsonUtility.FromJson<SaveData>(jsonFile);
-                if (currentSave.bossesDefeated == null)
-                {
-                    currentSave.bossesDefeated = new Dictionary<string, bool>();
-                }
+                if (currentSave.defeatedBosses == null) currentSave.defeatedBosses = new List<string>();
             }
             catch (Exception)
             {
                 currentSave = new SaveData();
             }
         }
-        else currentSave = new SaveData();
+        else
+        {
+            currentSave = new SaveData();
+        }
+    }
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoadedForSave;
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoadedForSave;
+    }
+    private void OnSceneLoadedForSave(Scene scene, LoadSceneMode mode)
+    {
+        SaveGame();
     }
     #endregion
     #region Scene Management
     public void LoadScene(string sceneName)
     {
-        SaveGame();
         SceneManager.sceneLoaded += OnScene;
         SceneManager.LoadScene(sceneName);
     }
@@ -164,11 +182,11 @@ public class LevelManager : MonoBehaviour
     public void MarkBossDefeated(string bossName)
     {
         Debug.Log("Boss defeated: " +  bossName);
-        if (!currentSave.bossesDefeated.ContainsKey(bossName))
+        if (!currentSave.defeatedBosses.Contains(bossName))
         {
-            currentSave.bossesDefeated[bossName] = true;
+            currentSave.defeatedBosses.Add(bossName);
         }
-        SaveGame();
+        
         if(bossName == "Bigfoot" || bossName == "Mothman")
         {
             LoadScene("HubArea");
@@ -181,13 +199,14 @@ public class LevelManager : MonoBehaviour
         string[] bossRoster = new string[] { "Bigfoot", "Mothman", "Wendigo" };
         foreach(string boss in bossRoster)
         {
-            if (!currentSave.bossesDefeated.ContainsKey(boss) || !currentSave.bossesDefeated[boss]) return;
+            if (!currentSave.defeatedBosses.Contains(boss)) return;
         }
         Victory();
     }
     public void Victory()
     {
         isVictoryScene = true;
+        SaveGame();
         if (player != null) Destroy(GameManager.instance.player);
         SceneManager.LoadScene("VictoryScene");
         GameManager.instance?.mouseVisibility();
