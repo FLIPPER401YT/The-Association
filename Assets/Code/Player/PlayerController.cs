@@ -17,12 +17,14 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] StatusEffects statusEffects;
     [SerializeField] public Animator anim;
     [SerializeField] AudioClip deathSound;
-
-    public PlayerShoot shoot;
-    public AudioSource audioSource;
+    [SerializeField] AnimationClip deathClip;
 
     public int healthMax;
     public int bloodSamples;
+    public bool lastBitOfLifeDamageTaken = false;
+    public PlayerShoot shoot;
+    public AudioSource audioSource;
+
     bool canMove = true;
 
     private Rigidbody rigidBody;
@@ -90,6 +92,7 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         health += amount;
         health = Mathf.Clamp(health, 0, healthMax);
+        lastBitOfLifeDamageTaken = false;
         SavePlayerStats();
     }
 
@@ -97,7 +100,11 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         if (enabled)
         {
-            if (damage >= lastBitOfLifeDamageAmount && health - damage <= 0) health = 1;
+            if (!lastBitOfLifeDamageTaken && damage >= lastBitOfLifeDamageAmount && health - damage <= 0)
+            {
+                health = 1;
+                lastBitOfLifeDamageTaken = true;
+            }
             else health -= damage;
             SavePlayerStats();
             StartCoroutine(damageScreenEffect());
@@ -108,7 +115,9 @@ public class PlayerController : MonoBehaviour, IDamage
                 anim.enabled = true;
                 audioSource.PlayOneShot(deathSound);
                 anim.SetTrigger("Death");
+                StartCoroutine(Lose());
                 enabled = false;
+                lastBitOfLifeDamageTaken = false;
             }
         }
     }
@@ -125,8 +134,10 @@ public class PlayerController : MonoBehaviour, IDamage
         GameManager.instance.playerDamageEffect.SetActive(false);
     }
 
-    public void Lose()
+    IEnumerator Lose()
     {
+        yield return new WaitForSeconds(deathClip.length);
+
         GameManager.instance.Lose();
     }
 
@@ -143,10 +154,12 @@ public class PlayerController : MonoBehaviour, IDamage
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
         enabled = true;
+        lastBitOfLifeDamageTaken = false;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        lastBitOfLifeDamageTaken = false;
         if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
         if (LevelManager.Instance != null)
         {
