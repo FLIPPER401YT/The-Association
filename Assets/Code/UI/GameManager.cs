@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public PlayerController playerScript;
     public CameraController cameraController;
     public Image playerHealthBar;
+    public Image playerDash;
     public GameObject playerDamageEffect;
     public GameObject playerSpawnPos;
     public TMP_Text playerHealthMaxText;
