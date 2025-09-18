@@ -70,10 +70,12 @@ MonoBehaviour:
   statusEffects: {fileID: 1801471411105332039}
   anim: {fileID: 1225435400628897746}
   deathSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
-  shoot: {fileID: 8254974378684984855}
-  audioSource: {fileID: 142140309991897775}
+  deathClip: {fileID: 7400000, guid: 44719991da87bee4daf70bba9b98aadd, type: 2}
   healthMax: 0
   bloodSamples: 0
+  lastBitOfLifeDamageTaken: 0
+  shoot: {fileID: 8254974378684984855}
+  audioSource: {fileID: 142140309991897775}
   spawnPoint: {fileID: 0}
 --- !u!114 &1801471411105332039
 MonoBehaviour:
