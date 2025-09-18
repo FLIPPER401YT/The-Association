@@ -4,6 +4,8 @@ class PlayerJump : MonoBehaviour
 {
     [SerializeField] float jumpHeight;
     [SerializeField] int jumpMax;
+    [SerializeField] AudioClip jumpSound;
+
     int jumps = 0;
     Rigidbody rb;
 
@@ -18,6 +20,7 @@ class PlayerJump : MonoBehaviour
         {
             rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
             jumps++;
+            GameManager.instance.playerScript.audioSource.PlayOneShot(jumpSound);
         }
     }
 
