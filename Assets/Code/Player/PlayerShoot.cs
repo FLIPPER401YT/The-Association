@@ -213,9 +213,9 @@ public class PlayerShoot : MonoBehaviour
                         weaponAnimator.SetTrigger("Ranged");
                     }
                     else weaponAnimator.SetTrigger("Melee");
-                    fireTimer = 0;
                 }
                 else if (!isMelee && gunList[gunListPos].clip == 0) weaponAnimator.SetTrigger("ShootNoAmmo");
+                fireTimer = 0;
             }
         }
     }
