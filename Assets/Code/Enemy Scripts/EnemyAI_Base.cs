@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 
 [RequireComponent(typeof(Collider))]
@@ -7,6 +8,8 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
 {
     [Header("References")]
     [SerializeField] protected Animator anim;
+    [SerializeField] protected Component[] scripts;
+    [SerializeField] protected AnimationClip deathClip;
     [Header("Visuals & Stats")]
     [SerializeField] protected Renderer model;
     [SerializeField] public int HP;
@@ -153,11 +156,20 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
             anim.SetBool("Walking", false);
             anim.SetBool("Death", true);
 
-            if (enableDrops) DropLoot();
+            StartCoroutine(DestroyOnDeath());
 
-            //Destroy(gameObject);
+            if (enableDrops) DropLoot();
         }
 
+    }
+
+    IEnumerator DestroyOnDeath()
+    {
+        foreach (Component script in scripts) (script as Behaviour).enabled = false;
+
+        yield return new WaitForSeconds(deathClip.length);
+
+        Destroy(gameObject);
     }
 
     IEnumerator flashRed()
