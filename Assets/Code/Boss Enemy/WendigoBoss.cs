@@ -13,17 +13,26 @@ public class WendigoBoss : MonoBehaviour, IDamage
     [SerializeField] Animator anim;
 
     [Header("Health")]
-    [SerializeField] int healthMax, healthCurrent;
+    [SerializeField] int healthMax;
+    [SerializeField] int healthCurrent;
 
     [Header("Perception")]
-    [SerializeField] float aggroRange, leashRange;
+    [SerializeField] float aggroRange;
+    [SerializeField] float leashRange;
 
     [Header("Movement")]
-    [SerializeField] float maxSpeed, chaseSpeed, maxAccel, turnLerp;
+    [SerializeField] float maxSpeed;
+    [SerializeField] float chaseSpeed;
+    [SerializeField] float maxAccel;
+    [SerializeField] float turnLerp;
 
     [Header("Avoidance")]
     [SerializeField] LayerMask obstacleMask = ~0;
-    [SerializeField] float avoidStrength, lookAhead, whiskerAngle, whiskerLen, avoidRadius;
+    [SerializeField] float avoidStrength;
+    [SerializeField] float lookAhead;
+    [SerializeField] float whiskerAngle;
+    [SerializeField] float whiskerLen;
+    [SerializeField] float avoidRadius;
 
     [Header("Action Radius")]
     [SerializeField] bool drawGizmos = true;
