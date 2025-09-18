@@ -4,7 +4,9 @@ using System.Collections;
 
 [RequireComponent(typeof(Collider))]
 public class EnemyAI_Base : MonoBehaviour, IDamage
-{ 
+{
+    [Header("References")]
+    [SerializeField] protected Animator anim;
     [Header("Visuals & Stats")]
     [SerializeField] protected Renderer model;
     [SerializeField] public int HP;
@@ -136,9 +138,13 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         {
             //GameManger.instance.updateGameGoal(-1);
 
+            anim.SetBool("Running", false);
+            anim.SetBool("Walking", false);
+            anim.SetBool("Death", true);
+
             if (enableDrops) DropLoot();
 
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
 
     }

@@ -11,7 +11,7 @@ public class Movement_PatrolSync : EnemyMovementBaseRB
     {
         base.Awake();
         if (!patrol) patrol = GetComponent<EnemyPatrol>();
-        // We’re handling “no target” ourselves; don’t use the base roam.
+        // Weï¿½re handling ï¿½no targetï¿½ ourselves; donï¿½t use the base roam.
         enableRoam = false;
     }
 
@@ -65,10 +65,15 @@ public class Movement_PatrolSync : EnemyMovementBaseRB
 
     private IEnumerator PauseAndAdvance()
     {
+        anim.SetBool("Walking", false);
+
         if (isPaused) yield break;
         isPaused = true;
         BrakeToStop();
         yield return new WaitForSeconds(pause);
+
+        anim.SetBool("Walking", true);
+        
         patrol.NextPoint();
         isPaused = false;
     }
