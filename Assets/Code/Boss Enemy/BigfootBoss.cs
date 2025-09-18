@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 
 public class BigfootBoss : Base_Boss_AI
 {
@@ -20,6 +19,7 @@ public class BigfootBoss : Base_Boss_AI
     [SerializeField] Vector3 swipeOffset;
     [Tooltip("If set, swipe uses this position instead of swipeOffset.")]
     [SerializeField] Transform attackPos;
+    [SerializeField] AnimationClip swipeAnimation;
 
     [Header("Rush / Ram")]
     [SerializeField] float rushSpeed;
@@ -217,13 +217,7 @@ public class BigfootBoss : Base_Boss_AI
         if (keepSpaceWhileAttacking) MaintainPersonalSpace();
 
         anim.SetTrigger("Swipe");
-        AnimationClip clip = null;
-        if (anim.runtimeAnimatorController is AnimatorController controller)
-        {
-            foreach (ChildAnimatorState state in controller.layers[0].stateMachine.states)
-                if (state.state.name.Equals("Swipe Attack")) clip = state.state.motion as AnimationClip;
-        }
-        float attackCheckTime = clip != null ? clip.length / 3f : swipeWindup;
+        float attackCheckTime = swipeAnimation != null ? swipeAnimation.length / 3f : swipeWindup;
 
         yield return new WaitForSeconds(attackCheckTime);
 
