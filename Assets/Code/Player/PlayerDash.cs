@@ -58,8 +58,12 @@ public class PlayerDash : MonoBehaviour
 
     void Update()
     {
+        
         if (dashes > 0)
         {
+            
+            updatePlayerDashUI();
+
             dashTimer += Time.deltaTime;
             if (dashTimer >= dashReloadTime)
             {
@@ -68,5 +72,22 @@ public class PlayerDash : MonoBehaviour
             }
         }
         else dashTimer = 0;
+    }
+
+    public void updatePlayerDashUI()
+    {
+        if(dashes == 1)
+        {
+            GameManager.instance.playerDash.fillAmount = ((dashMax - dashes) / 3f) + ((dashTimer / dashReloadTime) / 3);
+        }
+        else if(dashes == 2)
+        {
+            GameManager.instance.playerDash.fillAmount = ((dashMax - dashes) / 3f) + ((dashTimer / dashReloadTime) / 3);
+        }
+        else if (dashes == 3)
+        {
+            GameManager.instance.playerDash.fillAmount = ((dashMax - dashes) / 3f) + ((dashTimer / dashReloadTime) / 3);
+        }
+
     }
 }
