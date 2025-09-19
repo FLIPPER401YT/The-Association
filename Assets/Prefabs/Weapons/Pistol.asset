@@ -26,6 +26,7 @@ MonoBehaviour:
   shootSound: {fileID: 8300000, guid: 164f42971bd320b4cb378514493d029b, type: 3}
   shootNoAmmoSound: {fileID: 8300000, guid: 0e86e47bc1dd7b54d92e7efed575f511, type: 3}
   reloadSound: {fileID: 8300000, guid: 43fa5b9a4570adb488b539e74ddbbb7a, type: 3}
+  equipSound: {fileID: 8300000, guid: 81e2075ab4da59e4d8d0f28629a7289a, type: 3}
   reloadAnimation: {fileID: 7400000, guid: 25de02eead8b08b469e314c288add196, type: 2}
   shootAnimation: {fileID: 7400000, guid: b399f98aa7813474ab44fe7e3643869f, type: 2}
   shootNoAmmoAnimation: {fileID: 7400000, guid: 8691ac2460aa38648a19e395ba613a75, type: 2}

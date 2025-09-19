@@ -35,7 +35,7 @@ public class MothmanBoss : Base_Boss_AI
     [SerializeField] LayerMask meleeHitMask = ~0;
 
     [Header("Blinding Shriek (No Damage)")]
-    [SerializeField] float blindRadius;     // “you heard it, you’re blinded”
+    [SerializeField] float blindRadius;     // ï¿½you heard it, youï¿½re blindedï¿½
     [SerializeField] float blindDuration;
     [SerializeField] float blindCooldown;
     [SerializeField] AudioClip shriekClip;
@@ -110,6 +110,14 @@ public class MothmanBoss : Base_Boss_AI
         MaintainPersonalSpace();
 
         base.FixedUpdate();
+    }
+
+    protected override void Die()
+    {
+        anim.SetBool("Running", false);
+        anim.SetTrigger("Death");
+
+        base.Die();
     }
 
     protected override void AttackStepWhileActive()
@@ -208,6 +216,9 @@ public class MothmanBoss : Base_Boss_AI
 
     IEnumerator DoSwoopClaw()
     {
+        anim.SetBool("Running", false);
+        anim.SetTrigger("Claw Attack");
+
         if (logAttacks) Debug.Log("[Mothman] Start Swoop");
 
         float t = 0f;
@@ -273,6 +284,8 @@ public class MothmanBoss : Base_Boss_AI
 
     IEnumerator DoBlindingShriek()
     {
+        anim.SetBool("Running", false);
+        
         if (logAttacks) Debug.Log("[Mothman] Start Shriek");
 
         // Play sound from attached AudioSource instead of one-shot

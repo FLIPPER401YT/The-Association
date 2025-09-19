@@ -133,6 +133,16 @@ public class BigfootBoss : Base_Boss_AI
         base.FixedUpdate();
     }
 
+    protected override void Die()
+    {
+        anim.SetBool("Rushing", false);
+        anim.SetBool("Stunned", false);
+        anim.SetTrigger("Death");
+        anim.SetBool("Running", false);
+
+        base.Die();
+    }
+
     // ---------------- Separation helper (NEW) ----------------
     void MaintainPersonalSpace()
     {
@@ -280,7 +290,7 @@ public class BigfootBoss : Base_Boss_AI
                     // Knockback via StatusEffects (same API used by Leap)
                     var status = GetPlayerStatus();
                     Vector3 playerCenter = GetPlayerCenter();
-                    Vector3 hitOrigin = bodyCol ? bodyCol.ClosestPoint(playerCenter) : transform.position;
+                    Vector3 hitOrigin = transform.position; //bodyCol ? bodyCol.ClosestPoint(playerCenter) : 
 
                     if (status)
                     {

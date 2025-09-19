@@ -235,7 +235,7 @@ public class PlayerShoot : MonoBehaviour
         weaponOverrideController["TempShoot"] = stats.shootAnimation;
         weaponOverrideController["TempShootNoAmmo"] = stats.shootNoAmmoAnimation;
         reloadTime = stats.reloadAnimation.length;
-        StartCoroutine(EquipWeapon());
+        StartCoroutine(EquipWeapon(stats.equipSound));
     }
 
     void SwitchWeapons(MeleeStats stats)
@@ -247,11 +247,12 @@ public class PlayerShoot : MonoBehaviour
         bloomMod = 0;
         weaponMesh.sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
         weaponRenderer.sharedMaterial = stats.model.GetComponent<Renderer>().sharedMaterial;
-        StartCoroutine(EquipWeapon());
+        StartCoroutine(EquipWeapon(stats.equipSound));
     }
 
-    IEnumerator EquipWeapon()
+    IEnumerator EquipWeapon(AudioClip clip)
     {
+        GameManager.instance.playerScript.audioSource.PlayOneShot(clip);
         weaponAnimator.SetTrigger("Equip");
         changingWeapons = true;
 

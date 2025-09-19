@@ -9,4 +9,5 @@ public class MeleeStats : ScriptableObject
     public GameObject model;
     public AudioClip attackSound;
     public AudioClip heavyAttackSound;
+    public AudioClip equipSound;
 }
