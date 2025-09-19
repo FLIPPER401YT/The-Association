@@ -11,9 +11,9 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
     [SerializeField] float controlLockDuration;
 
     [Header("Leap Ballistics")]
-    [SerializeField] float minAirTime;   
-    [SerializeField] float maxAirTime;   
-    [SerializeField] float maxLeapSpeed;    
+    [SerializeField] float minAirTime;
+    [SerializeField] float maxAirTime;
+    [SerializeField] float maxLeapSpeed;
 
     [Header("Grounding")]
     [SerializeField] LayerMask groundMask = ~0;
@@ -21,14 +21,34 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
     [SerializeField] float groundCheckRadius;
     [SerializeField] float groundCheckOffset;
 
+    // --- Audio ---
+    [Header("Audio")]
+    [SerializeField] private AudioSource sfx;              // assign a 3D AudioSource (spatial blend = 1)
+    [SerializeField] private AudioClip[] chaseFootsteps;   // footsteps to use during chase
+    [SerializeField] private float stepInterval = 0.45f;   // seconds between steps at normal run
+    [SerializeField] private float stepVolume = 1f;
+
+    [Space(6)]
+    [SerializeField] private AudioClip[] leapWindupClips;  // optional: play before leap
+    [SerializeField] private AudioClip[] leapLaunchClips;  // play on takeoff
+    [SerializeField] private AudioClip[] leapLandClips;    // play on landing
+    [SerializeField] private float leapVolume = 1f;
+    [SerializeField] private float pitchJitter = 0.05f;    // ±5% random pitch
+
     float cooldownTimer;
     bool controlLocked;
     bool grounded;
+
+    // audio/runtime helpers
+    float stepTimer;
+    bool inLeap;            // currently in the leap arc
+    bool lastGrounded;      // for landing detection
 
     protected override void TickMovement()
     {
         anim.SetBool("Running", true);
 
+        // update grounded + gravity, also handles landing sound
         GroundCheckAndGravity();
 
         if (!target) { BrakeToStop(); return; }
@@ -40,13 +60,13 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
         if (stopDistance > 0f && dist <= stopDistance)
         {
             anim.SetBool("Running", false);
-
+            ResetFootsteps();
             BrakeToStop();
             if (dist > 0.001f) Face(new Vector3(to.x, 0f, to.z).normalized);
             return;
         }
 
-        // during leap, let physics carry it
+        // during leap, let physics carry it (no steering / no footsteps)
         if (controlLocked) return;
 
         cooldownTimer += Time.fixedDeltaTime;
@@ -57,6 +77,8 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
         if (canLeap)
         {
             anim.SetBool("Running", false);
+            ResetFootsteps();
+            PlayOneShotRandom(leapWindupClips, leapVolume);   // windup (optional)
             anim.SetTrigger("Leap");
 
             DoBallisticLeap(target.position);
@@ -70,11 +92,14 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
             Vector3 dir = ApplyAvoidance(dirXZ.normalized);
             Face(dir);
             MoveHorizontal(dir);
+
+            // footsteps while running
+            PlayFootstepsIfMoving();
         }
         else
         {
             anim.SetBool("Running", false);
-
+            ResetFootsteps();
             BrakeToStop();
         }
     }
@@ -83,6 +108,7 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
     {
         cooldownTimer = 0f;
         controlLocked = true;
+        inLeap = true; // mark airborne leap
 
         // snapshot pos
         Vector3 p0 = transform.position;
@@ -94,7 +120,7 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
         float dXZ = toXZ.magnitude;
         float dY = to.y;
 
-        if (dXZ < 0.01f) // basically on top�nudge forward a bit
+        if (dXZ < 0.01f) // basically on top — nudge forward a bit
         {
             toXZ = transform.forward;
             dXZ = 1f;
@@ -127,6 +153,9 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
         // set launch instantly (mass-independent)
         rb.AddForce(v0, ForceMode.VelocityChange);
 
+        // play launch SFX
+        PlayOneShotRandom(leapLaunchClips, leapVolume);
+
         // brief lock so chase steering doesn't fight the arc
         Invoke(nameof(UnlockControl), controlLockDuration);
     }
@@ -135,6 +164,9 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
 
     void GroundCheckAndGravity()
     {
+        // cache last grounded for landing detect
+        bool wasGrounded = grounded;
+
         grounded = Physics.SphereCast(
             transform.position + Vector3.up * 0.1f,
             groundCheckRadius,
@@ -145,9 +177,50 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
             QueryTriggerInteraction.Ignore
         );
 
+        // landing sound: only when we were in a leap and just touched ground
+        if (inLeap && grounded && !wasGrounded)
+        {
+            inLeap = false;
+            PlayOneShotRandom(leapLandClips, leapVolume);
+        }
+
         Vector3 v = rb.linearVelocity;
         if (grounded && v.y < 0f) v.y = -2f;   // stick to ground
         else v.y += gravity * Time.fixedDeltaTime;
         rb.linearVelocity = v;
+
+        lastGrounded = grounded;
+    }
+
+    // --- footsteps during chase ---
+    void PlayFootstepsIfMoving()
+    {
+        if (!sfx || chaseFootsteps == null || chaseFootsteps.Length == 0) return;
+
+        // planar speed threshold
+        Vector3 v = rb.linearVelocity;
+        v.y = 0f;
+        if (v.sqrMagnitude < 0.04f) { stepTimer = 0f; return; } // too slow, reset timer
+
+        stepTimer += Time.fixedDeltaTime;
+        if (stepTimer >= stepInterval)
+        {
+            stepTimer = 0f;
+            PlayOneShotRandom(chaseFootsteps, stepVolume);
+        }
+    }
+
+    void ResetFootsteps() => stepTimer = 0f;
+
+    // --- tiny audio helper used everywhere ---
+    void PlayOneShotRandom(AudioClip[] bank, float vol)
+    {
+        if (!sfx || bank == null || bank.Length == 0) return;
+
+        var clip = bank[Random.Range(0, bank.Length)];
+        float original = sfx.pitch;
+        sfx.pitch = 1f + Random.Range(-pitchJitter, pitchJitter);
+        sfx.PlayOneShot(clip, vol);
+        sfx.pitch = original;
     }
 }
