@@ -280,7 +280,7 @@ public class BigfootBoss : Base_Boss_AI
                     // Knockback via StatusEffects (same API used by Leap)
                     var status = GetPlayerStatus();
                     Vector3 playerCenter = GetPlayerCenter();
-                    Vector3 hitOrigin = bodyCol ? bodyCol.ClosestPoint(playerCenter) : transform.position;
+                    Vector3 hitOrigin = transform.position; //bodyCol ? bodyCol.ClosestPoint(playerCenter) : 
 
                     if (status)
                     {
