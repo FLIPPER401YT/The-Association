@@ -51,6 +51,8 @@ public class StatusEffects : MonoBehaviour
 
         if (isKnockback)
         {
+            Debug.Log(knockbackDir);
+            Debug.Log(isKnockback);
             knockbackDir = Vector3.MoveTowards(knockbackDir, Vector3.zero, 9.8f * Time.deltaTime);
             rb.AddForce(knockbackDir, ForceMode.Force);
             if (Vector3.Distance(knockbackDir, Vector3.zero) <= 0.01)
