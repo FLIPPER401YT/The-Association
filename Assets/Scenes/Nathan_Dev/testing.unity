@@ -180,6 +180,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1781298894}
     - target: {fileID: 7238039289935847092, guid: c11c942aa63cf564ea4f5a8a4e65b8d3, type: 3}
+      propertyPath: verticalAccel
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7238039289935847092, guid: c11c942aa63cf564ea4f5a8a4e65b8d3, type: 3}
+      propertyPath: cruiseAltitude
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7238039289935847092, guid: c11c942aa63cf564ea4f5a8a4e65b8d3, type: 3}
       propertyPath: deathAnimation
       value: 
       objectReference: {fileID: 7400000, guid: bff94ea7c50b6754889e623a6cfe868a, type: 2}
@@ -1110,7 +1118,7 @@ CapsuleCollider:
   m_Radius: 40
   m_Height: 80
   m_Direction: 1
-  m_Center: {x: 0, y: 40, z: 0}
+  m_Center: {x: 0, y: 80, z: 0}
 --- !u!4 &1970711793 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8648457667011911293, guid: ba72dff7553e3d24584252a2256e12a9, type: 3}
