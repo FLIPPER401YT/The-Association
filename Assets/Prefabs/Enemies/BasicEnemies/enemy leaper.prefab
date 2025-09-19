@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 329962325042255156}
   - component: {fileID: 3450861346065507354}
   - component: {fileID: 8933258127500704465}
+  - component: {fileID: 8411895246138018244}
   m_Layer: 9
   m_Name: enemy leaper
   m_TagString: Untagged
@@ -129,6 +130,12 @@ MonoBehaviour:
     m_Bits: 8
   patrol: {fileID: 2287390096332775899}
   pause: 1
+  sfx: {fileID: 8411895246138018244}
+  footstepClips:
+  - {fileID: 8300000, guid: 9398a3887f12a6a4bb720adeb2a565b6, type: 3}
+  stepInterval: 0.6
+  stepVolume: 1
+  pitchJitter: 0.05
 --- !u!114 &5694067082883110077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,6 +186,13 @@ MonoBehaviour:
   attackRange: 3
   attackCooldown: 3
   meleeDamage: 1
+  sfx: {fileID: 8411895246138018244}
+  swingClips: []
+  hitClips:
+  - {fileID: 8300000, guid: ea0d527b928733d4493858f230a9e579, type: 3}
+  swingVolume: 1
+  hitVolume: 1
+  pitchJitter: 0.05
 --- !u!114 &5805952579697768189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,6 +241,16 @@ MonoBehaviour:
   gravity: -2
   groundCheckRadius: 0.25
   groundCheckOffset: 0.05
+  sfx: {fileID: 8411895246138018244}
+  chaseFootsteps:
+  - {fileID: 8300000, guid: ab5899356e4d68f4888f75fc62200b4b, type: 3}
+  stepInterval: 0.45
+  stepVolume: 1
+  leapWindupClips: []
+  leapLaunchClips: []
+  leapLandClips: []
+  leapVolume: 1
+  pitchJitter: 0.05
 --- !u!33 &4853246549152173359
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -351,6 +375,103 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!82 &8411895246138018244
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1728491905800200378}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 7347046352254174284, guid: f010d9a09ea138343845d132a496cf57, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6714094335378348615
 GameObject:
   m_ObjectHideFlags: 0

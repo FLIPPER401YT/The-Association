@@ -64,7 +64,42 @@ public class BigfootBoss : Base_Boss_AI
     [Tooltip("Bigfoot's main collider used for closest-point rush origin. If null, will GetComponent at runtime.")]
     [SerializeField] Collider bodyCol;
 
-    // ---------------- Personal Space (NEW) ----------------
+    // ---------------- AUDIO ----------------
+    [Header("Audio Sources")]
+    [Tooltip("Looping roar/voice source (3D, loop ON).")]
+    [SerializeField] AudioSource roarSrc;
+    [Tooltip("One-shot FX source for attacks/impacts.")]
+    [SerializeField] AudioSource fxSrc;
+
+    [Header("Roar Loop")]
+    [SerializeField] AudioClip roarLoop;
+    [Range(0f, 1f)][SerializeField] float roarVolume = 0.6f;
+
+    [Header("Swipe SFX")]
+    [SerializeField] AudioClip swipeWindupSfx;
+    [SerializeField] AudioClip swipeHitSfx;
+    [Range(0f, 1f)][SerializeField] float swipeWindupVol = 1f;
+    [Range(0f, 1f)][SerializeField] float swipeHitVol = 1f;
+
+    [Header("Rush SFX")]
+    [SerializeField] AudioClip rushStartSfx;
+    [SerializeField] AudioClip rushHitSfx;
+    [SerializeField] AudioClip rushEndSfx;
+    [Range(0f, 1f)][SerializeField] float rushStartVol = 1f;
+    [Range(0f, 1f)][SerializeField] float rushHitVol = 1f;
+    [Range(0f, 1f)][SerializeField] float rushEndVol = 1f;
+
+    [Header("Leap/Slam SFX")]
+    [SerializeField] AudioClip leapStartSfx;
+    [SerializeField] AudioClip slamImpactSfx;
+    [Range(0f, 1f)][SerializeField] float leapStartVol = 1f;
+    [Range(0f, 1f)][SerializeField] float slamImpactVol = 1f;
+
+    [Header("SFX Tuning")]
+    [Tooltip("Small random pitch variance for one-shots (±).")]
+    [Range(0f, 0.2f)][SerializeField] float sfxPitchJitter = 0.05f;
+
+    // ---------------- Personal Space ----------------
     [Header("Separation")]
     [SerializeField, Tooltip("Minimum XZ distance Bigfoot keeps from the player.")]
     float minPersonalSpace;
@@ -112,6 +147,24 @@ public class BigfootBoss : Base_Boss_AI
     {
         base.Awake();
         if (!bodyCol) bodyCol = GetComponent<Collider>();
+
+        // --- Audio init ---
+        if (!roarSrc) roarSrc = GetComponent<AudioSource>(); // fallback if you put one source on the root
+        if (roarSrc)
+        {
+            roarSrc.loop = true;
+            roarSrc.spatialBlend = 1f;
+            roarSrc.rolloffMode = AudioRolloffMode.Logarithmic;
+            if (roarLoop)
+            {
+                roarSrc.clip = roarLoop;
+                roarSrc.volume = roarVolume;
+                if (!roarSrc.isPlaying) roarSrc.Play();
+            }
+        }
+
+        // fxSrc can be the same as roarSrc if you only have one source.
+        if (!fxSrc) fxSrc = roarSrc;
     }
 
     protected override bool CanAttack(float distToPlayer)
@@ -127,7 +180,6 @@ public class BigfootBoss : Base_Boss_AI
         float dt = Time.fixedDeltaTime;
         swipeCD -= dt; rushCD -= dt; leapCD -= dt;
 
-        // keep a little distance whenever we can (but not mid-leap so we don't fight our jump)
         if (keepSpaceWhileAttacking && !isLeaping) MaintainPersonalSpace();
 
         base.FixedUpdate();
@@ -140,10 +192,13 @@ public class BigfootBoss : Base_Boss_AI
         anim.SetTrigger("Death");
         anim.SetBool("Running", false);
 
+        // stop roar on death
+        if (roarSrc) roarSrc.Stop();
+
         base.Die();
     }
 
-    // ---------------- Separation helper (NEW) ----------------
+    // ---------------- Separation helper ----------------
     void MaintainPersonalSpace()
     {
         if (!player) return;
@@ -153,13 +208,12 @@ public class BigfootBoss : Base_Boss_AI
         delta.y = 0f;
         float dist = delta.magnitude;
 
-        if (dist < 0.001f) delta = -transform.forward; // fallback
+        if (dist < 0.001f) delta = -transform.forward;
         if (dist >= minPersonalSpace) return;
 
         Vector3 outward = delta.normalized;
         Vector3 targetXZ = player.position + outward * minPersonalSpace;
 
-        // move only in XZ so Y/grounding stays owned by physics
         Vector3 newPos = Vector3.MoveTowards(
             new Vector3(transform.position.x, transform.position.y, transform.position.z),
             new Vector3(targetXZ.x, transform.position.y, targetXZ.z),
@@ -173,10 +227,9 @@ public class BigfootBoss : Base_Boss_AI
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
         anim.SetBool("Running", false);
-        
+
         if (MeleeEnabled && distToPlayer <= meleeRange && swipeCD <= 0f)
         {
-            Debug.Log("[Bigfoot] ATTACK: Swipe");
             yield return StartCoroutine(DoSwipe());
             yield break;
         }
@@ -189,7 +242,6 @@ public class BigfootBoss : Base_Boss_AI
 
         if (canRush && (!canLeap || distToPlayer > (leapMaxDist + 0.5f)))
         {
-            Debug.Log("[Bigfoot] ATTACK: Rush (outside leap range)");
             yield return StartCoroutine(DoRush());
             yield break;
         }
@@ -197,20 +249,17 @@ public class BigfootBoss : Base_Boss_AI
         if (canRush && canLeap)
         {
             bool pickRush = Random.value < 0.7f;
-            Debug.Log("[Bigfoot] ATTACK pick (both valid): " + (pickRush ? "Rush" : "Leap"));
             yield return StartCoroutine(pickRush ? DoRush() : DoLeapSlam());
             yield break;
         }
 
         if (canRush)
         {
-            Debug.Log("[Bigfoot] ATTACK: Rush");
             yield return StartCoroutine(DoRush());
             yield break;
         }
         if (canLeap)
         {
-            Debug.Log("[Bigfoot] ATTACK: Leap");
             yield return StartCoroutine(DoLeapSlam());
             yield break;
         }
@@ -223,8 +272,10 @@ public class BigfootBoss : Base_Boss_AI
         FacePlayer();
         BrakePlanar();
 
-        // make sure we aren�t standing on the player before winding up
         if (keepSpaceWhileAttacking) MaintainPersonalSpace();
+
+        // SFX: windup
+        PlayOneShot(swipeWindupSfx, swipeWindupVol);
 
         anim.SetTrigger("Swipe");
         float attackCheckTime = swipeAnimation != null ? swipeAnimation.length / 3f : swipeWindup;
@@ -240,6 +291,9 @@ public class BigfootBoss : Base_Boss_AI
             if (!IsPlayerObj(h.transform)) continue;
             var dmg = FindDamage(h);
             if (dmg != null) dmg.TakeDamage((int)swipeDamage);
+
+            // SFX: hit
+            PlayOneShot(swipeHitSfx, swipeHitVol);
             break;
         }
 
@@ -254,6 +308,9 @@ public class BigfootBoss : Base_Boss_AI
     {
         ChangeState(BossState.Attack);
         rushDidHit = false;
+
+        // SFX: start
+        PlayOneShot(rushStartSfx, rushStartVol);
 
         anim.SetBool("Rushing", true);
 
@@ -283,40 +340,28 @@ public class BigfootBoss : Base_Boss_AI
 
                     rushDidHit = true;
 
-                    // damage
                     var dmg = FindDamage(c);
                     if (dmg != null) dmg.TakeDamage((int)rushDamage);
 
-                    // Knockback via StatusEffects (same API used by Leap)
                     var status = GetPlayerStatus();
                     Vector3 playerCenter = GetPlayerCenter();
-                    Vector3 hitOrigin = transform.position; //bodyCol ? bodyCol.ClosestPoint(playerCenter) : 
+                    Vector3 hitOrigin = transform.position;
 
-                    if (status)
-                    {
-                        status.ApplyKnockback(hitOrigin, rushKnockback);
-                    }
+                    if (status) status.ApplyKnockback(hitOrigin, rushKnockback);
                     else
                     {
-                        // Rigidbody fallback
-                        var prb = player ? (player.GetComponent<Rigidbody>() ??
-                                            player.GetComponentInChildren<Rigidbody>()) : null;
+                        var prb = player ? (player.GetComponent<Rigidbody>() ?? player.GetComponentInChildren<Rigidbody>()) : null;
                         if (prb)
                         {
                             Vector3 dir = (playerCenter - hitOrigin); dir.y = 0f;
                             if (dir.sqrMagnitude < 0.0001f) dir = transform.forward;
                             dir.Normalize();
-                            prb.AddForce(dir * rushKnockback + Vector3.up * Mathf.Max(0.5f, rushUpwardKick),
-                                         ForceMode.Impulse);
+                            prb.AddForce(dir * rushKnockback + Vector3.up * Mathf.Max(0.5f, rushUpwardKick), ForceMode.Impulse);
                         }
                     }
 
-                    // brief ignore so the player can slide out if overlapping
-                    if (bodyCol && player)
-                    {
-                        var pCol = player.GetComponentInChildren<Collider>();
-                        if (pCol) StartCoroutine(TemporarilyIgnoreCollision(bodyCol, pCol, 0.25f));
-                    }
+                    // SFX: hit
+                    PlayOneShot(rushHitSfx, rushHitVol);
 
 #if UNITY_6000_0_OR_NEWER
                     rb.linearVelocity = Vector3.zero;
@@ -340,7 +385,9 @@ public class BigfootBoss : Base_Boss_AI
         anim.SetBool("Rushing", false);
         anim.SetBool("Stunned", true);
 
-        // after rushing, ensure we aren�t resting on the player
+        // SFX: end / breathe / stumble
+        PlayOneShot(rushEndSfx, rushEndVol);
+
         if (keepSpaceWhileAttacking) MaintainPersonalSpace();
 
         yield return new WaitForSeconds(rushRestDuration);
@@ -379,6 +426,9 @@ public class BigfootBoss : Base_Boss_AI
         }
         if (telegraphLanding) yield return new WaitForSeconds(Mathf.Max(0.05f, telegraphDuration * 0.5f));
 
+        // SFX: leap start
+        PlayOneShot(leapStartSfx, leapStartVol);
+
         Vector3 dir = (target - transform.position); dir.y = 0f; dir.Normalize();
 #if UNITY_6000_0_OR_NEWER
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
@@ -398,7 +448,6 @@ public class BigfootBoss : Base_Boss_AI
         }
 
         // flee after slam
-
         anim.SetBool("Running", true);
 
         float t = 0f;
@@ -448,6 +497,9 @@ public class BigfootBoss : Base_Boss_AI
     {
         Vector3 slamCenter = transform.position + Vector3.up * 0.3f;
 
+        // SFX: ground impact
+        PlayOneShot(slamImpactSfx, slamImpactVol);
+
         var aoe = Physics.OverlapSphere(slamCenter, slamOuterRadius, slamHitMask, QueryTriggerInteraction.Collide);
         foreach (var h in aoe)
         {
@@ -465,7 +517,7 @@ public class BigfootBoss : Base_Boss_AI
             var status = FindStatus(h);
             if (status)
             {
-                status.ApplyKnockback(slamCenter, slamKnock); // same API as Rush
+                status.ApplyKnockback(slamCenter, slamKnock);
                 if (slamStunDuration > 0f) status.ApplyStun(slamStunDuration);
             }
             else
@@ -498,9 +550,17 @@ public class BigfootBoss : Base_Boss_AI
             Gizmos.DrawWireSphere(transform.position, slamInnerRadius);
         }
 
-        // personal space radius
         Gizmos.color = new Color(0f, 0.6f, 1f, 0.35f);
         Gizmos.DrawWireSphere(transform.position, minPersonalSpace);
     }
 #endif
+
+    // ---------------- AUDIO UTILS ----------------
+    void PlayOneShot(AudioClip clip, float volume = 1f)
+    {
+        if (!clip || !fxSrc) return;
+        float basePitch = 1f + Random.Range(-sfxPitchJitter, sfxPitchJitter);
+        fxSrc.pitch = basePitch;
+        fxSrc.PlayOneShot(clip, volume);
+    }
 }
