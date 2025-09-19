@@ -158,10 +158,23 @@ public class WendigoBoss : MonoBehaviour, IDamage
     }
     #endregion
     #region Movement and Actions
+    protected virtual void OnDrawGizmosSelected()
+    {
+        if (!drawGizmos) return;
+        Vector3 center = Application.isPlaying ? spawn : transform.position;
+        if (attackPosition)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(attackPosition.position, swipeRadius);
+        }
+        Gizmos.color = new Color(1f, 0.7f, 0f, 0.6f);
+        Gizmos.color = new Color(0f, 0.6f, 1f, 0.35f);
+        Gizmos.DrawWireSphere(transform.position, personalSpace);
+    }
     void ChasePlayer()
     {
         if (!player) return;
-        anim.SetTrigger("Walking");
+        anim.SetBool("Walking", true);
         Vector3 velocity = (player.position - transform.position).normalized * chaseSpeed;
         velocity.y = 0f;
         Vector3 planarVelocity = new Vector3(rigidBody.linearVelocity.x, 0, rigidBody.linearVelocity.z);
@@ -276,6 +289,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
             }
         }
         yield return new WaitForSeconds(swipeRecover);
+        anim.SetBool("Walking", true);
         state = WendigoState.Chase;
     }
     IEnumerator RangeRoutine()
@@ -290,12 +304,13 @@ public class WendigoBoss : MonoBehaviour, IDamage
             if (boltRB) boltRB.linearVelocity = castMuzzle.forward * boltSpeed;
         }
         yield return new WaitForSeconds(boltRecover);
+        anim.SetBool("Walking", true);
         state = WendigoState.Chase;
     }
     IEnumerator RushRoutine()
     {
         attackLockout = rushCooldown;
-        anim.SetTrigger("Rush");
+        anim.SetBool("Rush", true);
         yield return new WaitForSeconds(rushWindup);
         float time = 0f;
         rushHit = false;
@@ -320,14 +335,16 @@ public class WendigoBoss : MonoBehaviour, IDamage
             yield return new WaitForFixedUpdate();
         }
         rigidBody.linearVelocity = Vector3.zero;
+        anim.SetBool("Rush", false);
         anim.SetTrigger("RushRecover");
         yield return new WaitForSeconds(rushRecover);
+        anim.SetBool("Walking", true);
         state = WendigoState.Chase;
     }
     IEnumerator EvadeRoutine()
     {
         attackLockout = dashCooldown;
-        anim.SetTrigger("Dash");
+        anim.SetBool("Evade", true);
         float time = 0f;
         while (time < dashTime)
         {
@@ -336,12 +353,14 @@ public class WendigoBoss : MonoBehaviour, IDamage
             time += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
+        anim.SetBool("Evade", false);
         rigidBody.linearVelocity = Vector3.zero;
+        anim.SetBool("Walking", true);
         state = WendigoState.Chase;
     }
     IEnumerator SummonRoutine()
     {
-        anim.SetTrigger("Summon");
+        anim.SetBool("Summon", true);
         yield return new WaitForSeconds(summonWindup);
         foreach (GameObject minionPrefab in minions)
         {
@@ -349,8 +368,9 @@ public class WendigoBoss : MonoBehaviour, IDamage
             spawnPosition.y = spawn.y;
             Instantiate(minionPrefab, spawnPosition, Quaternion.identity);
         }
-        anim.SetTrigger("Idle");
+        anim.SetBool("Summon", false);
         yield return new WaitForSeconds(summonRecover);
+        anim.SetBool("Walking", true);
         state = WendigoState.Chase;
     }
     #endregion
@@ -365,6 +385,10 @@ public class WendigoBoss : MonoBehaviour, IDamage
     void Death()
     {
         state = WendigoState.Dead;
+        anim.SetBool("Walking", false);
+        anim.SetBool("Rush", false);
+        anim.SetBool("Evade", false);
+        anim.SetBool("Summon", false);
         anim.SetTrigger("Death");
     }
     #endregion

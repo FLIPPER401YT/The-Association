@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3911046518360766697}
   - component: {fileID: 327888807078103629}
+  - component: {fileID: 8182951245958880094}
   - component: {fileID: 9210168865451443306}
   - component: {fileID: 8781684977721464673}
   - component: {fileID: 5611749811243292346}
@@ -178,6 +179,20 @@ MonoBehaviour:
   minPersonalSpace: 2.5
   separationSpeed: 4
   keepSpaceWhileAttacking: 1
+--- !u!114 &8182951245958880094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2685116618366660546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94027e9b2d8c0054a873a5c2b7d8354b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossName: Bigfoot
+  bossPrefab: {fileID: 2685116618366660546}
 --- !u!33 &9210168865451443306
 MeshFilter:
   m_ObjectHideFlags: 0
