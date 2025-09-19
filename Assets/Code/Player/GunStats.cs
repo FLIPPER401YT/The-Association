@@ -21,4 +21,7 @@ public class GunStats : ScriptableObject
     public AnimationClip reloadAnimation;
     public AnimationClip shootAnimation;
     public AnimationClip shootNoAmmoAnimation;
+    public AnimationClip equipWeapon;
+    public AnimationClip unequipWeapon;
+    public Vector3 scale;
 }

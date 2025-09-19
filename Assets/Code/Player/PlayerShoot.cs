@@ -13,6 +13,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] int bullets;
     [SerializeField] float bulletSpeed;
     [SerializeField] float bloomMod;
+    [SerializeField] float meleeWeaponPosOffset;
     [SerializeField] bool isAutomatic;
     [SerializeField] GameObject hitEffect;
     [SerializeField] GameObject shootPoint;
@@ -35,12 +36,14 @@ public class PlayerShoot : MonoBehaviour
 
     float fireTimer = 0;
     bool isMelee = false;
+    Vector3 gunPos;
 
     void Start()
     {
         foreach (GunStats stat in gunList) FillAmmo(stat);
         SwitchWeapons(gunList[0], 0);
         weaponAnimator.runtimeAnimatorController = weaponOverrideController;
+        gunPos = weaponMesh.gameObject.transform.position;
     }
 
     void Update()
@@ -234,7 +237,10 @@ public class PlayerShoot : MonoBehaviour
         weaponOverrideController["GunReload"] = stats.reloadAnimation;
         weaponOverrideController["TempShoot"] = stats.shootAnimation;
         weaponOverrideController["TempShootNoAmmo"] = stats.shootNoAmmoAnimation;
+        weaponOverrideController["EquipWeapon"] = stats.equipWeapon;
+        weaponOverrideController["UnequipWeapon"] = stats.unequipWeapon;
         reloadTime = stats.reloadAnimation.length;
+        weaponRenderer.gameObject.transform.localScale = stats.scale;
         StartCoroutine(EquipWeapon(stats.equipSound));
     }
 
@@ -247,6 +253,9 @@ public class PlayerShoot : MonoBehaviour
         bloomMod = 0;
         weaponMesh.sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
         weaponRenderer.sharedMaterial = stats.model.GetComponent<Renderer>().sharedMaterial;
+        weaponRenderer.gameObject.transform.localScale = stats.scale;
+        weaponOverrideController["EquipWeapon"] = stats.equipWeapon;
+        weaponOverrideController["UnequipWeapon"] = stats.unequipWeapon;
         StartCoroutine(EquipWeapon(stats.equipSound));
     }
 

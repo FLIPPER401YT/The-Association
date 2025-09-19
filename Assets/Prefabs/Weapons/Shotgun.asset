@@ -19,7 +19,7 @@ MonoBehaviour:
   bullets: 200
   ammo: 60
   clipSize: 6
-  clip: 6
+  clip: 5
   maxAmmo: 60
   isAutomatic: 0
   model: {fileID: 9091087455982598204, guid: 8705711deb539c847b057d09b8a880be, type: 3}
@@ -30,3 +30,6 @@ MonoBehaviour:
   reloadAnimation: {fileID: 7400000, guid: bdfeca5e9b4ff64478bf4fea09c22d5d, type: 2}
   shootAnimation: {fileID: 7400000, guid: c49139c99200de8418860c5cdd17128e, type: 2}
   shootNoAmmoAnimation: {fileID: 7400000, guid: 68a58a261c703454ea62cb227ad8fa2b, type: 2}
+  equipWeapon: {fileID: 7400000, guid: 5d857f5aa4516fa429c7d2d6a77e71da, type: 2}
+  unequipWeapon: {fileID: 7400000, guid: 20159491eab608640a0b0afb4a26a57c, type: 2}
+  scale: {x: 0.5, y: 0.5, z: 0.5}

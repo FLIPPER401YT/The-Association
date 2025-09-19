@@ -17,11 +17,11 @@ MonoBehaviour:
   fireDistance: 150
   bloomMod: 5
   bullets: 1
-  ammo: 120
+  ammo: 116
   clipSize: 30
-  clip: 29
+  clip: 26
   maxAmmo: 120
-  isAutomatic: 1
+  isAutomatic: 0
   model: {fileID: 9004096622392337306, guid: 83001077f5963ef4bbc461da2fb7a98a, type: 3}
   shootSound: {fileID: 8300000, guid: 164f42971bd320b4cb378514493d029b, type: 3}
   shootNoAmmoSound: {fileID: 8300000, guid: 0e86e47bc1dd7b54d92e7efed575f511, type: 3}
@@ -30,3 +30,6 @@ MonoBehaviour:
   reloadAnimation: {fileID: 7400000, guid: 25de02eead8b08b469e314c288add196, type: 2}
   shootAnimation: {fileID: 7400000, guid: b399f98aa7813474ab44fe7e3643869f, type: 2}
   shootNoAmmoAnimation: {fileID: 7400000, guid: 8691ac2460aa38648a19e395ba613a75, type: 2}
+  equipWeapon: {fileID: 7400000, guid: 4795c80d35ed4284eac1fbb657cc6a9d, type: 2}
+  unequipWeapon: {fileID: 7400000, guid: 25b743fdc2678644fa9d890da517bdef, type: 2}
+  scale: {x: 0.5, y: 0.5, z: 0.5}
