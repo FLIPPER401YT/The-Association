@@ -86,6 +86,7 @@ MonoBehaviour:
   player: {fileID: 0}
   rb: {fileID: 5611749811243292346}
   anim: {fileID: 9108339018958933876}
+  deathAnimation: {fileID: 7400000, guid: bf3583383f580194bbaef404335c39c4, type: 2}
   maxHP: 50
   currentHP: 50
   aggroRange: 25

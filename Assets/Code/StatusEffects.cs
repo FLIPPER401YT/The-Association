@@ -42,6 +42,7 @@ public class StatusEffects : MonoBehaviour
             stunTimer -= Time.deltaTime;
             if (stunTimer <= 0f)
             {
+                GameManager.instance.playerStunEffect.SetActive(false);
                 stunTimer = 0f;
                 if (showDebug) Debug.Log($"{gameObject.name} recovered from STUN");
                 OnStunChanged?.Invoke(false);
@@ -64,6 +65,7 @@ public class StatusEffects : MonoBehaviour
             blindTimer -= Time.deltaTime;
             if (blindTimer <= 0f)
             {
+                GameManager.instance.playerBlindEffect.SetActive(false);
                 blindTimer = 0f;
                 if (showDebug) Debug.Log($"{gameObject.name} recovered from BLIND");
                 OnBlindChanged?.Invoke(false);
@@ -77,6 +79,7 @@ public class StatusEffects : MonoBehaviour
     public void ApplyStun(float duration)
     {
         bool wasStunned = IsStunned;
+        GameManager.instance.playerStunEffect.SetActive(true);
         stunTimer = Mathf.Max(stunTimer, duration); // refresh with max duration
         if (!wasStunned)
         {
@@ -107,6 +110,7 @@ public class StatusEffects : MonoBehaviour
     
     public void ApplyBlind(float duration)
     {
+        GameManager.instance.playerBlindEffect.SetActive(true);
         bool wasBlinded = IsBlinded;
         blindTimer = Mathf.Max(blindTimer, duration);
 
