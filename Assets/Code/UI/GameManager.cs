@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
     public Image playerHealthBar;
     public Image playerDash;
     public GameObject playerDamageEffect;
+    public GameObject playerStunEffect;
+    public GameObject playerBlindEffect;
     public GameObject playerSpawnPos;
     public TMP_Text playerHealthMaxText;
     public TMP_Text playerHealthText;
