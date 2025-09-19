@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 4461049892907689078}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.555}
+  m_LocalPosition: {x: -0.286, y: 1.09, z: 0.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -209,8 +209,8 @@ MonoBehaviour:
     maxCount: 1
   weapon: {fileID: 0}
   attackPos: {fileID: 3048833053527537153}
-  attackRange: 1.5
-  attackCooldown: 1
+  attackRange: 3
+  attackCooldown: 3
   meleeDamage: 1
 --- !u!114 &8776218185966148276
 MonoBehaviour:
@@ -230,7 +230,7 @@ MonoBehaviour:
   acceleration: 20
   decel: 25
   turnSpeed: 10
-  stopDistance: 1.4
+  stopDistance: 1.5
   obstacleMask:
     serializedVersion: 2
     m_Bits: 2048
@@ -373,7 +373,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 2
+  m_Radius: 4
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &860263975199186669
 PrefabInstance:

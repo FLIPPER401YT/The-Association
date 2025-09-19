@@ -25,7 +25,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4589358039285968700
 Transform:
   m_ObjectHideFlags: 0
@@ -176,8 +176,8 @@ MonoBehaviour:
     maxCount: 1
   weapon: {fileID: 0}
   attackPos: {fileID: 6101181926861926551}
-  attackRange: 1.5
-  attackCooldown: 1
+  attackRange: 3
+  attackCooldown: 3
   meleeDamage: 1
 --- !u!114 &5805952579697768189
 MonoBehaviour:
