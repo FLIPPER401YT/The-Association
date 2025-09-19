@@ -11,21 +11,95 @@ public class EnemyMeleeAI : EnemyAI_Base
     [SerializeField] float attackCooldown;
     [SerializeField] int meleeDamage;
 
-    [Header("Audio")]
-    [SerializeField] private AudioSource sfx;          // assign on the enemy (3D, spatial blend = 1)
-    [SerializeField] private AudioClip[] swingClips;   // whoosh/swing options
-    [SerializeField] private AudioClip[] hitClips;     // impact options
+    [Header("Audio (one-shots)")]
+    [SerializeField] private AudioSource sfx;            // 3D, for swings/hits
+    [SerializeField] private AudioClip[] swingClips;
+    [SerializeField] private AudioClip[] hitClips;
     [SerializeField] private float swingVolume = 1f;
     [SerializeField] private float hitVolume = 1f;
-    [SerializeField] private float pitchJitter = 0.05f; // ±5% random pitch
+    [SerializeField, Range(0f, 0.3f)] private float pitchJitter = 0.05f;
+
+    [Header("Audio (constant roar/ambience)")]
+    [SerializeField] private AudioSource loopSrc;        // 3D, separate from sfx
+    [SerializeField] private AudioClip[] roarClips;
+    [SerializeField, Range(0f, 1f)] private float roarVolume = 0.6f;
+    [SerializeField] private Vector2 roarGapSeconds = new Vector2(0f, 0.75f);
+    [SerializeField, Range(0f, 0.2f)] private float roarPitchJitter = 0.03f;
+    [SerializeField] private bool autoStartRoar = true;
+
+    [Header("3D Roar Settings")]
+    [Tooltip("Optional: where the roar should emanate from (mouth/chest).")]
+    [SerializeField] private Transform roarAnchor;
+    [Tooltip("Within this distance, volume stays near max.")]
+    [SerializeField] private float roarMinDistance = 8f;
+    [Tooltip("Beyond this distance, volume is ~0.")]
+    [SerializeField] private float roarMaxDistance = 45f;
+    [SerializeField] private AudioRolloffMode roarRolloff = AudioRolloffMode.Logarithmic;
+    [SerializeField, Range(0f, 5f)] private float dopplerLevel = 0f;
 
     float attackTimer;
+    Coroutine roarRoutine;
 
     void Awake()
     {
         if (!mover) mover = GetComponent<EnemyMovementBaseRB>();
+        Configure3DAudio(loopSrc, roarMinDistance, roarMaxDistance, roarRolloff, dopplerLevel);
+        Configure3DAudio(sfx, 3f, 30f, AudioRolloffMode.Logarithmic, 0f);
+        if (loopSrc != null) loopSrc.loop = false; // code handles looping/jitter
     }
 
+    void OnEnable()
+    {
+        if (autoStartRoar) StartRoar();
+    }
+
+    void OnDisable()
+    {
+        StopRoar();
+    }
+
+    void LateUpdate()
+    {
+        // keep the roar’s AudioSource positioned at the anchor if provided
+        if (roarAnchor && loopSrc) loopSrc.transform.position = roarAnchor.position;
+    }
+
+    // -------- roar control --------
+    public void StartRoar()
+    {
+        if (roarRoutine != null) return;
+        if (!loopSrc || roarClips == null || roarClips.Length == 0) return;
+        roarRoutine = StartCoroutine(RoarLoop());
+    }
+
+    public void StopRoar()
+    {
+        if (roarRoutine != null) { StopCoroutine(roarRoutine); roarRoutine = null; }
+        if (loopSrc) loopSrc.Stop();
+    }
+
+    IEnumerator RoarLoop()
+    {
+        while (true)
+        {
+            var clip = roarClips[Random.Range(0, roarClips.Length)];
+            if (!clip) { yield return null; continue; }
+
+            float pitch = 1f + Random.Range(-roarPitchJitter, roarPitchJitter);
+            loopSrc.pitch = pitch;
+            loopSrc.volume = roarVolume;     // base volume; distance falloff handled by 3D settings
+            loopSrc.clip = clip;
+            loopSrc.Play();
+
+            float dur = clip.length / Mathf.Max(0.01f, pitch);
+            yield return new WaitForSeconds(dur);
+
+            float gap = Mathf.Max(0f, Random.Range(roarGapSeconds.x, roarGapSeconds.y));
+            if (gap > 0f) yield return new WaitForSeconds(gap);
+        }
+    }
+
+    // -------- melee logic (unchanged) --------
     protected override void Update()
     {
         base.Update();
@@ -51,10 +125,8 @@ public class EnemyMeleeAI : EnemyAI_Base
 
     IEnumerator DoMeleeAttack()
     {
-        // start animation
         anim.SetTrigger("Attack");
 
-        // find the clip length of "Melee Attack" (editor controllers only; safe if null)
         AnimationClip clip = null;
         if (anim.runtimeAnimatorController is AnimatorController controller)
         {
@@ -68,19 +140,15 @@ public class EnemyMeleeAI : EnemyAI_Base
             }
         }
 
-        // play the swing immediately on wind-up
         PlayOneShotRandom(swingClips, swingVolume);
 
-        // wait until mid animation to apply damage (same timing you had)
         float attackCheckTime = clip != null ? clip.length / 2.5f : 0f;
         yield return new WaitForSeconds(attackCheckTime);
 
-        // do damage
         IDamage dmg = player.GetComponent<IDamage>();
         if (dmg != null)
         {
             dmg.TakeDamage(meleeDamage);
-            // impact sound right when the hit lands
             PlayOneShotRandom(hitClips, hitVolume);
         }
     }
@@ -94,15 +162,26 @@ public class EnemyMeleeAI : EnemyAI_Base
     }
 #endif
 
-    // ---- audio helper ----
+    // ---- helpers ----
     void PlayOneShotRandom(AudioClip[] bank, float vol)
     {
         if (!sfx || bank == null || bank.Length == 0) return;
-
         var clip = bank[Random.Range(0, bank.Length)];
         float original = sfx.pitch;
         sfx.pitch = 1f + Random.Range(-pitchJitter, pitchJitter);
         sfx.PlayOneShot(clip, vol);
         sfx.pitch = original;
+    }
+
+    static void Configure3DAudio(AudioSource src, float minDist, float maxDist, AudioRolloffMode rolloff, float doppler)
+    {
+        if (!src) return;
+        src.spatialBlend = 1f;           // make it 3D
+        src.rolloffMode = rolloff;       // Logarithmic is natural
+        src.minDistance = Mathf.Max(0.01f, minDist);
+        src.maxDistance = Mathf.Max(src.minDistance + 0.01f, maxDist);
+        src.dopplerLevel = doppler;      // 0 to disable Doppler
+        src.spread = 0f;
+        src.spatialize = false;          // set true if using a spatializer plugin
     }
 }
