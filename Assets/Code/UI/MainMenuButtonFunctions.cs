@@ -12,6 +12,16 @@ public class MainMenuButtonFunctions : MonoBehaviour
     {
         MainMenuScript.instance.settingsOpen();
     }
+
+    public void credits()
+    {
+        MainMenuScript.instance.creditsOpen();
+    }
+
+    public void assetsCredits()
+    {
+        MainMenuScript.instance.assetsCreditsOpen();
+    }
     public void controlSettings()
     {
         MainMenuScript.instance.controlSettingsOpen();

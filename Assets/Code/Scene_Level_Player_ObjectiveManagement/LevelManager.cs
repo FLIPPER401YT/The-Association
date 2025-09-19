@@ -176,17 +176,7 @@ public class LevelManager : MonoBehaviour
         LoadGame();
         SceneManager.sceneLoaded -= OnScene;
     }
-    IEnumerator LoadAsynScene(string sceneName)
-    {
-        yield return new WaitForSeconds(loadDelay);
-        AsyncOperation asynLoad = SceneManager.LoadSceneAsync(sceneName);
-        asynLoad.allowSceneActivation = false;
-        while(!asynLoad.isDone)
-        {
-            yield return null;
-        }
-
-    }
+    
     #endregion
     #region Victory Condition
     public void RegisterTrackable(GameObject boss)
