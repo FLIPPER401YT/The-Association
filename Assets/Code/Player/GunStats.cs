@@ -17,6 +17,7 @@ public class GunStats : ScriptableObject
     public AudioClip shootSound;
     public AudioClip shootNoAmmoSound;
     public AudioClip reloadSound;
+    public AudioClip equipSound;
     public AnimationClip reloadAnimation;
     public AnimationClip shootAnimation;
     public AnimationClip shootNoAmmoAnimation;

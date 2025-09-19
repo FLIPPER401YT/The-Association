@@ -18,3 +18,4 @@ MonoBehaviour:
   model: {fileID: 4996981283368724576, guid: 7b20b023b2c954e478b75d623b36597c, type: 3}
   attackSound: {fileID: 8300000, guid: 7d189a7a369e7a844b1c38041548f585, type: 3}
   heavyAttackSound: {fileID: 8300000, guid: 7ff8c3bba8841004eb03c8192cd845a3, type: 3}
+  equipSound: {fileID: 8300000, guid: f6ba0790873842b408ccdae135222584, type: 3}
