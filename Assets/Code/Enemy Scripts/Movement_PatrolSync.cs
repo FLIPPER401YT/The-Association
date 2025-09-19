@@ -7,12 +7,23 @@ public class Movement_PatrolSync : EnemyMovementBaseRB
     [SerializeField] private float pause;
     private bool isPaused;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource sfx;           // assign in Inspector
+    [SerializeField] private AudioClip[] footstepClips; // walking footstep sounds
+    [SerializeField] private float stepInterval = 0.6f; // seconds between footsteps
+    [SerializeField] private float stepVolume = 1f;
+    [SerializeField] private float pitchJitter = 0.05f; // ±5% pitch variation
+
+    private float nextStepTime;
+
     protected override void Awake()
     {
         base.Awake();
         if (!patrol) patrol = GetComponent<EnemyPatrol>();
-        // We�re handling �no target� ourselves; don�t use the base roam.
         enableRoam = false;
+
+        if (!sfx) sfx = GetComponent<AudioSource>();
+        if (sfx) sfx.spatialBlend = 1f; // make it 3D
     }
 
     // Called when a target exists (AI set target = player)
@@ -56,6 +67,10 @@ public class Movement_PatrolSync : EnemyMovementBaseRB
             Vector3 dir = ApplyAvoidance(to.normalized);
             Face(dir);
             MoveHorizontal(dir);
+
+            // walking footsteps
+            TryPlayFootstep();
+            anim.SetBool("Walking", true);
         }
         else
         {
@@ -72,9 +87,24 @@ public class Movement_PatrolSync : EnemyMovementBaseRB
         BrakeToStop();
         yield return new WaitForSeconds(pause);
 
-        anim.SetBool("Walking", true);
-        
         patrol.NextPoint();
         isPaused = false;
+    }
+
+    private void TryPlayFootstep()
+    {
+        if (!sfx || footstepClips.Length == 0) return;
+
+        if (Time.time >= nextStepTime)
+        {
+            var clip = footstepClips[Random.Range(0, footstepClips.Length)];
+            float originalPitch = sfx.pitch;
+            sfx.pitch = 1f + Random.Range(-pitchJitter, pitchJitter);
+
+            sfx.PlayOneShot(clip, stepVolume);
+
+            sfx.pitch = originalPitch;
+            nextStepTime = Time.time + stepInterval;
+        }
     }
 }
