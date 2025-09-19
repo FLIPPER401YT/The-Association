@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: bb0352b736ad41c4797ee54acb4a77e6
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 261494
+  packageName: WendigoMonster
+  packageVersion: 1.0
+  assetPath: Assets/WendigoMonster/Prefab/BaseMesh_WendigoMonster_Skin_3.prefab
+  uploadId: 602858

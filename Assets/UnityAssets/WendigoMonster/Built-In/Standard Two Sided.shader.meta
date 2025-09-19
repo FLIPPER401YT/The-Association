@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 796e6fea0fc10bd43924d44ef53f266a
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 261494
+  packageName: WendigoMonster
+  packageVersion: 1.0
+  assetPath: Assets/WendigoMonster/Built-In/Standard Two Sided.shader
+  uploadId: 602858

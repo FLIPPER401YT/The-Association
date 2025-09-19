@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fc3c61440f31a6b4bb25582f000ac4a6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 261494
+  packageName: WendigoMonster
+  packageVersion: 1.0
+  assetPath: Assets/WendigoMonster/Materials/MAT_WendigoMonster_Body_Skin_2.mat
+  uploadId: 602858
