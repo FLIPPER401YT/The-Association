@@ -9,6 +9,7 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
     [SerializeField] protected Transform player;
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected Animator anim;
+    [SerializeField] protected AnimationClip deathAnimation;
 
     [Header("Health")]
     [SerializeField] protected int maxHP;
@@ -165,7 +166,14 @@ public abstract class Base_Boss_AI : MonoBehaviour, IDamage
             rb.detectCollisions = false;
         }
 
-        //Destroy(gameObject, 0f);
+        StartCoroutine(DestroyTimeOffset());
+    }
+
+    IEnumerator DestroyTimeOffset()
+    {
+        yield return new WaitForSeconds(deathAnimation.length);
+
+        Destroy(gameObject);
     }
 
     // State helpers
