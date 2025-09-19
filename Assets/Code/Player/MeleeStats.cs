@@ -7,7 +7,10 @@ public class MeleeStats : ScriptableObject
     public float swingRate;
     public float swingDistance;
     public GameObject model;
+    public AnimationClip equipWeapon;
+    public AnimationClip unequipWeapon;
     public AudioClip attackSound;
     public AudioClip heavyAttackSound;
     public AudioClip equipSound;
+    public Vector3 scale;
 }
