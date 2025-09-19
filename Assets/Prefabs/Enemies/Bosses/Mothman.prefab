@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6654097013363482160}
   - component: {fileID: 7238039289935847092}
+  - component: {fileID: 22771116510590656}
   - component: {fileID: 9046747126798362045}
   - component: {fileID: 2130602561291289377}
   - component: {fileID: 3341597790931829447}
@@ -115,6 +116,20 @@ MonoBehaviour:
   keepSpaceWhileAttacking: 0
   logAttacks: 1
   ringSegments: 48
+--- !u!114 &22771116510590656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2944074325720338504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94027e9b2d8c0054a873a5c2b7d8354b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossName: Mothman
+  bossPrefab: {fileID: 2944074325720338504}
 --- !u!33 &9046747126798362045
 MeshFilter:
   m_ObjectHideFlags: 0

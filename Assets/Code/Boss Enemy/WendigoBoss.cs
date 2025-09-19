@@ -158,6 +158,19 @@ public class WendigoBoss : MonoBehaviour, IDamage
     }
     #endregion
     #region Movement and Actions
+    protected virtual void OnDrawGizmosSelected()
+    {
+        if (!drawGizmos) return;
+        Vector3 center = Application.isPlaying ? spawn : transform.position;
+        if (attackPosition)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(attackPosition.position, swipeRadius);
+        }
+        Gizmos.color = new Color(1f, 0.7f, 0f, 0.6f);
+        Gizmos.color = new Color(0f, 0.6f, 1f, 0.35f);
+        Gizmos.DrawWireSphere(transform.position, personalSpace);
+    }
     void ChasePlayer()
     {
         if (!player) return;
