@@ -192,10 +192,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bigfoot
       objectReference: {fileID: 0}
-    - target: {fileID: 2685116618366660546, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3911046518360766697, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 78.5
@@ -487,6 +483,10 @@ PrefabInstance:
     - target: {fileID: 1728491905800200378, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: m_Name
       value: enemy leaper
+      objectReference: {fileID: 0}
+    - target: {fileID: 1728491905800200378, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2287390096332775899, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
