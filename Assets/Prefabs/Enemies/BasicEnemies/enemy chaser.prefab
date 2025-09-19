@@ -190,7 +190,7 @@ MonoBehaviour:
   - {fileID: 8776218185966148276}
   deathClip: {fileID: 7400000, guid: 3731e31967a44bd498c039a0128d9dc8, type: 2}
   model: {fileID: 0}
-  HP: 50
+  HP: 100
   faceTargetSpeed: 10
   FOV: 90
   viewDistance: 10
@@ -218,7 +218,7 @@ MonoBehaviour:
   attackPos: {fileID: 3048833053527537153}
   attackRange: 3
   attackCooldown: 3
-  meleeDamage: 1
+  meleeDamage: 15
   sfx: {fileID: 8752229729551803894}
   swingClips: []
   hitClips:

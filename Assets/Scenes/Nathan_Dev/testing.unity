@@ -127,10 +127,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2902617756260140468, guid: c11c942aa63cf564ea4f5a8a4e65b8d3, type: 3}
-      propertyPath: m_Resource
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 2944074325720338504, guid: c11c942aa63cf564ea4f5a8a4e65b8d3, type: 3}
       propertyPath: m_Name
       value: Mothman
@@ -195,6 +191,10 @@ PrefabInstance:
     - target: {fileID: 2685116618366660546, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_Name
       value: Bigfoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 2685116618366660546, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3911046518360766697, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_LocalPosition.x

@@ -57,8 +57,8 @@ MonoBehaviour:
   rb: {fileID: 0}
   anim: {fileID: 4120897076171327677}
   deathAnimation: {fileID: 7400000, guid: bff94ea7c50b6754889e623a6cfe868a, type: 2}
-  maxHP: 100
-  currentHP: 100
+  maxHP: 300
+  currentHP: 300
   aggroRange: 35
   leashRange: 40
   roamRadius: 50
@@ -90,11 +90,11 @@ MonoBehaviour:
   spitBoltPrefab: {fileID: 5730125231447525711, guid: 5238f25ea9593e844941dd5fc88e97fa, type: 3}
   castMuzzle: {fileID: 374878025054074241}
   boltSpeed: 20
-  boltDamage: 10
+  boltDamage: 15
   rangedCooldown: 2
   diveSpeed: 14
   diveTime: 0.9
-  clawDamage: 20
+  clawDamage: 35
   clawRadius: 2
   postSwoopRecover: 0.6
   swoopAttackPos: {fileID: 7515057806263498615}
@@ -250,7 +250,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 7347046352254174284, guid: f010d9a09ea138343845d132a496cf57, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: f6ba0790873842b408ccdae135222584, type: 3}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

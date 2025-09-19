@@ -185,7 +185,7 @@ MonoBehaviour:
   attackPos: {fileID: 6101181926861926551}
   attackRange: 3
   attackCooldown: 3
-  meleeDamage: 1
+  meleeDamage: 20
   sfx: {fileID: 8411895246138018244}
   swingClips: []
   hitClips:
