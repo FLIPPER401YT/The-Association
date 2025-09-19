@@ -10,6 +10,8 @@ public class MainMenuScript : MonoBehaviour
     [SerializeField] GameObject activeMenu;
     [SerializeField] GameObject titleScreen;
     [SerializeField] GameObject settingsMenu;
+    [SerializeField] GameObject creditsMenu;
+    [SerializeField] GameObject assetsCreditsMenu;
     [SerializeField] GameObject menuControlSettings;
     [SerializeField] GameObject menuAudioSettings;
     [SerializeField] MenuState menuCurr;
@@ -18,12 +20,15 @@ public class MainMenuScript : MonoBehaviour
     {
         None,
         Title,
-        Settings
+        Settings,
+        Credits
     }
     public MenuState originalMenu;
 
     [SerializeField] private GameObject titleFirst;
     [SerializeField] private GameObject settingsFirst;
+    [SerializeField] private GameObject creditsFirst;
+    [SerializeField] private GameObject assetsCreditsFirst;
     [SerializeField] private GameObject audioSettingsFirst;
     [SerializeField] private GameObject controlsSettingsFirst;
 
@@ -49,6 +54,24 @@ public class MainMenuScript : MonoBehaviour
         activeMenu = settingsMenu;
         activeMenu.SetActive(true);
         EventSystem.current.SetSelectedGameObject(settingsFirst);
+    }
+
+    public void creditsOpen()
+    {
+        activeMenu.SetActive(false);
+        activeMenu = null;
+        activeMenu = creditsMenu;
+        activeMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(creditsFirst);
+    }
+    public void assetsCreditsOpen()
+    {
+        activeMenu.SetActive(false);
+        activeMenu = null;
+        activeMenu = assetsCreditsMenu;
+        activeMenu.SetActive(true);
+        menuCurr = MenuState.Credits;
+        EventSystem.current.SetSelectedGameObject(creditsFirst);
     }
 
     public void controlSettingsOpen()
@@ -92,6 +115,16 @@ public class MainMenuScript : MonoBehaviour
                     activeMenu = settingsMenu;
                     activeMenu.SetActive(true);
                     EventSystem.current.SetSelectedGameObject(settingsFirst);
+                    break;
+                }
+            case MenuState.Credits:
+                {
+                    menuCurr = originalMenu;
+                    activeMenu.SetActive(false);
+                    activeMenu = null;
+                    activeMenu = creditsMenu;
+                    activeMenu.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(creditsFirst);
                     break;
                 }
             default:

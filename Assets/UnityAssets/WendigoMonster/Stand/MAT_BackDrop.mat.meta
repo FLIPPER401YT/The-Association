@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e2f1bb23b6779464b9f386b345d0f7ff
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 261494
+  packageName: WendigoMonster
+  packageVersion: 1.0
+  assetPath: Assets/WendigoMonster/Stand/MAT_BackDrop.mat
+  uploadId: 602858

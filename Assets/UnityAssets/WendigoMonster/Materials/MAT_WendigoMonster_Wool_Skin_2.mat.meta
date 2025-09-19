@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9db00c8c07c96eb47b7d7f1754a51300
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 261494
+  packageName: WendigoMonster
+  packageVersion: 1.0
+  assetPath: Assets/WendigoMonster/Materials/MAT_WendigoMonster_Wool_Skin_2.mat
+  uploadId: 602858

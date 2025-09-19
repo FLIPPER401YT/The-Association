@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AI;
-//using UnityEditor.Animations;
 
 public class WendigoBoss : MonoBehaviour, IDamage
 {
@@ -11,6 +10,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
     [SerializeField] Transform player;
     [SerializeField] Rigidbody rigidBody;
     [SerializeField] Animator anim;
+    [SerializeField] AnimationClip deathAnimation;
 
     [Header("Health")]
     [SerializeField] int healthMax;
@@ -37,28 +37,62 @@ public class WendigoBoss : MonoBehaviour, IDamage
     [Header("Action Radius")]
     [SerializeField] bool drawGizmos = true;
 
-    [Header("Range")][SerializeField] float swipeRange, boltMinRange, boltMaxRange, rushRange, dashRange;
+    [Header("Range")]
+    [SerializeField] float swipeRange;
+    [SerializeField] float boltMinRange;
+    [SerializeField] float boltMaxRange;
+    [SerializeField] float rushRange;
+    [SerializeField] float dashRange;
 
-    [Header("Summons")][SerializeField] GameObject[] minions, miniBosses;
-    [SerializeField] float summonWindup, summonRecover, minionCooldown;
+    [Header("Summons")]
+    [SerializeField] GameObject[] minions;
+    [SerializeField] float summonWindup;
+    [SerializeField] float summonRecover;
+    [SerializeField] float minionCooldown;
 
-    [Header("Swipe")][SerializeField] float swipeDamage, swipeWindup, swipeRecover, swipeRadius, swipeCooldown;
+    [Header("Swipe")]
+    [SerializeField] float swipeDamage;
+    [SerializeField] float swipeWindup;
+    [SerializeField] float swipeRecover;
+    [SerializeField] float swipeRadius;
+    [SerializeField] float swipeCooldown;
     [SerializeField] Vector3 swipeOffset;
     [SerializeField] Transform attackPosition;
 
-    [Header("Fang Shot")][SerializeField] float boltSpeed, boltDamage, boltWindup, boltRecover, boltCooldown;
+    [Header("Fang Shot")]
+    [SerializeField] float boltSpeed;
+    [SerializeField] float boltDamage;
+    [SerializeField] float boltWindup;
+    [SerializeField] float boltRecover;
+    [SerializeField] float boltCooldown;
     [SerializeField] GameObject boltPrefab;
     [SerializeField] Transform castMuzzle;
 
-    [Header("Rush")][SerializeField] float rushSpeed, rushTime, rushDamage, rushWindup, rushRecover, rushCooldown, rushShoulderRadius, rushShoulderLength;
+    [Header("Rush")]
+    [SerializeField] float rushSpeed;
+    [SerializeField] float rushTime;
+    [SerializeField] float rushDamage;
+    [SerializeField] float rushWindup;
+    [SerializeField] float rushRecover;
+    [SerializeField] float rushCooldown;
+    [SerializeField] float rushShoulderRadius;
+    [SerializeField] float rushShoulderLength;
 
-    [Header("Evade")][SerializeField] float dashSpeed, dashTime, dashWindup, dashRecover, dashCooldown;
+    [Header("Evade")]
+    [SerializeField] float dashSpeed;
+    [SerializeField] float dashTime;
+    [SerializeField] float dashWindup;
+    [SerializeField] float dashRecover;
+    [SerializeField] float dashCooldown;
 
-    [Header("Hit Masks & Tags")][SerializeField] LayerMask rushHitMask = ~0;
+    [Header("Hit Masks & Tags")]
+    [SerializeField] LayerMask rushHitMask = ~0;
     [SerializeField] Collider bodyCollider;
     [SerializeField] string playerTag = "Player";
 
-    [Header("Separation")][SerializeField] float personalSpace, separationSpeed;
+    [Header("Separation")]
+    [SerializeField] float personalSpace;
+    [SerializeField] float separationSpeed;
     [SerializeField] bool keepSpace = true;
 
     public enum WendigoState { Chase, Melee, Range, Evade, Rush, Summon, Dead };
@@ -127,6 +161,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
     void ChasePlayer()
     {
         if (!player) return;
+        anim.SetTrigger("Walking");
         Vector3 velocity = (player.position - transform.position).normalized * chaseSpeed;
         velocity.y = 0f;
         Vector3 planarVelocity = new Vector3(rigidBody.linearVelocity.x, 0, rigidBody.linearVelocity.z);
@@ -228,7 +263,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
     IEnumerator MeleeRoutine()
     {
         attackLockout = swipeCooldown;
-        anim.SetTrigger("SwipeWindup");
+        anim.SetTrigger("Swipe");
         yield return new WaitForSeconds(swipeWindup);
         Vector3 attack = transform.position + transform.forward * swipeOffset.z + swipeOffset;
         Collider[] hitBox = Physics.OverlapSphere(attack, swipeRadius, rushHitMask);
@@ -240,14 +275,13 @@ public class WendigoBoss : MonoBehaviour, IDamage
                 if (playerHit != null) playerHit.TakeDamage((int)swipeDamage);
             }
         }
-        anim.SetTrigger("SwipeRecover");
         yield return new WaitForSeconds(swipeRecover);
         state = WendigoState.Chase;
     }
     IEnumerator RangeRoutine()
     {
         attackLockout = boltCooldown;
-        anim.SetTrigger("BoltWindup");
+        anim.SetTrigger("Bolt");
         yield return new WaitForSeconds(boltWindup);
         if (boltPrefab && castMuzzle)
         {
@@ -255,14 +289,13 @@ public class WendigoBoss : MonoBehaviour, IDamage
             Rigidbody boltRB = bolt.GetComponent<Rigidbody>();
             if (boltRB) boltRB.linearVelocity = castMuzzle.forward * boltSpeed;
         }
-        anim.SetTrigger("BoltRecover");
         yield return new WaitForSeconds(boltRecover);
         state = WendigoState.Chase;
     }
     IEnumerator RushRoutine()
     {
         attackLockout = rushCooldown;
-        anim.SetTrigger("RushWindup");
+        anim.SetTrigger("Rush");
         yield return new WaitForSeconds(rushWindup);
         float time = 0f;
         rushHit = false;
@@ -294,7 +327,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
     IEnumerator EvadeRoutine()
     {
         attackLockout = dashCooldown;
-        anim.SetTrigger("DashWindup");
+        anim.SetTrigger("Dash");
         float time = 0f;
         while (time < dashTime)
         {
@@ -304,12 +337,11 @@ public class WendigoBoss : MonoBehaviour, IDamage
             yield return new WaitForFixedUpdate();
         }
         rigidBody.linearVelocity = Vector3.zero;
-        anim.SetTrigger("DashRecover");
         state = WendigoState.Chase;
     }
     IEnumerator SummonRoutine()
     {
-        anim.SetTrigger("SummonWindup");
+        anim.SetTrigger("Summon");
         yield return new WaitForSeconds(summonWindup);
         foreach (GameObject minionPrefab in minions)
         {
@@ -317,7 +349,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
             spawnPosition.y = spawn.y;
             Instantiate(minionPrefab, spawnPosition, Quaternion.identity);
         }
-        anim.SetTrigger("SummonRecover");
+        anim.SetTrigger("Idle");
         yield return new WaitForSeconds(summonRecover);
         state = WendigoState.Chase;
     }

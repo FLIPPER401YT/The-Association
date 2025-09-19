@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,7 @@ public class LevelManager : MonoBehaviour
     public bool isVictoryScene = false;
     public PlayerController player;
     public Transform spawnPoint;
+    private float loadDelay = 2f;
 
     #region Persistance
     [Serializable]
@@ -71,6 +73,10 @@ public class LevelManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
+    }
+    public void Update()
+    {
+        
     }
     #endregion
     #region Scene Handler
@@ -170,6 +176,7 @@ public class LevelManager : MonoBehaviour
         LoadGame();
         SceneManager.sceneLoaded -= OnScene;
     }
+    
     #endregion
     #region Victory Condition
     public void RegisterTrackable(GameObject boss)
