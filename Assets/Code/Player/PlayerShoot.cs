@@ -16,6 +16,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] float meleeWeaponPosOffset;
     [SerializeField] bool isAutomatic;
     [SerializeField] GameObject hitEffect;
+    [SerializeField] GameObject hitEffectGolem;
     [SerializeField] GameObject shootPoint;
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] LayerMask shootMask;
@@ -195,7 +196,7 @@ public class PlayerShoot : MonoBehaviour
                             {
                                 if (damages.ContainsKey(dmg)) damages[dmg] += isMelee && heavyAttack ? damage * 2 : damage;
                                 else damages.Add(dmg, isMelee && heavyAttack ? damage * 2 : damage);
-                                Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                                Instantiate(hit.transform.CompareTag("Golem") ? hitEffectGolem : hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
                             }
 
                         }
