@@ -192,10 +192,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bigfoot
       objectReference: {fileID: 0}
-    - target: {fileID: 2685116618366660546, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3911046518360766697, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 78.5
@@ -502,7 +498,7 @@ PrefabInstance:
       objectReference: {fileID: 2004514254}
     - target: {fileID: 4589358039285968700, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.41
+      value: 76.9
       objectReference: {fileID: 0}
     - target: {fileID: 4589358039285968700, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
       propertyPath: m_LocalPosition.y

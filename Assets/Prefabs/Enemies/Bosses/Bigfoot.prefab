@@ -141,7 +141,7 @@ MonoBehaviour:
   slamInnerRadius: 0
   slamDamage: 50
   slamStunDuration: 5
-  slamKnock: 20
+  slamKnock: 10
   fleeTime: 10
   fleeSpeed: 30
   leapCooldown: 20
