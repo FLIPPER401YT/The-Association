@@ -70,6 +70,7 @@ MonoBehaviour:
   statusEffects: {fileID: 1801471411105332039}
   anim: {fileID: 1225435400628897746}
   deathSound: {fileID: 8300000, guid: e936df4d6746caf46936e84458df4afd, type: 3}
+  takeDamageSound: {fileID: 8300000, guid: 4797428e6315a4242963e4efc0d35c03, type: 3}
   deathClip: {fileID: 7400000, guid: 44719991da87bee4daf70bba9b98aadd, type: 2}
   healthMax: 0
   bloodSamples: 0
