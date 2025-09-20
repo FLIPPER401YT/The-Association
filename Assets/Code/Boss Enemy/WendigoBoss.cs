@@ -100,6 +100,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
     Vector3 spawn; float attackLockout;
     float swipeCD, boltCD, rushCD, summonCD, dashCD;
     bool rushHit;
+    bool healthPercent70 = false, healthPercent30 = false;
     bool MeleeEnabled => swipeDamage > 0f && swipeRadius > 0f;
     bool RangeEnabled => boltDamage > 0f && boltMinRange > 0f && boltMaxRange > 0f;
     bool RushEnabled => rushSpeed > 0f && rushTime > 0f && rushDamage > 0f;
@@ -154,14 +155,34 @@ public class WendigoBoss : MonoBehaviour, IDamage
             case WendigoState.Summon:
                 PerformSummon();
                 break;
-        }
+        } 
     }
     #endregion
     #region Movement and Actions
+    protected virtual void OnDrawGizmosSelected()
+    {
+        if (!drawGizmos) return;
+        Vector3 center = Application.isPlaying ? spawn : transform.position;
+        if (attackPosition)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(attackPosition.position, swipeRadius);
+        }
+        Gizmos.color = new Color(1f, 0.7f, 0f, 0.6f);
+        Gizmos.color = new Color(0f, 0.6f, 1f, 0.35f);
+        Gizmos.DrawWireSphere(transform.position, personalSpace);
+        if (rushRange > 0f)
+        {
+            Gizmos.color = new Color(1f, 0.2f, 0f, 0.6f);
+            Gizmos.DrawWireSphere(transform.position, rushRange);
+        }
+        Gizmos.color = new Color(0f, 0.6f, 1f, 0.35f);
+        Gizmos.DrawWireSphere(transform.position, personalSpace);
+
+    }
     void ChasePlayer()
     {
         if (!player) return;
-        anim.SetTrigger("Walking");
         Vector3 velocity = (player.position - transform.position).normalized * chaseSpeed;
         velocity.y = 0f;
         Vector3 planarVelocity = new Vector3(rigidBody.linearVelocity.x, 0, rigidBody.linearVelocity.z);
@@ -175,9 +196,11 @@ public class WendigoBoss : MonoBehaviour, IDamage
         }
         if (planarVelocity.sqrMagnitude > 0.01f)
         {
+            anim.SetBool("Walking", true);
             Quaternion targetRotation = Quaternion.LookRotation(planarVelocity, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * turnLerp);
         }
+        else anim.SetBool("Walking", false);
     }
     void MeleeAttack()
     {
@@ -254,8 +277,16 @@ public class WendigoBoss : MonoBehaviour, IDamage
     void CheckSummonThreshold()
     {
         if (!SummonEnabled || summonCD > 0f || state == WendigoState.Summon) return;
-        if ((healthCurrent <= healthMax * 0.7f || healthCurrent <= healthMax * 0.3f) && dashCD > 0f)
+        float healthPercentage = (float)healthCurrent / healthMax;
+        if(healthPercentage <= 0.7f && !healthPercent70)
         {
+            healthPercent70 = true;
+            summonCD = minionCooldown;
+            state = WendigoState.Summon;
+        }
+        else if(healthPercentage <= 0.3f && !healthPercent30)
+        {
+            healthPercent30 = true;
             summonCD = minionCooldown;
             state = WendigoState.Summon;
         }
@@ -265,7 +296,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
         attackLockout = swipeCooldown;
         anim.SetTrigger("Swipe");
         yield return new WaitForSeconds(swipeWindup);
-        Vector3 attack = transform.position + transform.forward * swipeOffset.z + swipeOffset;
+        Vector3 attack = transform.position + transform.rotation * swipeOffset;
         Collider[] hitBox = Physics.OverlapSphere(attack, swipeRadius, rushHitMask);
         foreach (var hit in hitBox)
         {
@@ -327,7 +358,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
     IEnumerator EvadeRoutine()
     {
         attackLockout = dashCooldown;
-        anim.SetTrigger("Dash");
+        anim.SetTrigger("Evade");
         float time = 0f;
         while (time < dashTime)
         {
@@ -345,11 +376,10 @@ public class WendigoBoss : MonoBehaviour, IDamage
         yield return new WaitForSeconds(summonWindup);
         foreach (GameObject minionPrefab in minions)
         {
-            Vector3 spawnPosition = spawn + UnityEngine.Random.insideUnitSphere * 3f;
+            Vector3 spawnPosition = transform.position + UnityEngine.Random.insideUnitSphere * 3f;
             spawnPosition.y = spawn.y;
             Instantiate(minionPrefab, spawnPosition, Quaternion.identity);
         }
-        anim.SetTrigger("Idle");
         yield return new WaitForSeconds(summonRecover);
         state = WendigoState.Chase;
     }
@@ -365,7 +395,14 @@ public class WendigoBoss : MonoBehaviour, IDamage
     void Death()
     {
         state = WendigoState.Dead;
+        anim.SetBool("Walking", false);
         anim.SetTrigger("Death");
+        StartCoroutine(DestroyOffset());
+    }
+    IEnumerator DestroyOffset()
+    {
+        yield return new WaitForSeconds(deathAnimation.length);
+        Destroy(gameObject);
     }
     #endregion
 }

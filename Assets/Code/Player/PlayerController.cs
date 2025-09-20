@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] StatusEffects statusEffects;
     [SerializeField] public Animator anim;
     [SerializeField] AudioClip deathSound;
+    [SerializeField] AudioClip takeDamageSound;
     [SerializeField] AnimationClip deathClip;
 
     public int healthMax;
@@ -110,7 +111,11 @@ public class PlayerController : MonoBehaviour, IDamage
             StartCoroutine(damageScreenEffect());
             updatePlayerHealthBarUI();
 
-            if (health <= 0)
+            if (health > 0)
+            {
+                audioSource.PlayOneShot(takeDamageSound);
+            }
+            else if (health <= 0)
             {
                 anim.enabled = true;
                 audioSource.PlayOneShot(deathSound);

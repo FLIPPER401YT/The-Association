@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a47819b47ea8cb54a93cca886ae85c88
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 261494
+  packageName: WendigoMonster
+  packageVersion: 1.0
+  assetPath: Assets/WendigoMonster/WendigoMonster Animator Controller.controller
+  uploadId: 602858
