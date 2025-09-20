@@ -132,6 +132,7 @@ MonoBehaviour:
   meleeWeaponPosOffset: 0.5
   isAutomatic: 0
   hitEffect: {fileID: 2156521725812720333, guid: 5ce5286334da1a840824a8425542b79f, type: 3}
+  hitEffectGolem: {fileID: 5879923836264915677, guid: 11d2032f02740cf488923af9fcae0e5a, type: 3}
   shootPoint: {fileID: 8937604189313975159}
   bulletPrefab: {fileID: 2146355934780771645, guid: 594ce16b677d2c049a6b86b7d5da4962, type: 3}
   shootMask:
