@@ -544,13 +544,13 @@ MonoBehaviour:
   rigidBody: {fileID: 4470743929110887598}
   anim: {fileID: 8959282787153321606}
   deathAnimation: {fileID: 1827226128182048838, guid: 2503a47a3fe39d3409688b89da987f3c, type: 3}
-  healthMax: 3000
-  healthCurrent: 3000
-  aggroRange: 40
+  healthMax: 750
+  healthCurrent: 750
+  aggroRange: 30
   leashRange: 20
-  maxSpeed: 20
-  chaseSpeed: 20
-  maxAccel: 20
+  maxSpeed: 8
+  chaseSpeed: 8
+  maxAccel: 8
   turnLerp: 8
   obstacleMask:
     serializedVersion: 2
@@ -561,44 +561,44 @@ MonoBehaviour:
   whiskerLen: 1.5
   avoidRadius: 0.5
   drawGizmos: 1
-  swipeRange: 3
+  swipeRange: 1
   boltMinRange: 15
   boltMaxRange: 30
-  rushRange: 8
-  dashRange: 8
+  rushRange: 6
+  dashRange: 6
   minions:
   - {fileID: 9003971440569338922, guid: 0d42ffeffd37700438e53b78633e7661, type: 3}
   - {fileID: 1728491905800200378, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
   summonWindup: 3
   summonRecover: 3
-  minionCooldown: 3
-  swipeDamage: 20
+  minionCooldown: 10
+  swipeDamage: 10
   swipeWindup: 2
   swipeRecover: 2
   swipeRadius: 1.5
   swipeCooldown: 0.8
   swipeOffset: {x: 0, y: 1, z: 2}
-  attackPosition: {fileID: 0}
-  boltSpeed: 0
-  boltDamage: 0
-  boltWindup: 0
-  boltRecover: 0
-  boltCooldown: 0
+  attackPosition: {fileID: 8165457497244930920}
+  boltSpeed: 10
+  boltDamage: 10
+  boltWindup: 2
+  boltRecover: 2
+  boltCooldown: 5
   boltPrefab: {fileID: 5730125231447525711, guid: 5238f25ea9593e844941dd5fc88e97fa, type: 3}
   castMuzzle: {fileID: 8165457497244930920}
-  rushSpeed: 0
-  rushTime: 0
-  rushDamage: 0
-  rushWindup: 0
-  rushRecover: 0
-  rushCooldown: 0
-  rushShoulderRadius: 0
-  rushShoulderLength: 0
-  dashSpeed: 0
-  dashTime: 0
-  dashWindup: 0
-  dashRecover: 0
-  dashCooldown: 0
+  rushSpeed: 10
+  rushTime: 5
+  rushDamage: 10
+  rushWindup: 2
+  rushRecover: 2
+  rushCooldown: 10
+  rushShoulderRadius: 1
+  rushShoulderLength: 3
+  dashSpeed: 10
+  dashTime: 0.5
+  dashWindup: 2
+  dashRecover: 2
+  dashCooldown: 10
   rushHitMask:
     serializedVersion: 2
     m_Bits: 4294967295

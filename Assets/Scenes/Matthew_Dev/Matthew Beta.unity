@@ -726,6 +726,10 @@ PrefabInstance:
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: boltWindup
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
       propertyPath: chaseSpeed
       value: 8
       objectReference: {fileID: 0}
@@ -736,6 +740,10 @@ PrefabInstance:
     - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
       propertyPath: avoidRadius
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: boltRecover
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
       propertyPath: swipeWindup

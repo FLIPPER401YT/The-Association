@@ -142,7 +142,6 @@ public class LevelManager : MonoBehaviour
         if (PlayerPrefs.HasKey("Health")) currentSave.health = PlayerPrefs.GetInt("Health");
         if (PlayerPrefs.HasKey("HealthMax")) currentSave.healthMax = PlayerPrefs.GetInt("HealthMax");
         if (PlayerPrefs.HasKey("BloodSamples")) currentSave.bloodSamples = PlayerPrefs.GetInt("BloodSamples");
-        currentSave.defeatedBosses.Clear();
         int count = PlayerPrefs.GetInt("DefeatedBossesCount", 0);
         for (int index = 0; index < count; index++)
         {
