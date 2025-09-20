@@ -21,11 +21,11 @@ public class SpitBoltProjectile : MonoBehaviour
     [SerializeField] AudioClip launchClip;   // one-shot at spawn
     [SerializeField] AudioClip loopClip;     // looping whoosh while flying
     [SerializeField] AudioClip impactClip;   // one-shot on impact / expire
-    [Range(0f, 1f)] public float launchVolume = 1f;
-    [Range(0f, 1f)] public float loopVolume = 0.6f;
-    [Range(0f, 1f)] public float impactVolume = 1f;
-    [Tooltip("± pitch variance for one-shots/loop init.")]
-    [Range(0f, 0.2f)] public float pitchJitter = 0.05f;
+    [Range(0f, 1f)] public float launchVolume;
+    [Range(0f, 1f)] public float loopVolume;
+    [Range(0f, 1f)] public float impactVolume;
+    [Tooltip("pitch variance for one-shots/loop init.")]
+    [Range(0f, 0.2f)] public float pitchJitter;
 
     Rigidbody rb;
     float t;

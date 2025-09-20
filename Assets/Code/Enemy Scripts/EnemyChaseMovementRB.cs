@@ -11,9 +11,9 @@ public class EnemyChaseMovementRB : EnemyMovementBaseRB
     [Header("Audio")]
     [SerializeField] private AudioSource sfx;           // Assign in Inspector
     [SerializeField] private AudioClip[] runStepClips;  // Running footstep clips
-    [SerializeField] private float stepInterval = 0.4f; // Faster than walking
-    [SerializeField] private float stepVolume = 1f;
-    [SerializeField] private float pitchJitter = 0.05f; // ±5% random pitch
+    [SerializeField] private float stepInterval;        // Faster than walking
+    [SerializeField] private float stepVolume;
+    [SerializeField] private float pitchJitter; // random pitch
 
     bool grounded;
     float nextStepTime;

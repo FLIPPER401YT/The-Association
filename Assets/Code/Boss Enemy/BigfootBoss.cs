@@ -73,31 +73,31 @@ public class BigfootBoss : Base_Boss_AI
 
     [Header("Roar Loop")]
     [SerializeField] AudioClip roarLoop;
-    [Range(0f, 1f)][SerializeField] float roarVolume = 0.6f;
+    [Range(0f, 1f)][SerializeField] float roarVolume;
 
     [Header("Swipe SFX")]
     [SerializeField] AudioClip swipeWindupSfx;
     [SerializeField] AudioClip swipeHitSfx;
-    [Range(0f, 1f)][SerializeField] float swipeWindupVol = 1f;
-    [Range(0f, 1f)][SerializeField] float swipeHitVol = 1f;
+    [Range(0f, 1f)][SerializeField] float swipeWindupVol;
+    [Range(0f, 1f)][SerializeField] float swipeHitVol;
 
     [Header("Rush SFX")]
     [SerializeField] AudioClip rushStartSfx;
     [SerializeField] AudioClip rushHitSfx;
     [SerializeField] AudioClip rushEndSfx;
-    [Range(0f, 1f)][SerializeField] float rushStartVol = 1f;
-    [Range(0f, 1f)][SerializeField] float rushHitVol = 1f;
-    [Range(0f, 1f)][SerializeField] float rushEndVol = 1f;
+    [Range(0f, 1f)][SerializeField] float rushStartVol;
+    [Range(0f, 1f)][SerializeField] float rushHitVol;
+    [Range(0f, 1f)][SerializeField] float rushEndVol;
 
     [Header("Leap/Slam SFX")]
     [SerializeField] AudioClip leapStartSfx;
     [SerializeField] AudioClip slamImpactSfx;
-    [Range(0f, 1f)][SerializeField] float leapStartVol = 1f;
-    [Range(0f, 1f)][SerializeField] float slamImpactVol = 1f;
+    [Range(0f, 1f)][SerializeField] float leapStartVol;
+    [Range(0f, 1f)][SerializeField] float slamImpactVol;
 
     [Header("SFX Tuning")]
-    [Tooltip("Small random pitch variance for one-shots (±).")]
-    [Range(0f, 0.2f)][SerializeField] float sfxPitchJitter = 0.05f;
+    [Tooltip("Small random pitch variance for one-shots.")]
+    [Range(0f, 0.2f)][SerializeField] float sfxPitchJitter;
 
     // ---------------- Personal Space ----------------
     [Header("Separation")]
