@@ -546,8 +546,8 @@ MonoBehaviour:
   deathAnimation: {fileID: 1827226128182048838, guid: 2503a47a3fe39d3409688b89da987f3c, type: 3}
   healthMax: 3000
   healthCurrent: 3000
-  aggroRange: 35
-  leashRange: 40
+  aggroRange: 40
+  leashRange: 20
   maxSpeed: 20
   chaseSpeed: 20
   maxAccel: 20
@@ -555,7 +555,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 2048
-  avoidStrength: 0
+  avoidStrength: 3
   lookAhead: 2
   whiskerAngle: 30
   whiskerLen: 1.5

@@ -371,6 +371,11 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   lightOverride: {fileID: 0}
+--- !u!4 &572037267 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+  m_PrefabInstance: {fileID: 1166461859860309817}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &875070722 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8959282787153321606, guid: 6294c2064063e634b8868662e38eb108, type: 3}
@@ -483,15 +488,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8918952998549432659, guid: 1e3c644797b9cf146a40f77b7deeeee7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 443.93445
+      value: 462.5
       objectReference: {fileID: 0}
     - target: {fileID: 8918952998549432659, guid: 1e3c644797b9cf146a40f77b7deeeee7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.13
+      value: 1.55
       objectReference: {fileID: 0}
     - target: {fileID: 8918952998549432659, guid: 1e3c644797b9cf146a40f77b7deeeee7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 392.78488
+      value: 397.7
       objectReference: {fileID: 0}
     - target: {fileID: 8918952998549432659, guid: 1e3c644797b9cf146a40f77b7deeeee7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -697,6 +702,42 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 875070722}
     - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: maxAccel
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: maxSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: dashRange
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: healthMax
+      value: 750
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: rushRange
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: aggroRange
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: chaseSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: swipeRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: avoidRadius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
       propertyPath: swipeWindup
       value: 2
       objectReference: {fileID: 0}
@@ -705,8 +746,24 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: healthCurrent
+      value: 750
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: swipeOffset.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
       propertyPath: swipeOffset.z
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: attackPosition
+      value: 
+      objectReference: {fileID: 572037267}
+    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
+      propertyPath: minionCooldown
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
       propertyPath: m_LocalPosition.x
