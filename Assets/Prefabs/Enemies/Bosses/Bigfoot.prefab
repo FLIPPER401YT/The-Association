@@ -92,16 +92,16 @@ MonoBehaviour:
   deathAnimation: {fileID: 7400000, guid: bf3583383f580194bbaef404335c39c4, type: 2}
   maxHP: 300
   currentHP: 300
-  aggroRange: 25
+  aggroRange: 50
   leashRange: 40
-  roamRadius: 50
+  roamRadius: 100
   minHopDistance: 10
   arriveRadius: 4
   dwellRange: {x: 0.1, y: 0.5}
   groundMask:
     serializedVersion: 2
     m_Bits: 8
-  maxSpeed: 20
+  maxSpeed: 25
   chaseSpeed: 20
   maxAccel: 20
   turnLerp: 8
@@ -224,7 +224,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 02d842b11f3f7c248a251b5c7e94613a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

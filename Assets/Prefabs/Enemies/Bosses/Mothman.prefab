@@ -60,9 +60,9 @@ MonoBehaviour:
   deathAnimation: {fileID: 7400000, guid: bff94ea7c50b6754889e623a6cfe868a, type: 2}
   maxHP: 300
   currentHP: 300
-  aggroRange: 35
+  aggroRange: 50
   leashRange: 40
-  roamRadius: 50
+  roamRadius: 100
   minHopDistance: 10
   arriveRadius: 4
   dwellRange: {x: 0.1, y: 0.5}
@@ -70,7 +70,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   maxSpeed: 20
-  chaseSpeed: 20
+  chaseSpeed: 30
   maxAccel: 20
   turnLerp: 8
   obstacleMask:
