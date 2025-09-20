@@ -264,7 +264,7 @@ MonoBehaviour:
   avoidProbeDist: 1
   sideProbeOffset: 0.5
   avoidSteerStrength: 5
-  enableRoam: 0
+  enableRoam: 1
   roamRadius: 0
   minHopDistance: 0
   arriveRadius: 0
