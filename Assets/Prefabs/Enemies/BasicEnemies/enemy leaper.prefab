@@ -157,6 +157,9 @@ MonoBehaviour:
   - {fileID: 5805952579697768189}
   - {fileID: 5694067082883110077}
   deathClip: {fileID: 7400000, guid: 1bf07a92e9145d949b037195b72359ab, type: 2}
+  sfx: {fileID: 8411895246138018244}
+  takeDamageSound: {fileID: 8300000, guid: 2ef8b6ae76382174bbe68626066f39a2, type: 3}
+  deathSound: {fileID: 8300000, guid: 2fba8d2508ca3ed45adeffe2ae75fca8, type: 3}
   model: {fileID: 0}
   HP: 50
   faceTargetSpeed: 10
@@ -187,7 +190,6 @@ MonoBehaviour:
   attackRange: 3
   attackCooldown: 3
   meleeDamage: 20
-  sfx: {fileID: 8411895246138018244}
   swingClips: []
   hitClips:
   - {fileID: 8300000, guid: ea0d527b928733d4493858f230a9e579, type: 3}

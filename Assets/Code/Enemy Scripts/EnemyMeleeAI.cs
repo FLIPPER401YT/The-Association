@@ -12,7 +12,6 @@ public class EnemyMeleeAI : EnemyAI_Base
     [SerializeField] int meleeDamage;
 
     [Header("Audio (one-shots)")]
-    [SerializeField] private AudioSource sfx;            // 3D, for swings/hits
     [SerializeField] private AudioClip[] swingClips;
     [SerializeField] private AudioClip[] hitClips;
     [SerializeField] private float swingVolume = 1f;
@@ -60,7 +59,7 @@ public class EnemyMeleeAI : EnemyAI_Base
 
     void LateUpdate()
     {
-        // keep the roar’s AudioSource positioned at the anchor if provided
+        // keep the roarï¿½s AudioSource positioned at the anchor if provided
         if (roarAnchor && loopSrc) loopSrc.transform.position = roarAnchor.position;
     }
 
