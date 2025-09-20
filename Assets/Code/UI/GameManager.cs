@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
     public CameraController cameraController;
     public Image playerHealthBar;
     public Image playerDash;
+    public Image playerBloomReticle;
     public GameObject playerDamageEffect;
     public GameObject playerStunEffect;
     public GameObject playerBlindEffect;
@@ -46,6 +48,8 @@ public class GameManager : MonoBehaviour
     public GameObject ammoUIObject;
     public TMP_Text currentAmmo;
     public TMP_Text totalAmmo;
+    public float reticleOriginalHeight = 30;
+    public float reticleOriginalWidth = 30;
 
     [Header("Contract Board UI")]
     public GameObject contractBoardCam;
@@ -96,6 +100,9 @@ public class GameManager : MonoBehaviour
 
         cameraController = Camera.main.GetComponent<CameraController>();
         spawnPoint = GameObject.FindWithTag("Respawn");
+
+        playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, reticleOriginalWidth);
+        playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, reticleOriginalHeight);
     }
 
     // Update is called once per frame
