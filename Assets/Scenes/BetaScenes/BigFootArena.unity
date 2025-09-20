@@ -18674,6 +18674,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1172081498}
+    - target: {fileID: 4147011661229911901, guid: 08010051a4db29f4389c2ca3d3478a95, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7bfe4aeb982931b498323e640962c5cd, type: 2}
     - target: {fileID: 4515830050769475686, guid: 08010051a4db29f4389c2ca3d3478a95, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -25817,14 +25821,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
-      propertyPath: maxSpeed
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
-      propertyPath: roamRadius
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 2685116618366660546, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_Name
       value: Bigfoot
@@ -25869,10 +25865,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8781684977721464673, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 02d842b11f3f7c248a251b5c7e94613a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
