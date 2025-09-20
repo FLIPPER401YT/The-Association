@@ -34,21 +34,12 @@ public class WendigoBoss : MonoBehaviour, IDamage
     [SerializeField] float whiskerLen;
     [SerializeField] float avoidRadius;
 
-    [Header("Action Radius")]
-    [SerializeField] bool drawGizmos = true;
-
     [Header("Range")]
     [SerializeField] float swipeRange;
     [SerializeField] float boltMinRange;
     [SerializeField] float boltMaxRange;
     [SerializeField] float rushRange;
     [SerializeField] float dashRange;
-
-    [Header("Summons")]
-    [SerializeField] GameObject[] minions;
-    [SerializeField] float summonWindup;
-    [SerializeField] float summonRecover;
-    [SerializeField] float minionCooldown;
 
     [Header("Swipe")]
     [SerializeField] float swipeDamage;
@@ -68,16 +59,6 @@ public class WendigoBoss : MonoBehaviour, IDamage
     [SerializeField] GameObject boltPrefab;
     [SerializeField] Transform castMuzzle;
 
-    [Header("Rush")]
-    [SerializeField] float rushSpeed;
-    [SerializeField] float rushTime;
-    [SerializeField] float rushDamage;
-    [SerializeField] float rushWindup;
-    [SerializeField] float rushRecover;
-    [SerializeField] float rushCooldown;
-    [SerializeField] float rushShoulderRadius;
-    [SerializeField] float rushShoulderLength;
-
     [Header("Evade")]
     [SerializeField] float dashSpeed;
     [SerializeField] float dashTime;
@@ -95,16 +76,13 @@ public class WendigoBoss : MonoBehaviour, IDamage
     [SerializeField] float separationSpeed;
     [SerializeField] bool keepSpace = true;
 
-    public enum WendigoState { Chase, Melee, Range, Evade, Rush, Summon, Dead };
+    public enum WendigoState { Chase, Melee, Range, Evade, Dead };
     WendigoState state;
     Vector3 spawn; float attackLockout;
-    float swipeCD, boltCD, rushCD, summonCD, dashCD;
-    bool rushHit;
+    float swipeCD, boltCD, dashCD;
     bool healthPercent70 = false, healthPercent30 = false;
     bool MeleeEnabled => swipeDamage > 0f && swipeRadius > 0f;
     bool RangeEnabled => boltDamage > 0f && boltMinRange > 0f && boltMaxRange > 0f;
-    bool RushEnabled => rushSpeed > 0f && rushTime > 0f && rushDamage > 0f;
-    bool SummonEnabled;
     bool EvadeEnabled;
     #endregion
     #region Awake and Update
@@ -116,8 +94,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
         rigidBody.constraints |= RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         healthCurrent = Mathf.Clamp(healthCurrent, 1, healthMax);
         spawn = transform.position;
-        swipeCD = boltCD = rushCD = dashCD = summonCD = 0f;
-        SummonEnabled = minions != null && minions.Length > 0;
+        swipeCD = boltCD = dashCD = 0f;
         EvadeEnabled = dashCooldown > 0f && dashTime > 0f;
 
     }
@@ -130,10 +107,8 @@ public class WendigoBoss : MonoBehaviour, IDamage
     {
         if (state == WendigoState.Dead) return;
         attackLockout -= Time.fixedDeltaTime; swipeCD -= Time.fixedDeltaTime;
-        boltCD -= Time.fixedDeltaTime; rushCD -= Time.fixedDeltaTime;
-        dashCD -= Time.fixedDeltaTime; summonCD -= Time.fixedDeltaTime;
+        boltCD -= Time.fixedDeltaTime; dashCD -= Time.fixedDeltaTime;
         float playerDistance = player ? Vector3.Distance(transform.position, player.position) : Mathf.Infinity;
-        CheckSummonThreshold();
         switch (state)
         {
             case WendigoState.Chase:
@@ -142,44 +117,20 @@ public class WendigoBoss : MonoBehaviour, IDamage
                 break;
             case WendigoState.Melee:
                 MeleeAttack();
+                CheckTransitions(playerDistance);
                 break;
             case WendigoState.Range:
                 RangeAttack();
-                break;
-            case WendigoState.Rush:
-                RushAttack();
+                CheckTransitions(playerDistance);
                 break;
             case WendigoState.Evade:
                 PerformEvade();
-                break;
-            case WendigoState.Summon:
-                PerformSummon();
+                CheckTransitions(playerDistance);
                 break;
         } 
     }
     #endregion
     #region Movement and Actions
-    protected virtual void OnDrawGizmosSelected()
-    {
-        if (!drawGizmos) return;
-        Vector3 center = Application.isPlaying ? spawn : transform.position;
-        if (attackPosition)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(attackPosition.position, swipeRadius);
-        }
-        Gizmos.color = new Color(1f, 0.7f, 0f, 0.6f);
-        Gizmos.color = new Color(0f, 0.6f, 1f, 0.35f);
-        Gizmos.DrawWireSphere(transform.position, personalSpace);
-        if (rushRange > 0f)
-        {
-            Gizmos.color = new Color(1f, 0.2f, 0f, 0.6f);
-            Gizmos.DrawWireSphere(transform.position, rushRange);
-        }
-        Gizmos.color = new Color(0f, 0.6f, 1f, 0.35f);
-        Gizmos.DrawWireSphere(transform.position, personalSpace);
-
-    }
     void ChasePlayer()
     {
         if (!player) return;
@@ -204,29 +155,24 @@ public class WendigoBoss : MonoBehaviour, IDamage
     }
     void MeleeAttack()
     {
-        if (attackLockout > 0f) return;
+        anim.SetBool("Walking", false);
+        if (attackLockout > 0f)
+        {
+            return;
+        }
         StartCoroutine(MeleeRoutine());
     }
     void RangeAttack()
     {
+        anim.SetBool("Walking", false);
         if (attackLockout > 0f) return;
         StartCoroutine(RangeRoutine());
     }
-    void RushAttack()
-    {
-        if (attackLockout < 0f) return;
-        StartCoroutine(RushRoutine());
-    }
     void PerformEvade()
     {
+        anim.SetBool("Walking", false);
         if (attackLockout < 0f) return;
         StartCoroutine(EvadeRoutine());
-    }
-    void PerformSummon()
-    {
-        if (attackLockout < 0f) return;
-        StartCoroutine(SummonRoutine());
-
     }
     #endregion
     #region Checks and Coroutines
@@ -268,32 +214,31 @@ public class WendigoBoss : MonoBehaviour, IDamage
     void CheckTransitions(float distance)
     {
         if (attackLockout > 0f) return;
+        if (state == WendigoState.Melee || state == WendigoState.Range || state == WendigoState.Evade) return;
         if (MeleeEnabled && distance <= swipeRange && swipeCD <= 0f) { state = WendigoState.Melee; return; }
         if (RangeEnabled && distance >= boltMinRange && distance <= boltMaxRange && boltCD <= 0f) { state = WendigoState.Range; return; }
-        if (RushEnabled && distance <= rushRange && rushCD <= 0f) { state = WendigoState.Rush; return; }
-        if (EvadeEnabled && dashCD <= 0f && (healthCurrent <= healthMax * 0.7f || healthCurrent <= healthMax * 0.3f)) { state = WendigoState.Evade; return; }
+        if (EvadeEnabled && dashCD <= 0f && (healthPercent70 || healthPercent30)) { state = WendigoState.Evade; return; }
         state = WendigoState.Chase;
     }
-    void CheckSummonThreshold()
+    IEnumerator FacePlayer(float facePlayer = 10f)
     {
-        if (!SummonEnabled || summonCD > 0f || state == WendigoState.Summon) return;
-        float healthPercentage = (float)healthCurrent / healthMax;
-        if(healthPercentage <= 0.7f && !healthPercent70)
+        while (player != null)
         {
-            healthPercent70 = true;
-            summonCD = minionCooldown;
-            state = WendigoState.Summon;
-        }
-        else if(healthPercentage <= 0.3f && !healthPercent30)
-        {
-            healthPercent30 = true;
-            summonCD = minionCooldown;
-            state = WendigoState.Summon;
+            Vector3 playerDirection = (player.position - transform.position).normalized;
+            playerDirection.y = 0f;
+            if (playerDirection.sqrMagnitude < 0.01f) yield break;
+            Quaternion targetRotation = Quaternion.LookRotation(playerDirection);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, facePlayer * Time.deltaTime);
+            float angleDifference = Quaternion.Angle(transform.rotation, targetRotation);
+            if (angleDifference < .01f) break;
+            yield return null;
         }
     }
     IEnumerator MeleeRoutine()
     {
+        Debug.Log("MeleeRoutine started");
         attackLockout = swipeCooldown;
+        swipeCD = swipeCooldown;
         anim.SetTrigger("Swipe");
         yield return new WaitForSeconds(swipeWindup);
         Vector3 attack = transform.position + transform.rotation * swipeOffset;
@@ -311,7 +256,9 @@ public class WendigoBoss : MonoBehaviour, IDamage
     }
     IEnumerator RangeRoutine()
     {
+        yield return StartCoroutine(FacePlayer());
         attackLockout = boltCooldown;
+        boltCD = boltCooldown;
         anim.SetTrigger("Bolt");
         yield return new WaitForSeconds(boltWindup);
         if (boltPrefab && castMuzzle)
@@ -323,41 +270,10 @@ public class WendigoBoss : MonoBehaviour, IDamage
         yield return new WaitForSeconds(boltRecover);
         state = WendigoState.Chase;
     }
-    IEnumerator RushRoutine()
-    {
-        attackLockout = rushCooldown;
-        anim.SetTrigger("Rush");
-        yield return new WaitForSeconds(rushWindup);
-        float time = 0f;
-        rushHit = false;
-        while (time < rushTime)
-        {
-            rigidBody.linearVelocity = transform.forward * rushSpeed;
-            Collider[] hitBox = Physics.OverlapBox(transform.position + transform.forward * rushShoulderLength,
-                new Vector3(rushShoulderRadius, 1f, rushShoulderLength / 2), transform.rotation, rushHitMask);
-            foreach (Collider hit in hitBox)
-            {
-                if (!rushHit && hit.CompareTag(playerTag))
-                {
-                    IDamage playerHit = hit.GetComponent<IDamage>();
-                    if (playerHit != null)
-                    {
-                        playerHit.TakeDamage((int)rushDamage);
-                        rushHit = true;
-                    }
-                }
-            }
-            time = Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
-        }
-        rigidBody.linearVelocity = Vector3.zero;
-        anim.SetTrigger("RushRecover");
-        yield return new WaitForSeconds(rushRecover);
-        state = WendigoState.Chase;
-    }
     IEnumerator EvadeRoutine()
     {
         attackLockout = dashCooldown;
+        dashCD = dashCooldown;
         anim.SetTrigger("Evade");
         float time = 0f;
         while (time < dashTime)
@@ -370,19 +286,6 @@ public class WendigoBoss : MonoBehaviour, IDamage
         rigidBody.linearVelocity = Vector3.zero;
         state = WendigoState.Chase;
     }
-    IEnumerator SummonRoutine()
-    {
-        anim.SetTrigger("Summon");
-        yield return new WaitForSeconds(summonWindup);
-        foreach (GameObject minionPrefab in minions)
-        {
-            Vector3 spawnPosition = transform.position + UnityEngine.Random.insideUnitSphere * 3f;
-            spawnPosition.y = spawn.y;
-            Instantiate(minionPrefab, spawnPosition, Quaternion.identity);
-        }
-        yield return new WaitForSeconds(summonRecover);
-        state = WendigoState.Chase;
-    }
     #endregion
     #region Damage and Death
     public void TakeDamage(int damage)
@@ -390,7 +293,6 @@ public class WendigoBoss : MonoBehaviour, IDamage
         if (state == WendigoState.Dead) return;
         healthCurrent -= Mathf.Abs(damage);
         if (healthCurrent <= 0) Death();
-        else PerformSummon();
     }
     void Death()
     {

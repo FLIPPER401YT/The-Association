@@ -43705,11 +43705,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: maxHP
-      value: 2500
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: currentHP
-      value: 2500
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: roamRadius
