@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 50
   swingRate: 1
-  swingDistance: 1
+  swingDistance: 3
   model: {fileID: 4996981283368724576, guid: 7b20b023b2c954e478b75d623b36597c, type: 3}
   equipWeapon: {fileID: 7400000, guid: 1e3cf28cd681d0b408dbc1fe89c0fe77, type: 2}
   unequipWeapon: {fileID: 7400000, guid: 711954db66095744183cdd329ccff9da, type: 2}

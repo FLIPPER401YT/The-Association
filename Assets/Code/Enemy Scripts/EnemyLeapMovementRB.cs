@@ -23,17 +23,17 @@ public class EnemyLeapMovementRB : EnemyMovementBaseRB
 
     // --- Audio ---
     [Header("Audio")]
-    [SerializeField] private AudioSource sfx;              // assign a 3D AudioSource (spatial blend = 1)
+    [SerializeField] private AudioSource sfx;              // assign a 3D AudioSource 
     [SerializeField] private AudioClip[] chaseFootsteps;   // footsteps to use during chase
-    [SerializeField] private float stepInterval = 0.45f;   // seconds between steps at normal run
-    [SerializeField] private float stepVolume = 1f;
+    [SerializeField] private float stepInterval;   // seconds between steps at normal run
+    [SerializeField] private float stepVolume;
 
     [Space(6)]
-    [SerializeField] private AudioClip[] leapWindupClips;  // optional: play before leap
+    [SerializeField] private AudioClip[] leapWindupClips;  // play before leap
     [SerializeField] private AudioClip[] leapLaunchClips;  // play on takeoff
     [SerializeField] private AudioClip[] leapLandClips;    // play on landing
-    [SerializeField] private float leapVolume = 1f;
-    [SerializeField] private float pitchJitter = 0.05f;    // ±5% random pitch
+    [SerializeField] private float leapVolume;
+    [SerializeField] private float pitchJitter;    
 
     float cooldownTimer;
     bool controlLocked;

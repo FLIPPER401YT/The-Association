@@ -10,6 +10,9 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     [SerializeField] protected Animator anim;
     [SerializeField] protected Component[] scripts;
     [SerializeField] protected AnimationClip deathClip;
+    [SerializeField] protected AudioSource sfx;            // 3D, for swings/hits
+    [SerializeField] protected AudioClip takeDamageSound;
+    [SerializeField] protected AudioClip deathSound;
     [Header("Visuals & Stats")]
     [SerializeField] protected Renderer model;
     [SerializeField] public int HP;
@@ -138,6 +141,8 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     {
         if (HP > 0)
         {
+            sfx.PlayOneShot(takeDamageSound);
+
             HP -= amount;
 
             aggroTimer = aggroMemorySeconds;
@@ -150,6 +155,8 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
 
         if (HP <= 0)
         {
+            sfx.PlayOneShot(deathSound);
+
             //GameManger.instance.updateGameGoal(-1);
 
             anim.SetBool("Running", false);

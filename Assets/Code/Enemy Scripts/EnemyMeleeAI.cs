@@ -12,30 +12,29 @@ public class EnemyMeleeAI : EnemyAI_Base
     [SerializeField] int meleeDamage;
 
     [Header("Audio (one-shots)")]
-    [SerializeField] private AudioSource sfx;            // 3D, for swings/hits
     [SerializeField] private AudioClip[] swingClips;
     [SerializeField] private AudioClip[] hitClips;
-    [SerializeField] private float swingVolume = 1f;
-    [SerializeField] private float hitVolume = 1f;
-    [SerializeField, Range(0f, 0.3f)] private float pitchJitter = 0.05f;
+    [SerializeField] private float swingVolume;
+    [SerializeField] private float hitVolume;
+    [SerializeField, Range(0f, 0.3f)] private float pitchJitter;
 
     [Header("Audio (constant roar/ambience)")]
     [SerializeField] private AudioSource loopSrc;        // 3D, separate from sfx
     [SerializeField] private AudioClip[] roarClips;
-    [SerializeField, Range(0f, 1f)] private float roarVolume = 0.6f;
+    [SerializeField, Range(0f, 1f)] private float roarVolume;
     [SerializeField] private Vector2 roarGapSeconds = new Vector2(0f, 0.75f);
-    [SerializeField, Range(0f, 0.2f)] private float roarPitchJitter = 0.03f;
+    [SerializeField, Range(0f, 0.2f)] private float roarPitchJitter;
     [SerializeField] private bool autoStartRoar = true;
 
     [Header("3D Roar Settings")]
     [Tooltip("Optional: where the roar should emanate from (mouth/chest).")]
     [SerializeField] private Transform roarAnchor;
     [Tooltip("Within this distance, volume stays near max.")]
-    [SerializeField] private float roarMinDistance = 8f;
+    [SerializeField] private float roarMinDistance;
     [Tooltip("Beyond this distance, volume is ~0.")]
-    [SerializeField] private float roarMaxDistance = 45f;
+    [SerializeField] private float roarMaxDistance;
     [SerializeField] private AudioRolloffMode roarRolloff = AudioRolloffMode.Logarithmic;
-    [SerializeField, Range(0f, 5f)] private float dopplerLevel = 0f;
+    [SerializeField, Range(0f, 5f)] private float dopplerLevel;
 
     float attackTimer;
     Coroutine roarRoutine;
@@ -60,7 +59,7 @@ public class EnemyMeleeAI : EnemyAI_Base
 
     void LateUpdate()
     {
-        // keep the roar’s AudioSource positioned at the anchor if provided
+        // keep the roarï¿½s AudioSource positioned at the anchor if provided
         if (roarAnchor && loopSrc) loopSrc.transform.position = roarAnchor.position;
     }
 

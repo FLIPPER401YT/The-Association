@@ -10,9 +10,9 @@ public class Movement_PatrolSync : EnemyMovementBaseRB
     [Header("Audio")]
     [SerializeField] private AudioSource sfx;           // assign in Inspector
     [SerializeField] private AudioClip[] footstepClips; // walking footstep sounds
-    [SerializeField] private float stepInterval = 0.6f; // seconds between footsteps
-    [SerializeField] private float stepVolume = 1f;
-    [SerializeField] private float pitchJitter = 0.05f; // ±5% pitch variation
+    [SerializeField] private float stepInterval;        // seconds between footsteps
+    [SerializeField] private float stepVolume;
+    [SerializeField] private float pitchJitter;         // pitch variation
 
     private float nextStepTime;
 
