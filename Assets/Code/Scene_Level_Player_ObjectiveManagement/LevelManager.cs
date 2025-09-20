@@ -14,7 +14,6 @@ public class LevelManager : MonoBehaviour
     public bool isVictoryScene = false;
     public PlayerController player;
     public Transform spawnPoint;
-    private string loadScreen = "LoadScreen";
 
     #region Persistance
     [Serializable]
@@ -168,29 +167,14 @@ public class LevelManager : MonoBehaviour
     #region Scene Management
     public void LoadScene(string sceneName)
     {
-        SceneManager.sceneLoaded += OnScene;
-        StartCoroutine(SwapToSceneAsync(sceneName));
+        LoadingScreenManager.nextScene = sceneName;
+        SceneManager.LoadScene("LoadingScreen");
     }
     private void OnScene(Scene scene, LoadSceneMode mode)
     {
         LoadGame();
         SceneManager.sceneLoaded -= OnScene;
     }
-    IEnumerator SwapToSceneAsync(string name)
-    {
-        SceneManager.LoadScene("LoadingScreen");
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
-
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
-        yield return new WaitForSeconds(0.2f); 
-        
-        //LoadingScreenManager.instance.loadingScreenObject.SetActive(false);
-        //SceneManager.LoadScene("Level_Test");
-    }
-
     #endregion
     #region Victory Condition
     public void RegisterTrackable(GameObject boss)

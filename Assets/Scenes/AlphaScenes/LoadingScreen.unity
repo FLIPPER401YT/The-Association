@@ -612,7 +612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba801fa50ec91444a7fcebf72a94a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadingScreenObject: {fileID: 1565467086}
+  loadingUI: {fileID: 342031828}
 --- !u!224 &1592822340
 RectTransform:
   m_ObjectHideFlags: 0
