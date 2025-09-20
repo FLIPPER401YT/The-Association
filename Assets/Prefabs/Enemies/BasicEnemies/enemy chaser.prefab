@@ -226,6 +226,17 @@ MonoBehaviour:
   swingVolume: 1
   hitVolume: 1
   pitchJitter: 0.05
+  loopSrc: {fileID: 0}
+  roarClips: []
+  roarVolume: 0.6
+  roarGapSeconds: {x: 0, y: 0.75}
+  roarPitchJitter: 0.03
+  autoStartRoar: 1
+  roarAnchor: {fileID: 0}
+  roarMinDistance: 8
+  roarMaxDistance: 45
+  roarRolloff: 0
+  dopplerLevel: 0
 --- !u!114 &8776218185966148276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,7 +262,7 @@ MonoBehaviour:
   avoidProbeDist: 1
   sideProbeOffset: 0.5
   avoidSteerStrength: 5
-  enableRoam: 0
+  enableRoam: 1
   roamRadius: 0
   minHopDistance: 0
   arriveRadius: 0

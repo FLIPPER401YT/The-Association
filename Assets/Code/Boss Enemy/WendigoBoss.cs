@@ -215,6 +215,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
     void PerformSummon()
     {
         if (attackLockout < 0f) return;
+        CheckSummonThreshold();
         StartCoroutine(SummonRoutine());
 
     }

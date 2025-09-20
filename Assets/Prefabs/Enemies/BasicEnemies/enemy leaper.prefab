@@ -231,11 +231,11 @@ MonoBehaviour:
   avoidProbeDist: 1
   sideProbeOffset: 0.5
   avoidSteerStrength: 5
-  enableRoam: 0
-  roamRadius: 0
-  minHopDistance: 0
-  arriveRadius: 0
-  dwellRange: {x: 0, y: 0}
+  enableRoam: 1
+  roamRadius: 10
+  minHopDistance: 6
+  arriveRadius: 3
+  dwellRange: {x: 14, y: 0}
   roamGroundMask:
     serializedVersion: 2
     m_Bits: 8

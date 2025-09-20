@@ -490,10 +490,8 @@ GameObject:
   - component: {fileID: 8165457497244930920}
   - component: {fileID: 8597306425099098423}
   - component: {fileID: 6402208737824907341}
-  - component: {fileID: 3609399203210748071}
   - component: {fileID: 4470743929110887598}
-  - component: {fileID: 3113259892598192633}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wendigo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -513,8 +511,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8621046233857581603}
-  - {fileID: 4562477693982094628}
+  - {fileID: 6412844364765679655}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8597306425099098423
@@ -545,7 +542,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   rigidBody: {fileID: 4470743929110887598}
-  anim: {fileID: 3609399203210748071}
+  anim: {fileID: 8959282787153321606}
   deathAnimation: {fileID: 1827226128182048838, guid: 2503a47a3fe39d3409688b89da987f3c, type: 3}
   healthMax: 3000
   healthCurrent: 3000
@@ -575,20 +572,20 @@ MonoBehaviour:
   summonWindup: 3
   summonRecover: 3
   minionCooldown: 3
-  swipeDamage: 5
-  swipeWindup: 0
-  swipeRecover: 0
-  swipeRadius: 0
-  swipeCooldown: 0
-  swipeOffset: {x: 0, y: 0, z: 0}
+  swipeDamage: 20
+  swipeWindup: 2
+  swipeRecover: 2
+  swipeRadius: 1.5
+  swipeCooldown: 0.8
+  swipeOffset: {x: 0, y: 1, z: 2}
   attackPosition: {fileID: 0}
   boltSpeed: 0
   boltDamage: 0
   boltWindup: 0
   boltRecover: 0
   boltCooldown: 0
-  boltPrefab: {fileID: 0}
-  castMuzzle: {fileID: 0}
+  boltPrefab: {fileID: 5730125231447525711, guid: 5238f25ea9593e844941dd5fc88e97fa, type: 3}
+  castMuzzle: {fileID: 8165457497244930920}
   rushSpeed: 0
   rushTime: 0
   rushDamage: 0
@@ -607,31 +604,9 @@ MonoBehaviour:
     m_Bits: 4294967295
   bodyCollider: {fileID: 0}
   playerTag: Player
-  personalSpace: 0
-  separationSpeed: 0
+  personalSpace: 3
+  separationSpeed: 4
   keepSpace: 1
---- !u!95 &3609399203210748071
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1820647058003358099}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a47819b47ea8cb54a93cca886ae85c88, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!54 &4470743929110887598
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -659,13 +634,70 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &3113259892598192633
+--- !u!1 &1848127802095509029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6412844364765679655}
+  - component: {fileID: 8959282787153321606}
+  - component: {fileID: 5992962409335300165}
+  m_Layer: 6
+  m_Name: WendigoController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6412844364765679655
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848127802095509029}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8621046233857581603}
+  - {fileID: 4562477693982094628}
+  m_Father: {fileID: 8165457497244930920}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8959282787153321606
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848127802095509029}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a47819b47ea8cb54a93cca886ae85c88, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!136 &5992962409335300165
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1820647058003358099}
+  m_GameObject: {fileID: 1848127802095509029}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -679,9 +711,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1
+  m_Height: 2.5
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.3, z: 0}
 --- !u!1 &2232431087614873331
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,14 +868,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2903368458678767181}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000045394895, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7678638839434302004}
   - {fileID: 4158417781201517719}
-  m_Father: {fileID: 8165457497244930920}
+  m_Father: {fileID: 6412844364765679655}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3043105774449570662
 GameObject:
@@ -1507,15 +1539,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4866452755917868588}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1845862785322215046}
   - {fileID: 5795703791807672305}
   - {fileID: 664359346134302202}
-  m_Father: {fileID: 8165457497244930920}
+  m_Father: {fileID: 6412844364765679655}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4880150925305249614
 GameObject:
