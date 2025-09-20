@@ -141,7 +141,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
     {
         if (HP > 0)
         {
-            sfx.PlayOneShot(takeDamageSound);
+            if (takeDamageSound != null) sfx.PlayOneShot(takeDamageSound);
 
             HP -= amount;
 
@@ -155,7 +155,7 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
 
         if (HP <= 0)
         {
-            sfx.PlayOneShot(deathSound);
+            if (deathSound != null) sfx.PlayOneShot(deathSound);
 
             //GameManger.instance.updateGameGoal(-1);
 
