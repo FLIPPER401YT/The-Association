@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bcb6605a806faa499a4d59d265ebc06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupSound: {fileID: 8300000, guid: 7ff8c3bba8841004eb03c8192cd845a3, type: 3}
+  pickupSound: {fileID: 8300000, guid: fb15834d2f0aa4042bfa13ffebbde3f3, type: 3}
   healAmount: 25
 --- !u!33 &4985600786839342452
 MeshFilter:
