@@ -543,7 +543,7 @@ MonoBehaviour:
   player: {fileID: 0}
   rigidBody: {fileID: 4470743929110887598}
   anim: {fileID: 8959282787153321606}
-  deathAnimation: {fileID: 1827226128182048838, guid: 2503a47a3fe39d3409688b89da987f3c, type: 3}
+  deathAnimation: {fileID: 7400000, guid: c5e6cfd3f03a714448aa5b3f309d9b70, type: 2}
   healthMax: 750
   healthCurrent: 750
   aggroRange: 30
@@ -560,8 +560,7 @@ MonoBehaviour:
   whiskerAngle: 30
   whiskerLen: 1.5
   avoidRadius: 0.5
-  drawGizmos: 1
-  swipeRange: 1
+  swipeRange: 2
   boltMinRange: 15
   boltMaxRange: 30
   rushRange: 0
@@ -569,22 +568,22 @@ MonoBehaviour:
   minions:
   - {fileID: 9003971440569338922, guid: 0d42ffeffd37700438e53b78633e7661, type: 3}
   - {fileID: 1728491905800200378, guid: 72898c27b6e109b42a7d40e8023ebe31, type: 3}
-  summonWindup: 3
+  summonWindup: 0.5
   summonRecover: 3
   minionCooldown: 10
   swipeDamage: 10
-  swipeWindup: 2
+  swipeWindup: 1
   swipeRecover: 2
   swipeRadius: 1.5
-  swipeCooldown: 0.8
+  swipeCooldown: 3
   swipeOffset: {x: 0, y: 1, z: 2}
   attackPosition: {fileID: 8165457497244930920}
-  boltSpeed: 10
-  boltDamage: 10
-  boltWindup: 2
+  boltSpeed: 20
+  boltDamage: 1
+  boltWindup: 0.5
   boltRecover: 2
   boltCooldown: 5
-  boltPrefab: {fileID: 5730125231447525711, guid: 5238f25ea9593e844941dd5fc88e97fa, type: 3}
+  boltPrefab: {fileID: 12130448720110530, guid: 3aee3143388f24843831764d7a47b3bd, type: 3}
   castMuzzle: {fileID: 8165457497244930920}
   rushSpeed: 10
   rushTime: 5
