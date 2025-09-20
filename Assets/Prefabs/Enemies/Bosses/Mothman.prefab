@@ -70,7 +70,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   maxSpeed: 20
-  chaseSpeed: 20
+  chaseSpeed: 30
   maxAccel: 20
   turnLerp: 8
   obstacleMask:
