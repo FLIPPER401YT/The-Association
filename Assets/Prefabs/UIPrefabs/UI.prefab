@@ -15831,6 +15831,7 @@ MonoBehaviour:
   cameraController: {fileID: 0}
   playerHealthBar: {fileID: 3903912118370895957}
   playerDash: {fileID: 3026027189742893486}
+  playerBloomReticle: {fileID: 5078504590203653399}
   playerDamageEffect: {fileID: 6130809643896091110}
   playerStunEffect: {fileID: 5514780675079024142}
   playerBlindEffect: {fileID: 711297885331328678}
@@ -15841,6 +15842,8 @@ MonoBehaviour:
   ammoUIObject: {fileID: 1910709370088098948}
   currentAmmo: {fileID: 833509064557681930}
   totalAmmo: {fileID: 5369608277439030905}
+  reticleOriginalHeight: 30
+  reticleOriginalWidth: 30
   contractBoardCam: {fileID: 0}
   contractBoardActiveMenu: {fileID: 0}
   contractBoardListUI: {fileID: 8847545214563455429}

@@ -96,7 +96,6 @@ public class WendigoBoss : MonoBehaviour, IDamage
         spawn = transform.position;
         swipeCD = boltCD = dashCD = 0f;
         EvadeEnabled = dashCooldown > 0f && dashTime > 0f;
-
     }
     void Start()
     {
