@@ -183,6 +183,7 @@ public class PlayerShoot : MonoBehaviour
                     {
                         RaycastHit hit;
                         Vector3 randomSpread = Random.insideUnitSphere * (bloomMod / 100.0f);
+                        StartCoroutine(BloomUIUpdate());
                         if (Physics.Raycast(shootPoint.transform.position,
                                             (shootPoint.transform.forward + randomSpread).normalized,
                                             out hit,
@@ -268,5 +269,17 @@ public class PlayerShoot : MonoBehaviour
         yield return new WaitForSeconds(equipAnimation.length);
 
         changingWeapons = false;
+    }
+
+    IEnumerator BloomUIUpdate()
+    {
+        Debug.Log("Haha it is getting down here");
+        GameManager.instance.playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, GameManager.instance.reticleOriginalWidth * (gunList[gunListPos].bloomMod) / 2);
+        GameManager.instance.playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, GameManager.instance.reticleOriginalHeight * (gunList[gunListPos].bloomMod) / 2);
+
+        yield return new WaitForSeconds(1f);
+
+        GameManager.instance.playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, GameManager.instance.reticleOriginalWidth);
+        GameManager.instance.playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, GameManager.instance.reticleOriginalHeight);
     }
 }
