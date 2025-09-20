@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Data;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -50,6 +51,13 @@ public class PlayerController : MonoBehaviour, IDamage
             var data = LevelManager.Instance.currentSave;
             health = data.health;
             healthMax = data.healthMax;
+
+            for (int i = 0; i < shoot.gunList.Count; i++)
+            {
+                if (data.ammo.Count <= i && data.clip.Count <= i) continue;
+                shoot.gunList[i].ammo = data.ammo[i];
+                shoot.gunList[i].clip = data.clip[i];
+            }
         }
         SpawnPlayer();
         updatePlayerHealthBarUI();
@@ -171,6 +179,13 @@ public class PlayerController : MonoBehaviour, IDamage
             var data = LevelManager.Instance.currentSave;
             health = data.health;
             bloodSamples = data.bloodSamples;
+
+            for (int i = 0; i < shoot.gunList.Count; i++)
+            {
+                shoot.gunList[i].ammo = data.ammo[i];
+                shoot.gunList[i].clip = data.clip[i];
+            }
+
             updatePlayerHealthBarUI();
             UpdateSampleCount(bloodSamples);
         }
@@ -192,12 +207,21 @@ public class PlayerController : MonoBehaviour, IDamage
         bloodSamples = count;
         GameManager.instance?.SampleCount(bloodSamples);
     }
-    void SavePlayerStats()
+    public void SavePlayerStats()
     {
         if(LevelManager.Instance != null)
         {
             LevelManager.Instance.currentSave.health = health;
             LevelManager.Instance.currentSave.bloodSamples = bloodSamples;
+
+            LevelManager.Instance.currentSave.ammo.Clear();
+            LevelManager.Instance.currentSave.clip.Clear();
+            foreach (GunStats gun in shoot.gunList)
+            {
+                LevelManager.Instance.currentSave.ammo.Add(gun.ammo);
+                LevelManager.Instance.currentSave.clip.Add(gun.clip);
+            }
+
             LevelManager.Instance.SaveGame();
         }
     }

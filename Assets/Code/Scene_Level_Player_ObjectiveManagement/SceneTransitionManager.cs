@@ -13,4 +13,9 @@ public class SceneTransitionManager : MonoBehaviour
             LevelManager.Instance.LoadScene(sceneToLoad);
         }
     }
+
+    public void StartLevel(string scene)
+    {
+        LevelManager.Instance.LoadScene(scene);
+    }
 }

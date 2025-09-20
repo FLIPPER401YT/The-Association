@@ -37,14 +37,11 @@ public class PlayerShoot : MonoBehaviour
 
     float fireTimer = 0;
     bool isMelee = false;
-    Vector3 gunPos;
 
     void Start()
     {
-        foreach (GunStats stat in gunList) FillAmmo(stat);
         SwitchWeapons(gunList[0], 0);
         weaponAnimator.runtimeAnimatorController = weaponOverrideController;
-        gunPos = weaponMesh.gameObject.transform.position;
     }
 
     void Update()
@@ -81,7 +78,7 @@ public class PlayerShoot : MonoBehaviour
         }
     }
 
-    void FillAmmo(GunStats stat)
+    public void FillAmmo(GunStats stat)
     {
         stat.ammo = stat.maxAmmo;
         stat.clip = stat.clipSize;
@@ -111,6 +108,7 @@ public class PlayerShoot : MonoBehaviour
         }
 
         isReloading = false;
+        GameManager.instance.playerScript.SavePlayerStats();
     }
 
     public void AddAmmo(int amount)
@@ -214,6 +212,7 @@ public class PlayerShoot : MonoBehaviour
                     if (!isMelee)
                     {
                         gunList[gunListPos].clip--;
+                        GameManager.instance.playerScript.SavePlayerStats();
                         weaponAnimator.SetTrigger("Ranged");
                     }
                     else weaponAnimator.SetTrigger("Melee");
