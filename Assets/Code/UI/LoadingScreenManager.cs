@@ -4,17 +4,40 @@ using System.Collections;
 
 
 public class LoadingScreenManager : MonoBehaviour
-{ }
+{ 
+    public static LoadingScreenManager instance;
+    public GameObject loadingScreenObject;
 
-//    IEnumerator LoadAsynScene(string sceneName)
-//    {
-//        yield return new WaitForSeconds(loadDelay);
-//        AsyncOperation asynLoad = SceneManager.LoadSceneAsync(sceneName);
-//        asynLoad.allowSceneActivation = false;
-//        while (!asynLoad.isDone)
-//        {
-//            yield return null;
-//        }
+    void Awake()
+    {
+        //if (instance != null && instance != this)
+        //{
+        //    Destroy(this.gameObject);
+        //}
+        //else
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(this.gameObject);
+        //}
+        instance = this;
+    }
 
-//    }
-//}
+    //public void swapToScene(string name)
+    //{
+    //    loadingScreenObject.SetActive(true);
+    //    StartCoroutine(SwapToSceneAsync(name));
+    //}
+
+    //IEnumerator SwapToSceneAsync(string name)
+    //{
+    //    AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
+
+    //    while(!asyncLoad.isDone)
+    //    {
+    //        yield return null;
+    //    }
+    //    yield return new WaitForSeconds(0.2f);
+    //    loadingScreenObject.SetActive(false);
+    //}
+
+}
