@@ -21,6 +21,8 @@ public class LevelManager : MonoBehaviour
     public class SaveData
     {
         public int health, healthMax, bloodSamples;
+        public List<int> clip = new List<int>();
+        public List<int> ammo = new List<int>();
         public List<string> defeatedBosses = new List<string>();
         public Dictionary<string, bool> GetBossesDefeatedDict()
         {
@@ -59,11 +61,12 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         player = GameManager.instance?.playerScript;
-        if(player != null)
+        if (player != null)
         {
-            player.health = currentSave.health;
-            player.healthMax = currentSave.healthMax;
-            player.bloodSamples = currentSave.bloodSamples;
+            foreach (GunStats stat in player.shoot.gunList) player.shoot.FillAmmo(stat);
+            player.health = player.healthMax;
+            player.bloodSamples = 0;
+            player.SavePlayerStats();
             player.updatePlayerHealthBarUI();
             player.UpdateSampleCount(player.bloodSamples);
         }
@@ -99,12 +102,21 @@ public class LevelManager : MonoBehaviour
             isVictoryScene = false;
         }
         player = GameManager.instance?.playerScript;
-        if (player != null) {
+        if (player != null)
+        {
             player.health = currentSave.health;
             player.healthMax = currentSave.healthMax;
-            player.bloodSamples= currentSave.bloodSamples;
+            player.bloodSamples = currentSave.bloodSamples;
             player.updatePlayerHealthBarUI();
             player.UpdateSampleCount(player.bloodSamples);
+            for (int gunIndex = 0; gunIndex < player.shoot.gunList.Count; gunIndex++)
+            {
+                if (gunIndex < currentSave.ammo.Count)
+                {
+                    player.shoot.gunList[gunIndex].ammo = currentSave.ammo[gunIndex];
+                    player.shoot.gunList[gunIndex].clip = currentSave.clip[gunIndex];
+                }
+            }
         }
     }
     private Transform SpawnPoint(string sceneName)
@@ -135,6 +147,12 @@ public class LevelManager : MonoBehaviour
         {
             PlayerPrefs.SetString("DefeatedBoss_" + index, currentSave.defeatedBosses[index]);
         }
+        PlayerPrefs.SetInt("GunsCount", currentSave.ammo.Count);
+        for (int index = 0; index < currentSave.ammo.Count; index++)
+        {
+            PlayerPrefs.SetInt("GunAmmo_" + index, currentSave.ammo[index]);
+            PlayerPrefs.SetInt("GunClip_" + index, currentSave.clip[index]);
+        }
         PlayerPrefs.Save();
     }
     public void LoadGame()
@@ -150,6 +168,14 @@ public class LevelManager : MonoBehaviour
             string bossName = PlayerPrefs.GetString("DefeatedBoss_" + index, "");
             if (!string.IsNullOrEmpty(bossName))
                 currentSave.defeatedBosses.Add(bossName);
+        }
+        currentSave.ammo.Clear();
+        currentSave.clip.Clear();
+        for (int index = 0; index < PlayerPrefs.GetInt("GunsCount"); index++)
+        {
+            Debug.Log("Ammo Set");
+            currentSave.ammo.Add(PlayerPrefs.GetInt("GunAmmo_" + index));
+            currentSave.clip.Add(PlayerPrefs.GetInt("GunClip_" + index));
         }
     }
     private void OnEnable()
