@@ -20,7 +20,7 @@ public class EnemyChaseMovementRB : EnemyMovementBaseRB
 
     protected override void TickMovement()
     {
-        anim.SetBool("Running", true);
+        if (anim) anim.SetBool("Running", true);
 
         grounded = Physics.SphereCast(
             transform.position + Vector3.up * 0.1f,
