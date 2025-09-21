@@ -2335,7 +2335,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Level_Test
+          m_StringArgument: TutorialCombat
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1005163113218756085
@@ -3149,7 +3149,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4281a9dbb0e0277439e182e4cc365714, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6f868bccea3483f44a71c083d85bc719, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4926,12 +4926,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Cryptid: BigFoot (Sasquatch)
+  m_text: 'Cryptid: Mothman
 
     Threat Level: Unkown
 
-    Origin: Bro
-    got big feet and he be stomping on people.
+    Origin: Bro be flying
+    and shooting people in the forest.
 
 '
   m_isRightToLeft: 0
@@ -6861,7 +6861,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -362.5}
+  m_AnchoredPosition: {x: 0, y: -260.75}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5419207468406512711
@@ -10885,7 +10885,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4281a9dbb0e0277439e182e4cc365714, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6f868bccea3483f44a71c083d85bc719, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -15495,7 +15495,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Level_Test
+          m_StringArgument: BattleMap1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &6949974180952855860
@@ -15908,7 +15908,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4281a9dbb0e0277439e182e4cc365714, type: 3}
+  m_Sprite: {fileID: 21300000, guid: df57b8ac3b417624c9f513294a2b8bcb, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -18543,7 +18543,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4281a9dbb0e0277439e182e4cc365714, type: 3}
+  m_Sprite: {fileID: 21300000, guid: df57b8ac3b417624c9f513294a2b8bcb, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -20010,12 +20010,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Cryptid: BigFoot (Sasquatch)
+  m_text: 'Cryptid: Wendigo
 
     Threat Level: Unkown
 
-    Origin: Bro
-    got big feet and he be stomping on people.
+    Origin: Bro be enticing
+    people in the woods. That''s no good.
 
 '
   m_isRightToLeft: 0
