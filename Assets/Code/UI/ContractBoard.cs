@@ -26,7 +26,6 @@ public class ContractBoard : MonoBehaviour
 
     public void ToggleBoard()
     {
-        Debug.Log("Board");
         if (!_boardUp)
         {
             GameManager.instance.playerUI.SetActive(false);

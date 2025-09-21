@@ -46,7 +46,6 @@ public class ButtonFunctions : MonoBehaviour
 
     public void returnToGameFromBoard()
     {
-        Debug.Log("Close Board");
         GameManager.instance.contractBoard._boardUp = false;
         GameManager.instance.playerUI.SetActive(true);
         GameManager.instance.mouseInvisibility();
