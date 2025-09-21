@@ -59,6 +59,7 @@ public class LevelManager : MonoBehaviour
     }
     private void Start()
     {
+        ResetSave();
         player = GameManager.instance?.playerScript;
         if (player != null)
         {
@@ -164,8 +165,7 @@ public class LevelManager : MonoBehaviour
         for (int index = 0; index < count; index++)
         {
             string bossName = PlayerPrefs.GetString("DefeatedBoss_" + index, "");
-            if (!string.IsNullOrEmpty(bossName))
-                currentSave.defeatedBosses.Add(bossName);
+            if (!string.IsNullOrEmpty(bossName)) currentSave.defeatedBosses.Add(bossName);
         }
         currentSave.ammo.Clear();
         currentSave.clip.Clear();
@@ -198,6 +198,11 @@ public class LevelManager : MonoBehaviour
     {
         LoadGame();
         SceneManager.sceneLoaded -= OnScene;
+    }
+    public void ResetSave()
+    {
+        currentSave = new SaveData();
+        SaveGame();
     }
     #endregion
     #region Victory Condition
@@ -232,6 +237,7 @@ public class LevelManager : MonoBehaviour
         {
             if (!currentSave.defeatedBosses.Contains(boss)) return;
         }
+        BossesDestroyed?.Invoke();
         Victory();
     }
     public void Victory()

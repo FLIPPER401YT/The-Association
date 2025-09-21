@@ -74,7 +74,6 @@ public class WendigoBoss : MonoBehaviour, IDamage
     [Header("Separation")]
     [SerializeField] float personalSpace;
     [SerializeField] float separationSpeed;
-    [SerializeField] bool keepSpace = true;
 
     [Header("Sound Affects")]
     [SerializeField] AudioSource soundLoop;
