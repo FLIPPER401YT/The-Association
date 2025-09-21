@@ -65,16 +65,17 @@ public class PlayerShoot : MonoBehaviour
         }
         if (gunList.Count > 0)
         {
+            GameManager.instance.currentAmmo.text = gunList[gunListPos].clip.ToString("F0");
+            GameManager.instance.totalAmmo.text = gunList[gunListPos].ammo.ToString("F0");
+
             if (isMelee == false)
             {
                 GameManager.instance.ammoUIObject.SetActive(true);
-                GameManager.instance.currentAmmo.text = gunList[gunListPos].clip.ToString("F0");
-                GameManager.instance.totalAmmo.text = gunList[gunListPos].ammo.ToString("F0");
             }
-            else
-            {
-                GameManager.instance.ammoUIObject.SetActive(false);
-            }
+            //else
+            //{
+            //    GameManager.instance.ammoUIObject.SetActive(false);
+            //}
         }
     }
 

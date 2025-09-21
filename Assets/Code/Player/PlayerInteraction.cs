@@ -26,8 +26,6 @@ public class PlayerInteraction : MonoBehaviour
             if(hit.collider.tag == "Interactable")
             {
                 Interactable newInteractable = hit.collider.GetComponent<Interactable>();
-                
-                if (!newInteractable) return;
 
                 if (newInteractable.enabled)
                 {
@@ -59,9 +57,9 @@ public class PlayerInteraction : MonoBehaviour
 
     void DisableCurrentInteractable()
     {
-        GameManager.instance.disableInteractableText();
         if(currInteractable)
         { 
+            GameManager.instance.disableInteractableText();
             currInteractable = null; 
         }
     }
