@@ -6,8 +6,7 @@ public class MainMenuButtonFunctions : MonoBehaviour
     public void StartGame()
     {
         ButtonFunctions.quitingToMain = false;
-        //SceneManager.LoadScene("HubArea");
-        //LoadingScreenManager.instance.swapToScene("HubArea");
+        SceneManager.LoadScene("HubArea");
     }
     public void settings()
     {
