@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
     public ContractBoardState origContractBoardState;
 
     [Header("Shop UI")]
+    public ShopTruck shopTruck;
     public GameObject shopCam;
     public GameObject shopUI;
 
@@ -118,6 +119,10 @@ public class GameManager : MonoBehaviour
             if (contractBoard && contractBoard._boardUp)
             {
                 buttonFunctions.returnToGameFromBoard();
+            }
+            else if (shopTruck && shopTruck._shopUp)
+            {
+                buttonFunctions.returnToGameFromShop();
             }
             else
             {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ShopTruck : MonoBehaviour
 {
-    bool _shopUp = false;
+    public bool _shopUp = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -12,7 +12,7 @@ public class ShopTruck : MonoBehaviour
 
     public void ToggleShop()
     {
-        if (_shopUp)
+        if (!_shopUp)
         {
             GameManager.instance.playerUI.SetActive(false);
             GameManager.instance.shopUI.SetActive(true);
