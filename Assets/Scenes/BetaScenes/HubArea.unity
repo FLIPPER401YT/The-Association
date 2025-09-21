@@ -22526,6 +22526,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2087185839}
+    - target: {fileID: 2655789398217305364, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: WendigoArena
+      objectReference: {fileID: 0}
     - target: {fileID: 4081028210470276078, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
       propertyPath: m_text
       value: 'Cryptid: Wendigo
