@@ -199,7 +199,6 @@ public class PlayerController : MonoBehaviour, IDamage
 
     void OnDestroy()
     {
-        Debug.Log("Player destroyed: " + gameObject.name);
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     public void UpdateSampleCount(int count)

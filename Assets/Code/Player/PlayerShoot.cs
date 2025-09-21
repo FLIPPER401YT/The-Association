@@ -273,7 +273,7 @@ public class PlayerShoot : MonoBehaviour
 
     IEnumerator BloomUIUpdate()
     {
-        Debug.Log("Haha it is getting down here");
+
         GameManager.instance.playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, GameManager.instance.reticleOriginalWidth * (gunList[gunListPos].bloomMod) / 2);
         GameManager.instance.playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, GameManager.instance.reticleOriginalHeight * (gunList[gunListPos].bloomMod) / 2);
 

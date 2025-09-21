@@ -28,7 +28,6 @@ public class PlayerDash : MonoBehaviour
     {
         if (!dashing && Input.GetButtonDown("Dash") && dashes < dashMax)
         {
-            Debug.Log("Dash");
             GameManager.instance.playerScript.audioSource.PlayOneShot(dashSound);
             dashing = true;
             dashingTimer = 0;

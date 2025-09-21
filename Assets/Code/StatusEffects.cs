@@ -116,8 +116,6 @@ public class StatusEffects : MonoBehaviour
         bool wasBlinded = IsBlinded;
         blindTimer = Mathf.Max(blindTimer, duration);
 
-        if (showDebug) Debug.Log($"{gameObject.name} is BLINDED for {duration:F1}s (remaining: {blindTimer:F1}s)");
-
         if (!wasBlinded)
         {
             OnBlindChanged?.Invoke(true);
@@ -131,7 +129,6 @@ public class StatusEffects : MonoBehaviour
     {
         if (blindTimer <= 0f) return;
         blindTimer = 0f;
-        if (showDebug) Debug.Log($"{gameObject.name} BLIND cleared");
         OnBlindChanged?.Invoke(false);
     }
    

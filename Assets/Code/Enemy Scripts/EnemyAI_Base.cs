@@ -59,10 +59,6 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         //GameManager.instance.updateGameGoal(1);
 
         if (!mover) mover = GetComponent<EnemyMovementBaseRB>();
-        if (!mover)
-        {
-            Debug.LogError($"{name}: Missing EnemyMovementBaseRB component for Rigidbody movement.");
-        }
         
     }
 
@@ -194,7 +190,6 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = true;
-            Debug.Log($"{name}: Player ENTER trigger");
             aggroTimer = aggroMemorySeconds;
             aggro = true;
         }
@@ -205,7 +200,6 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = false;
-            Debug.Log($"{name}: Player EXIT trigger");
         }
     }
 

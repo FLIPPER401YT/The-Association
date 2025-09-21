@@ -5,32 +5,35 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/BetaScenes/MainMenu.unity
     guid: 4ef26287825f0034ab21c719514a8fc8
   - enabled: 1
-    path: Assets/Scenes/AlphaScenes/HubArea.unity
-    guid: ff801dbcd7e941f449c4bfc5d432a931
-  - enabled: 1
-    path: Assets/Scenes/AlphaScenes/Level_Test.unity
-    guid: 1711f707f0e32bb478be2ff3a13fab28
-  - enabled: 1
-    path: Assets/Scenes/AlphaScenes/BigFoot.unity
-    guid: a2b805b90616bde45a33b3ccb3096155
-  - enabled: 1
     path: Assets/Scenes/BetaScenes/VictoryScene.unity
     guid: 0005eba96bedb6143b3cbbc306214683
   - enabled: 1
-    path: Assets/Scenes/AlphaScenes/Showcase.unity
-    guid: b78d164cd80027f418fc5190c14ede26
-  - enabled: 0
-    path: Assets/Scenes/AlphaScenes/TestBoss.unity
-    guid: f8cd25c9eab0cab4cb87af6233dff750
+    path: Assets/Scenes/BetaScenes/WendigoArena.unity
+    guid: e468ea2df2e5f674d9a434df05cec6e2
   - enabled: 1
-    path: Assets/Scenes/AlphaScenes/LoadingScreen.unity
+    path: Assets/Scenes/BetaScenes/BattleMap1.unity
+    guid: 8ecc39e7551f7064f90782da54b0b537
+  - enabled: 1
+    path: Assets/Scenes/BetaScenes/BattleMap2.unity
+    guid: 17b7d8ba701b8fc4daa76454d897168c
+  - enabled: 1
+    path: Assets/Scenes/BetaScenes/BigFootArena.unity
+    guid: 3a99b894d7f2e4a40b49d9c4d20d1c11
+  - enabled: 1
+    path: Assets/Scenes/BetaScenes/TutorialCombat.unity
+    guid: a7cbf882263dad847a5bb37822350d3a
+  - enabled: 1
+    path: Assets/Scenes/BetaScenes/TutorialSneak.unity
+    guid: ea7a9a4d46be3df4dbb043051cb1290e
+  - enabled: 1
+    path: Assets/Scenes/BetaScenes/MothmanArena.unity
+    guid: 6d392d1e1108c374bbc12fc2f6efca65
+  - enabled: 1
+    path: Assets/Scenes/BetaScenes/LoadingScreen.unity
     guid: d5bd66a99774008458ada8f9460cb805
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

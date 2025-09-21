@@ -144,7 +144,6 @@ public class MothmanBoss : Base_Boss_AI
     {
         if (blindCD <= 0f)
         {
-            if (logAttacks) Debug.Log($"[Mothman] Pick: Shriek (dist {distToPlayer:F2})");
             yield return StartCoroutine(DoBlindingShriek());
             yield break;
         }
@@ -155,20 +154,17 @@ public class MothmanBoss : Base_Boss_AI
         if (inSwoopRange && canRanged)
         {
             bool pickMelee = Random.value < meleeBiasWhenBothValid;
-            if (logAttacks) Debug.Log($"[Mothman] Pick (both valid): {(pickMelee ? "Swoop" : "SpitBolt")}  dist={distToPlayer:F2}");
             if (pickMelee) yield return StartCoroutine(DoSwoopClaw());
             else yield return StartCoroutine(DoSpitBolt());
             yield break;
         }
         else if (inSwoopRange)
         {
-            if (logAttacks) Debug.Log($"[Mothman] Pick: Swoop (dist {distToPlayer:F2})");
             yield return StartCoroutine(DoSwoopClaw());
             yield break;
         }
         else if (canRanged)
         {
-            if (logAttacks) Debug.Log($"[Mothman] Pick: SpitBolt (dist {distToPlayer:F2})");
             yield return StartCoroutine(DoSpitBolt());
             yield break;
         }
@@ -181,7 +177,6 @@ public class MothmanBoss : Base_Boss_AI
 
     IEnumerator DoSpitBolt()
     {
-        if (logAttacks) Debug.Log("[Mothman] Start SpitBolt");
 
         // small hover brake + face
         FacePlayer();
@@ -208,7 +203,6 @@ public class MothmanBoss : Base_Boss_AI
             }
 
             rangedCD = rangedCooldown;
-            if (logAttacks) Debug.Log("[Mothman] SpitBolt fired");
         }
 
         yield return null;
@@ -218,8 +212,6 @@ public class MothmanBoss : Base_Boss_AI
     {
         anim.SetBool("Running", false);
         anim.SetTrigger("Claw Attack");
-
-        if (logAttacks) Debug.Log("[Mothman] Start Swoop");
 
         float t = 0f;
 
@@ -267,7 +259,6 @@ public class MothmanBoss : Base_Boss_AI
                     if (dmg != null)
                     {
                         dmg.TakeDamage((int)clawDamage);
-                        if (logAttacks) Debug.Log($"[Mothman] Swoop HIT for {clawDamage} at {center}");
                         dealtDamageThisSwoop = true;
                         break;
                     }
@@ -278,15 +269,12 @@ public class MothmanBoss : Base_Boss_AI
             yield return new WaitForFixedUpdate();
         }
 
-        if (logAttacks) Debug.Log("[Mothman] End Swoop (recover)");
         yield return new WaitForSeconds(postSwoopRecover);
     }
 
     IEnumerator DoBlindingShriek()
     {
         anim.SetBool("Running", false);
-        
-        if (logAttacks) Debug.Log("[Mothman] Start Shriek");
 
         // Play sound from attached AudioSource instead of one-shot
         if (sfx && shriekClip)
@@ -312,12 +300,10 @@ public class MothmanBoss : Base_Boss_AI
             {
                 var status = player.GetComponentInChildren<StatusEffects>();
                 if (status) status.ApplyBlind(blindDuration);
-                if (logAttacks) Debug.Log($"[Mothman] Shriek applied BLIND for {blindDuration:F2}s");
             }
         }
 
         blindCD = blindCooldown;
-        if (logAttacks) Debug.Log("[Mothman] End Shriek");
         yield return new WaitForSeconds(0.2f);
     }
 

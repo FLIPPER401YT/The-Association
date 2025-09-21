@@ -171,7 +171,6 @@ public class LevelManager : MonoBehaviour
         currentSave.clip.Clear();
         for (int index = 0; index < PlayerPrefs.GetInt("GunsCount"); index++)
         {
-            Debug.Log("Ammo Set");
             currentSave.ammo.Add(PlayerPrefs.GetInt("GunAmmo_" + index));
             currentSave.clip.Add(PlayerPrefs.GetInt("GunClip_" + index));
         }
@@ -214,7 +213,6 @@ public class LevelManager : MonoBehaviour
     #region Boss Tracking
     public void MarkBossDefeated(string bossName)
     {
-        Debug.Log("Boss defeated: " +  bossName);
         if (!currentSave.defeatedBosses.Contains(bossName))
         {
             currentSave.defeatedBosses.Add(bossName);

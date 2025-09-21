@@ -76,6 +76,28 @@ public class WendigoBoss : MonoBehaviour, IDamage
     [SerializeField] float separationSpeed;
     [SerializeField] bool keepSpace = true;
 
+    [Header("Sound Affects")]
+    [SerializeField] AudioSource soundLoop;
+    [SerializeField] AudioSource affects;
+
+    [Header("Walking Loop")]
+    [SerializeField] AudioClip walkingSound;
+    [Range(0f, 1f)][SerializeField] float walkingVolume;
+
+    [Header("Swipe Sound")]
+    [SerializeField] AudioClip swipeSound;
+    [Range(0f, 1f)][SerializeField] float swipeVolume;
+
+    [Header("Range Sound")]
+    [SerializeField] AudioClip rangeSound;
+    [Range(0f, 1f)][SerializeField] float rangeVolume;
+
+    [Header("Death Sound")]
+    [SerializeField] AudioClip deathSound;
+    [Range(0f, 1f)][SerializeField] float deathVolume;
+
+    [Header("Sound Pitch")]
+    [Range(0f, 1f)][SerializeField] float soundPitch;
     public enum WendigoState { Chase, Melee, Range, Evade, Dead };
     WendigoState state;
     Vector3 spawn; float attackLockout;
@@ -96,6 +118,20 @@ public class WendigoBoss : MonoBehaviour, IDamage
         spawn = transform.position;
         swipeCD = boltCD = dashCD = 0f;
         EvadeEnabled = dashCooldown > 0f && dashTime > 0f;
+        if (!soundLoop) soundLoop = GetComponent<AudioSource>();
+        if (soundLoop)
+        {
+            soundLoop.loop = true;
+            soundLoop.spatialBlend = 1f;
+            soundLoop.rolloffMode = AudioRolloffMode.Logarithmic;
+            if (walkingSound)
+            {
+                soundLoop.clip = walkingSound;
+                soundLoop.volume = walkingVolume;
+                if (!soundLoop.isPlaying) soundLoop.Play();
+            }
+        }
+        if (!affects) affects = soundLoop;
     }
     void Start()
     {
@@ -210,6 +246,13 @@ public class WendigoBoss : MonoBehaviour, IDamage
         avoidanceForce.y = 0f;
         return avoidanceForce;
     }
+    void PlayOneShot(AudioClip clip, float volume = 1f)
+    {
+        if (!clip || !affects) return;
+        float basePitch = 1f + Random.Range(-soundPitch, soundPitch);
+        affects.pitch = basePitch;
+        affects.PlayOneShot(clip, volume);
+    }
     void CheckTransitions(float distance)
     {
         if (attackLockout > 0f) return;
@@ -235,9 +278,9 @@ public class WendigoBoss : MonoBehaviour, IDamage
     }
     IEnumerator MeleeRoutine()
     {
-        Debug.Log("MeleeRoutine started");
         attackLockout = swipeCooldown;
         swipeCD = swipeCooldown;
+        PlayOneShot(swipeSound, swipeVolume);
         anim.SetTrigger("Swipe");
         yield return new WaitForSeconds(swipeWindup);
         Vector3 attack = transform.position + transform.rotation * swipeOffset;
@@ -258,6 +301,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
         yield return StartCoroutine(FacePlayer());
         attackLockout = boltCooldown;
         boltCD = boltCooldown;
+        PlayOneShot(rangeSound, rangeVolume);
         anim.SetTrigger("Bolt");
         yield return new WaitForSeconds(boltWindup);
         if (boltPrefab && castMuzzle)
@@ -297,6 +341,7 @@ public class WendigoBoss : MonoBehaviour, IDamage
     {
         state = WendigoState.Dead;
         anim.SetBool("Walking", false);
+        PlayOneShot(deathSound, deathVolume);
         anim.SetTrigger("Death");
         StartCoroutine(DestroyOffset());
     }

@@ -274,7 +274,6 @@ public class GameManager : MonoBehaviour
 
     public void Lose()
     {
-        Debug.Log("Runs Lose");
         cameraController.ResetRotation();
         updateToLoseScreen();
         cameraController.canLook = false;
