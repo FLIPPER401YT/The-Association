@@ -135,6 +135,8 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
 
     public void TakeDamage(int amount)
     {
+        if (HP <= 0) return;
+        
         if (HP > 0)
         {
             if (takeDamageSound != null) sfx.PlayOneShot(takeDamageSound);
