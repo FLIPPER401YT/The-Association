@@ -6,9 +6,9 @@ using System.Collections;
 public class StatusEffects : MonoBehaviour
 {
     [Header("Stun Settings")]
-    [Space(10)]
+    //[Space(10)]
 
-    [SerializeField] bool showDebug = true;
+    //[SerializeField] bool showDebug = true;
 
     public bool IsStunned => stunTimer > 0f;
     public event Action<bool> OnStunChanged; // true = stunned, false = unstunned
@@ -44,15 +44,15 @@ public class StatusEffects : MonoBehaviour
             {
                 GameManager.instance.playerStunEffect.SetActive(false);
                 stunTimer = 0f;
-                if (showDebug) Debug.Log($"{gameObject.name} recovered from STUN");
-                OnStunChanged?.Invoke(false);
+                //if (showDebug) Debug.Log($"{gameObject.name} recovered from STUN");
+                //OnStunChanged?.Invoke(false);
             }
         }
 
         if (isKnockback)
         {
-            Debug.Log(knockbackDir);
-            Debug.Log(isKnockback);
+            //Debug.Log(knockbackDir);
+            //Debug.Log(isKnockback);
             knockbackDir = Vector3.MoveTowards(knockbackDir, Vector3.zero, 9.8f * Time.deltaTime);
             rb.AddForce(knockbackDir, ForceMode.Force);
             if (Vector3.Distance(knockbackDir, Vector3.zero) <= 0.01)
@@ -69,8 +69,8 @@ public class StatusEffects : MonoBehaviour
             {
                 GameManager.instance.playerBlindEffect.SetActive(false);
                 blindTimer = 0f;
-                if (showDebug) Debug.Log($"{gameObject.name} recovered from BLIND");
-                OnBlindChanged?.Invoke(false);
+                //if (showDebug) Debug.Log($"{gameObject.name} recovered from BLIND");
+                //OnBlindChanged?.Invoke(false);
             }
         }
         
@@ -85,8 +85,8 @@ public class StatusEffects : MonoBehaviour
         stunTimer = Mathf.Max(stunTimer, duration); // refresh with max duration
         if (!wasStunned)
         {
-            if (showDebug) Debug.Log($"{gameObject.name} is STUNNED for {duration:F1}s");
-            OnStunChanged?.Invoke(true);
+            //if (showDebug) Debug.Log($"{gameObject.name} is STUNNED for {duration:F1}s");
+            //OnStunChanged?.Invoke(true);
         }
     }
 

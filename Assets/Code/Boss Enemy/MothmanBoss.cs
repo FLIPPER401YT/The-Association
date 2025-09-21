@@ -59,9 +59,6 @@ public class MothmanBoss : Base_Boss_AI
     [SerializeField] float separationSpeed = 6f;
     [SerializeField] bool keepSpaceWhileAttacking = true;
 
-    [Header("Debug")]
-    [SerializeField] bool logAttacks = true;
-
     [Header("Debug Gizmos")]
     [SerializeField] int ringSegments = 24;
 
