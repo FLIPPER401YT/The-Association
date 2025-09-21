@@ -22596,6 +22596,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
+--- !u!114 &1315048182 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2655789398217305364, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
+  m_PrefabInstance: {fileID: 1315048181}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &1323188304
 Mesh:
   m_ObjectHideFlags: 0
@@ -37577,6 +37588,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1904836298}
+    - target: {fileID: 6064861924066164563, guid: b0ef0f92fe751af4c8b5562ca226c2e0, type: 3}
+      propertyPath: wendigoStartHunt
+      value: 
+      objectReference: {fileID: 1315048182}
     - target: {fileID: 6073087702555819270, guid: b0ef0f92fe751af4c8b5562ca226c2e0, type: 3}
       propertyPath: m_Mesh
       value: 
