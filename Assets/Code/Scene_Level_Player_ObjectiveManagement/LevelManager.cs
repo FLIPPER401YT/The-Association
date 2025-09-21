@@ -19,7 +19,9 @@ public class LevelManager : MonoBehaviour
     [Serializable]
     public class SaveData
     {
-        public int health, healthMax, bloodSamples;
+        public int health = 100;
+        public int healthMax = 100;
+        public int bloodSamples = 0;
         public List<int> clip = new List<int>();
         public List<int> ammo = new List<int>();
         public List<string> defeatedBosses = new List<string>();

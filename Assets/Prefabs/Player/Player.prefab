@@ -90,7 +90,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbfe96b5aac5ca409b3056730793846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebug: 1
   rb: {fileID: 3717102040862646966}
 --- !u!114 &4592218793867380759
 MonoBehaviour:
@@ -104,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4c628a774bfd8a44b0250579b52555e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 750
+  speed: 400
   timeBetweenSteps: 0.5
   rb: {fileID: 3717102040862646966}
   walkStepSound: {fileID: 8300000, guid: ae2aa835b4f9b1e42a1a64d381d12be1, type: 3}
