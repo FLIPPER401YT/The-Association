@@ -1,15 +1,27 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ContractBoard : MonoBehaviour
 {
 
     bool _boardUp = false;
+    public Button wendigoStartHunt;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _boardUp = false;
+        if (LevelManager.Instance != null && LevelManager.Instance.currentSave != null)
+        {
+            List<string> defeated = LevelManager.Instance.currentSave.defeatedBosses;
+            wendigoStartHunt.interactable = defeated.Contains("Bigfoot") && defeated.Contains("Mothman");
+        }
+        else
+        {
+            wendigoStartHunt.interactable = false;
+        }
     }
 
     public void ToggleBoard()
