@@ -15,9 +15,6 @@ public class ContractBoard : MonoBehaviour
         _boardUp = false;
         if (LevelManager.Instance != null && LevelManager.Instance.currentSave != null)
         {
-            Debug.Log(LevelManager.Instance);
-            Debug.Log(LevelManager.Instance.currentSave);
-            Debug.Log(LevelManager.Instance.currentSave.defeatedBosses);
             wendigoStartHunt.interactable = LevelManager.Instance.currentSave.defeatedBosses.Contains("Bigfoot")
                 && LevelManager.Instance.currentSave.defeatedBosses.Contains("Mothman");
         }
