@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuButtonFunctions : MonoBehaviour
 {
+
     public void StartGame()
     {
         ButtonFunctions.quitingToMain = false;

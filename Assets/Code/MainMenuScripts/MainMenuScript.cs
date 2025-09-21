@@ -32,10 +32,27 @@ public class MainMenuScript : MonoBehaviour
     [SerializeField] private GameObject audioSettingsFirst;
     [SerializeField] private GameObject controlsSettingsFirst;
 
+    public Button quitButton;
+
     void Awake()
     {
         instance = this;
         titleScreenOpen();
+
+        if(Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            quitButton.interactable = false;
+        }
+        else
+        {
+            quitButton.interactable = true;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void titleScreenOpen()
