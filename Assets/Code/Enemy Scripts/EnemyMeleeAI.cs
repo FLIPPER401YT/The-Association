@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyMeleeAI : EnemyAI_Base
 {
     [Header("Melee")]
+    [SerializeField] AnimationClip meleeAttackAnimation;
     [SerializeField] GameObject weapon;
     [SerializeField] Transform attackPos;
     [SerializeField] float attackRange;
@@ -126,22 +127,9 @@ public class EnemyMeleeAI : EnemyAI_Base
     {
         anim.SetTrigger("Attack");
 
-        AnimationClip clip = null;
-        if (anim.runtimeAnimatorController is AnimatorController controller)
-        {
-            foreach (ChildAnimatorState state in controller.layers[0].stateMachine.states)
-            {
-                if (state.state.name.Equals("Melee Attack"))
-                {
-                    clip = state.state.motion as AnimationClip;
-                    break;
-                }
-            }
-        }
-
         PlayOneShotRandom(swingClips, swingVolume);
 
-        float attackCheckTime = clip != null ? clip.length / 2.5f : 0f;
+        float attackCheckTime = meleeAttackAnimation != null ? meleeAttackAnimation.length / 2.5f : 0f;
         yield return new WaitForSeconds(attackCheckTime);
 
         IDamage dmg = player.GetComponent<IDamage>();

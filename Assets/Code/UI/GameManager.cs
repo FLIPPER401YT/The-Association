@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [Header("Menu UI")]
+    [SerializeField] ButtonFunctions buttonFunctions;
     [SerializeField] public GameObject menuActive;
     [SerializeField] public GameObject menuPause;
     [SerializeField] GameObject menuLose;
@@ -52,10 +53,13 @@ public class GameManager : MonoBehaviour
     public float reticleOriginalWidth = 30;
 
     [Header("Contract Board UI")]
+    public ContractBoard contractBoard;
     public GameObject contractBoardCam;
     public GameObject contractBoardActiveMenu;
     public GameObject contractBoardListUI;
     public GameObject contractBoardBigfootUI;
+    public GameObject contractBoardMothmanUI;
+    public GameObject contractBoardWendigoUI;
     public ContractBoardState contractBoardCurr;
 
     public enum ContractBoardState
@@ -108,17 +112,25 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Cancel"))
+        if (((Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && Input.GetButtonDown("Cancel")) ||
+            (Application.platform == RuntimePlatform.WebGLPlayer && Input.GetButtonDown("WebglPause")))
         {
-            if (menuActive == null)
+            if (contractBoard && contractBoard._boardUp)
             {
-                statePaused();
-                menuActive = menuPause;
-                menuActive.SetActive(true);
+                buttonFunctions.returnToGameFromBoard();
             }
-            else if (menuActive == menuPause)
+            else
             {
-                stateUnpaused();
+                if (menuActive == null)
+                {
+                    statePaused();
+                    menuActive = menuPause;
+                    menuActive.SetActive(true);
+                }
+                else if (menuActive == menuPause)
+                {
+                    stateUnpaused();
+                }
             }
         }
     }

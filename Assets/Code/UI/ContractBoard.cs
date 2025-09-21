@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ContractBoard : MonoBehaviour
 {
 
-    bool _boardUp = false;
+    public bool _boardUp = false;
     public Button wendigoStartHunt;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,7 +26,8 @@ public class ContractBoard : MonoBehaviour
 
     public void ToggleBoard()
     {
-        if(_boardUp)
+        Debug.Log("Board");
+        if (!_boardUp)
         {
             GameManager.instance.playerUI.SetActive(false);
             GameManager.instance.contractBoardListUI.SetActive(true);

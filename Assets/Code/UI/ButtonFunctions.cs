@@ -46,12 +46,17 @@ public class ButtonFunctions : MonoBehaviour
 
     public void returnToGameFromBoard()
     {
+        Debug.Log("Close Board");
+        GameManager.instance.contractBoard._boardUp = false;
         GameManager.instance.playerUI.SetActive(true);
         GameManager.instance.mouseInvisibility();
         GameManager.instance.contractBoardListUI.SetActive(false);
         GameManager.instance.player.SetActive(true);
         GameManager.instance.contractBoardCam.SetActive(false);
         GameManager.instance.interactableTextObject.SetActive(true);
+        GameManager.instance.contractBoardBigfootUI.SetActive(false);
+        GameManager.instance.contractBoardMothmanUI.SetActive(false);
+        GameManager.instance.contractBoardWendigoUI.SetActive(false);
         GameManager.instance.contractBoardCurr = GameManager.ContractBoardState.None;
     }
 

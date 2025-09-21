@@ -217,6 +217,7 @@ MonoBehaviour:
     chance: 1
     minCount: 1
     maxCount: 1
+  meleeAttackAnimation: {fileID: 7400000, guid: 74f0fc056eb417a4485e520ed4a13f62, type: 2}
   weapon: {fileID: 0}
   attackPos: {fileID: 3048833053527537153}
   attackRange: 3
