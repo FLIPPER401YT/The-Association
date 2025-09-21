@@ -51,32 +51,27 @@ public class PlayerShoot : MonoBehaviour
         if (Input.GetButtonDown("Weapon1"))
         {
             SwitchWeapons(gunList[0], 0);
+            GameManager.instance.ammoUIObject.SetActive(true);
             isMelee = false;
         }
         else if (gunList.Count > 1 && Input.GetButtonDown("Weapon2"))
         {
             SwitchWeapons(gunList[1], 1);
+            GameManager.instance.ammoUIObject.SetActive(true);
             isMelee = false;
         }
         else if (Input.GetButtonDown("Weapon3"))
         {
             SwitchWeapons(meleeStats);
+            GameManager.instance.ammoUIObject.SetActive(false);
             isMelee = true;
         }
         if (gunList.Count > 0)
         {
             GameManager.instance.currentAmmo.text = gunList[gunListPos].clip.ToString("F0");
             GameManager.instance.totalAmmo.text = gunList[gunListPos].ammo.ToString("F0");
-
-            if (isMelee == false)
-            {
-                GameManager.instance.ammoUIObject.SetActive(true);
-            }
-            //else
-            //{
-            //    GameManager.instance.ammoUIObject.SetActive(false);
-            //}
         }
+        
     }
 
     public void FillAmmo(GunStats stat)
