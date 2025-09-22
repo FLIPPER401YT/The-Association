@@ -4184,7 +4184,7 @@ MonoBehaviour:
   - {fileID: 1427309526810394100, guid: e60df6e077c232e40a8511c3a82f9daa, type: 3}
   - {fileID: 5073147253743116939, guid: 21aadc1eb67a9c44b84c3e1eca67bb33, type: 3}
   summonPoints: []
-  summonCount: 2
+  summonCount: 4
   summonCooldown: 10
   maxSummonsAlive: 4
   summonTag: Enemy
