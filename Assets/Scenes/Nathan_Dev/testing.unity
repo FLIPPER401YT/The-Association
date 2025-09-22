@@ -4162,7 +4162,7 @@ MonoBehaviour:
   swipeCooldown: 5
   swipeOffset: {x: 0, y: 0.9, z: 1.1}
   swipeAttackPos: {fileID: 5991459055114987038}
-  rushSpeed: 10
+  rushSpeed: 25
   rushTime: 5
   rushDamage: 20
   rushKnockback: 12
@@ -4186,7 +4186,7 @@ MonoBehaviour:
   summonPoints: []
   summonCount: 2
   summonCooldown: 10
-  maxSummonsAlive: 2
+  maxSummonsAlive: 4
   summonTag: Enemy
   roarLoop: {fileID: 0}
   swipeSFX: {fileID: 0}
