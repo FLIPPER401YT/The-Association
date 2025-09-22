@@ -7,7 +7,10 @@ public class WendigoBossV2 : Base_Boss_AI
     [Header("Ranges")]
     [SerializeField] float meleeRange = 2.2f;          // Swipe
     [SerializeField] float rushMinDist = 5f;           // Rush if at/over this distance
-    
+
+    [Header("Stop")]
+    [SerializeField] float stopDistance = 1.75f;
+
 
     // ---------------- SWIPE (MELEE) ----------------
     [Header("Swipe")]
@@ -139,6 +142,23 @@ public class WendigoBossV2 : Base_Boss_AI
         // If we got here, nothing valid this tick
         yield return null;
     }
+
+    // --- Make Wendigo stop steering when within stopDistance ---
+    protected override Vector3 DesiredChaseVelocity()
+    {
+        if (!player) return Vector3.zero;
+
+        Vector3 to = player.position - transform.position;
+        Vector3 planar = new Vector3(to.x, 0f, to.z);
+        float dist = planar.magnitude;
+
+        // if close enough, don't push toward the player anymore
+        if (stopDistance > 0f && dist <= stopDistance)
+            return Vector3.zero;
+
+        return (dist > 0.001f) ? planar.normalized * chaseSpeed : Vector3.zero;
+    }
+
 
     // ---------------- SWIPE ----------------
     IEnumerator DoSwipe()
@@ -376,6 +396,10 @@ public class WendigoBossV2 : Base_Boss_AI
     protected override void OnDrawGizmosSelected()
     {
         base.OnDrawGizmosSelected();
+
+        // stop distance ring
+        Gizmos.color = new Color(0.9f, 0.9f, 0.2f, 0.8f);
+        Gizmos.DrawWireSphere(transform.position, stopDistance);
 
         // Ranges
         Gizmos.color = new Color(1f, 0.25f, 0.2f, 0.9f);
