@@ -13,7 +13,7 @@ public class ObjectiveManager : MonoBehaviour
         if(LevelManager.Instance != null)
         {
             LevelManager.Instance.UnregisterTrackable(bossPrefab);
-            if (!string.IsNullOrEmpty(bossName)) LevelManager.Instance.MarkBossDefeated(bossName);
+            if (!string.IsNullOrEmpty(bossName) && !ButtonFunctions.quitingToMain) LevelManager.Instance.MarkBossDefeated(bossName);
         }
     }
 }
