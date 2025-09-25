@@ -62,7 +62,6 @@ public class GameManager : MonoBehaviour
     public GameObject contractBoardBigfootUI;
     public GameObject contractBoardMothmanUI;
     public GameObject contractBoardWendigoUI;
-    public GameObject wendigoUpdateTextObject;
     public ContractBoardState contractBoardCurr;
 
     public enum ContractBoardState

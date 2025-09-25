@@ -17,12 +17,10 @@ public class ContractBoard : MonoBehaviour
         {
             wendigoStartHunt.interactable = LevelManager.Instance.currentSave.defeatedBosses.Contains("Bigfoot")
                 && LevelManager.Instance.currentSave.defeatedBosses.Contains("Mothman");
-            GameManager.instance.wendigoUpdateTextObject.SetActive(true);
         }
         else
         {
             wendigoStartHunt.interactable = false;
-            GameManager.instance.wendigoUpdateTextObject.SetActive(false);
         }
     }
 
