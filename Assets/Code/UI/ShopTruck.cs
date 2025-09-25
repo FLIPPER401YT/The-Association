@@ -14,7 +14,8 @@ public class ShopTruck : MonoBehaviour
     {
         if (!_shopUp)
         {
-            GameManager.instance.playerUI.SetActive(false);
+            GameManager.instance.playerDashObject.SetActive(false);
+            GameManager.instance.playerHotBarObject.SetActive(false);
             GameManager.instance.shopUI.SetActive(true);
             GameManager.instance.mouseVisibility();
             GameManager.instance.shopCam.SetActive(true);
