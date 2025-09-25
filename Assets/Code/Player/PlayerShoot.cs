@@ -46,7 +46,7 @@ public class PlayerShoot : MonoBehaviour
 
     void Update()
     {
-        if (isReloading || changingWeapons) return;
+        if (isReloading || changingWeapons || GameManager.instance.playerScript.health <= 0) return;
 
         if (Input.GetButtonDown("Weapon1"))
         {
