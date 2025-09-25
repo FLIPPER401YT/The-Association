@@ -43,16 +43,14 @@ public class LevelManager : MonoBehaviour
                 if (keyPair.Value) defeatedBosses.Add(keyPair.Key);
             }
         }
-
         public SaveData()
         {
 
         }
-
         public SaveData(SaveData data)
         {
             health = data.health;
-            healthMax = data.health;
+            healthMax = data.healthMax;
             clip = new List<int>(data.clip);
             ammo = new List<int>(data.ammo);
             defeatedBosses = new List<string>(data.defeatedBosses);
