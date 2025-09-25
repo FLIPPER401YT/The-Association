@@ -89,8 +89,8 @@ MonoBehaviour:
   rb: {fileID: 5611749811243292346}
   anim: {fileID: 9108339018958933876}
   deathAnimation: {fileID: 7400000, guid: bf3583383f580194bbaef404335c39c4, type: 2}
-  maxHP: 300
-  currentHP: 300
+  maxHP: 500
+  currentHP: 500
   aggroRange: 50
   leashRange: 40
   roamRadius: 100
@@ -126,7 +126,7 @@ MonoBehaviour:
   swipeOffset: {x: 0, y: 1, z: 1.5}
   attackPos: {fileID: 2947298620938731828}
   swipeAnimation: {fileID: 7400000, guid: 6e0a8988df64e89449ffa9f36642c40a, type: 2}
-  rushSpeed: 30
+  rushSpeed: 35
   rushTime: 5
   rushDamage: 30
   rushKnockback: 10
@@ -142,7 +142,7 @@ MonoBehaviour:
   slamDamage: 50
   slamStunDuration: 5
   slamKnock: 10
-  fleeTime: 10
+  fleeTime: 5
   fleeSpeed: 30
   leapCooldown: 20
   telegraphLanding: 1

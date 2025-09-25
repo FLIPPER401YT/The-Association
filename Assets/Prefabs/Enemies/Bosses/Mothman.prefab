@@ -58,8 +58,8 @@ MonoBehaviour:
   rb: {fileID: 0}
   anim: {fileID: 4120897076171327677}
   deathAnimation: {fileID: 7400000, guid: bff94ea7c50b6754889e623a6cfe868a, type: 2}
-  maxHP: 300
-  currentHP: 300
+  maxHP: 500
+  currentHP: 500
   aggroRange: 50
   leashRange: 40
   roamRadius: 100
@@ -92,7 +92,7 @@ MonoBehaviour:
   castMuzzle: {fileID: 374878025054074241}
   boltSpeed: 20
   boltDamage: 15
-  rangedCooldown: 2
+  rangedCooldown: 1
   diveSpeed: 14
   diveTime: 0.9
   clawDamage: 35
@@ -114,7 +114,6 @@ MonoBehaviour:
   minPersonalSpace: 0
   separationSpeed: 0
   keepSpaceWhileAttacking: 0
-  logAttacks: 1
   ringSegments: 48
 --- !u!114 &22771116510590656
 MonoBehaviour:
