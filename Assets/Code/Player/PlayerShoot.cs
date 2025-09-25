@@ -34,8 +34,8 @@ public class PlayerShoot : MonoBehaviour
     public bool isReloading = false;
     public bool changingWeapons = false;
     public int gunListPos = 0;
+    public float fireTimer = 0;
 
-    float fireTimer = 0;
     bool isMelee = false;
 
     void Start()

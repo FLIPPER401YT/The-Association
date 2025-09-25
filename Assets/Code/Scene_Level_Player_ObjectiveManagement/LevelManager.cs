@@ -43,6 +43,20 @@ public class LevelManager : MonoBehaviour
                 if (keyPair.Value) defeatedBosses.Add(keyPair.Key);
             }
         }
+
+        public SaveData()
+        {
+
+        }
+
+        public SaveData(SaveData data)
+        {
+            health = data.health;
+            healthMax = data.health;
+            clip = new List<int>(data.clip);
+            ammo = new List<int>(data.ammo);
+            defeatedBosses = new List<string>(data.defeatedBosses);
+        }
     }
     public SaveData currentSave = new SaveData();
     public SaveData sceneStartSave = new SaveData();
@@ -119,6 +133,7 @@ public class LevelManager : MonoBehaviour
             {
                 Debug.Log("Resetting");
                 SetPlayerStats(sceneStartSave);
+                currentSave = new SaveData(sceneStartSave);
                 player.resetting = false;
             }
         }
@@ -143,11 +158,12 @@ public class LevelManager : MonoBehaviour
 
     void SetStartSaveToCurrent()
     {
-        sceneStartSave.health = currentSave.health;
-        sceneStartSave.healthMax = currentSave.healthMax;
-        sceneStartSave.bloodSamples = currentSave.bloodSamples;
-        sceneStartSave.clip = new List<int>(currentSave.clip);
-        sceneStartSave.ammo = new List<int>(currentSave.ammo);
+        // sceneStartSave.health = currentSave.health;
+        // sceneStartSave.healthMax = currentSave.healthMax;
+        // sceneStartSave.bloodSamples = currentSave.bloodSamples;
+        // sceneStartSave.clip = new List<int>(currentSave.clip);
+        // sceneStartSave.ammo = new List<int>(currentSave.ammo);
+        sceneStartSave = new SaveData(currentSave);
     }
 
     private Transform SpawnPoint(string sceneName)

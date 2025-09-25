@@ -105,11 +105,15 @@ public class GameManager : MonoBehaviour
             playerScript = player.GetComponent<PlayerController>();
         }
 
-        cameraController = Camera.main.GetComponent<CameraController>();
         spawnPoint = GameObject.FindWithTag("Respawn");
 
         playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, reticleOriginalWidth);
         playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, reticleOriginalHeight);
+    }
+
+    void Start()
+    {
+        cameraController = Camera.main.GetComponent<CameraController>();
     }
 
     // Update is called once per frame
@@ -144,6 +148,7 @@ public class GameManager : MonoBehaviour
 
     public void statePaused()
     {
+        if (playerScript) playerScript.shoot.fireTimer = 0;
         isPaused = !isPaused;
         Time.timeScale = 0;
         Cursor.visible = true;
