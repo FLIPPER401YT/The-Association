@@ -62,7 +62,8 @@ public class ButtonFunctions : MonoBehaviour
     public void returnToGameFromShop()
     {
         GameManager.instance.shopTruck._shopUp = false;
-        GameManager.instance.playerUI.SetActive(true);
+        GameManager.instance.playerDashObject.SetActive(true);
+        GameManager.instance.playerHotBarObject.SetActive(true);
         GameManager.instance.mouseInvisibility();
         GameManager.instance.shopUI.SetActive(false);
         GameManager.instance.player.SetActive(true);
