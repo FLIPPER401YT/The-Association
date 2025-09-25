@@ -436,6 +436,7 @@ public class BigfootBoss : Base_Boss_AI
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 #endif
         rb.AddForce(dir * leapForce + Vector3.up * leapUpBoost, ForceMode.VelocityChange);
+        
 
         isLeaping = true;
         slamTriggered = false;
