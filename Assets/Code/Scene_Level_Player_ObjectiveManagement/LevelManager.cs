@@ -125,13 +125,11 @@ public class LevelManager : MonoBehaviour
         {
             if (!player.resetting)
             {
-                Debug.Log("Not Resetting");
                 SetPlayerStats(currentSave);
                 SetStartSaveToCurrent();
             }
             else
             {
-                Debug.Log("Resetting");
                 SetPlayerStats(sceneStartSave);
                 currentSave = new SaveData(sceneStartSave);
                 player.resetting = false;
