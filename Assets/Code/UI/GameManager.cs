@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
     public GameObject shopUI;
 
     [Header("Miscellaneous stuff")]
-    float timeScaleOriginal;
+    public float timeScaleOriginal;
 
     [SerializeField] public GameObject interactableTextObject;
     [SerializeField] public TMP_Text interactableText;
