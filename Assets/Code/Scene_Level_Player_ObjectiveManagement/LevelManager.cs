@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -42,8 +43,21 @@ public class LevelManager : MonoBehaviour
                 if (keyPair.Value) defeatedBosses.Add(keyPair.Key);
             }
         }
+        public SaveData()
+        {
+
+        }
+        public SaveData(SaveData data)
+        {
+            health = data.health;
+            healthMax = data.healthMax;
+            clip = new List<int>(data.clip);
+            ammo = new List<int>(data.ammo);
+            defeatedBosses = new List<string>(data.defeatedBosses);
+        }
     }
     public SaveData currentSave = new SaveData();
+    public SaveData sceneStartSave = new SaveData();
     private const string saveData = "SaveData";
     #endregion
     #region Unity
@@ -72,6 +86,7 @@ public class LevelManager : MonoBehaviour
             player.updatePlayerHealthBarUI();
             player.UpdateSampleCount(player.bloodSamples);
         }
+        SetStartSaveToCurrent();
         BossesDestroyed += Victory;
         if(isVictoryScene)
         {
@@ -88,7 +103,7 @@ public class LevelManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         spawnPoint = SpawnPoint(scene.name);
-        if(player != null && spawnPoint != null)
+        if (player != null && spawnPoint != null)
         {
             player.spawnPoint = spawnPoint;
             player.SpawnPlayer();
@@ -103,24 +118,50 @@ public class LevelManager : MonoBehaviour
             GameManager.instance?.mouseInvisibility();
             isVictoryScene = false;
         }
-        player = GameManager.instance?.playerScript;
+        if (!player) player = GameManager.instance?.playerScript;
         if (player != null)
         {
-            player.health = currentSave.health;
-            player.healthMax = currentSave.healthMax;
-            player.bloodSamples = currentSave.bloodSamples;
-            player.updatePlayerHealthBarUI();
-            player.UpdateSampleCount(player.bloodSamples);
-            for (int gunIndex = 0; gunIndex < player.shoot.gunList.Count; gunIndex++)
+            if (!player.resetting)
             {
-                if (gunIndex < currentSave.ammo.Count)
-                {
-                    player.shoot.gunList[gunIndex].ammo = currentSave.ammo[gunIndex];
-                    player.shoot.gunList[gunIndex].clip = currentSave.clip[gunIndex];
-                }
+                SetPlayerStats(currentSave);
+                SetStartSaveToCurrent();
+            }
+            else
+            {
+                SetPlayerStats(sceneStartSave);
+                currentSave = new SaveData(sceneStartSave);
+                player.resetting = false;
             }
         }
     }
+
+    void SetPlayerStats(SaveData save)
+    {
+        player.health = save.health;
+        player.healthMax = save.healthMax;
+        player.bloodSamples = save.bloodSamples;
+        player.updatePlayerHealthBarUI();
+        player.UpdateSampleCount(player.bloodSamples);
+        for (int gunIndex = 0; gunIndex < player.shoot.gunList.Count; gunIndex++)
+        {
+            if (gunIndex < save.ammo.Count)
+            {
+                player.shoot.gunList[gunIndex].ammo = save.ammo[gunIndex];
+                player.shoot.gunList[gunIndex].clip = save.clip[gunIndex];
+            }
+        }
+    }
+
+    void SetStartSaveToCurrent()
+    {
+        // sceneStartSave.health = currentSave.health;
+        // sceneStartSave.healthMax = currentSave.healthMax;
+        // sceneStartSave.bloodSamples = currentSave.bloodSamples;
+        // sceneStartSave.clip = new List<int>(currentSave.clip);
+        // sceneStartSave.ammo = new List<int>(currentSave.ammo);
+        sceneStartSave = new SaveData(currentSave);
+    }
+
     private Transform SpawnPoint(string sceneName)
     {
         GameObject spawnObject = GameObject.FindGameObjectWithTag("Respawn");
@@ -204,6 +245,7 @@ public class LevelManager : MonoBehaviour
     public void ResetSave()
     {
         currentSave = new SaveData();
+        sceneStartSave = new SaveData();
         SaveGame();
     }
     #endregion

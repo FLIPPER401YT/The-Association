@@ -34,6 +34,7 @@ public class ButtonFunctions : MonoBehaviour
     public void restart()
     {
         quitingToMain = true;
+        GameManager.instance.playerScript.resetting = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         GameManager.instance.stateUnpaused();
     }
@@ -41,6 +42,7 @@ public class ButtonFunctions : MonoBehaviour
     public void quitToMainMenu()
     {
         quitingToMain = true;
+        GameManager.instance.playerScript.resetting = true;
         SceneManager.LoadScene("MainMenu");
     }
 

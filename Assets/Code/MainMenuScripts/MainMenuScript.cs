@@ -51,8 +51,11 @@ public class MainMenuScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        if (!Cursor.visible)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     public void titleScreenOpen()
