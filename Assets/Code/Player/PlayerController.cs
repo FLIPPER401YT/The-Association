@@ -80,10 +80,8 @@ public class PlayerController : MonoBehaviour, IDamage
             }
         }
 
-        GameManager.instance.playerHealthText.text = health.ToString("F0");
-        GameManager.instance.playerHealthMaxText.text = healthMax.ToString("F0");
-
-
+        //GameManager.instance.playerHealthText.text = health.ToString("F0");
+        //GameManager.instance.playerHealthMaxText.text = healthMax.ToString("F0");
     }
 
     public void Heal(int amount)
@@ -114,20 +112,24 @@ public class PlayerController : MonoBehaviour, IDamage
             }
             else if (health <= 0)
             {
+                health = 0;
                 anim.enabled = true;
                 audioSource.PlayOneShot(deathSound);
                 anim.SetTrigger("Death");
                 StartCoroutine(Lose());
                 enabled = false;
                 lastBitOfLifeDamageTaken = false;
+                updatePlayerHealthBarUI();
             }
         }
     }
-
     public void updatePlayerHealthBarUI()
     {
         GameManager.instance.playerHealthBar.fillAmount = (float)health / healthMax;
+        GameManager.instance.playerHealthText.text = health.ToString("F0");
+        GameManager.instance.playerHealthMaxText.text = healthMax.ToString("F0");
     }
+
 
     IEnumerator damageScreenEffect()
     {
