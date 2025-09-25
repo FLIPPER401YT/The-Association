@@ -75,13 +75,11 @@ public class PlayerDash : MonoBehaviour
 
     public void updatePlayerDashUI()
     {
-        if (GameManager.instance.playerDash == null) return;
-
-        if (dashes == 1)
+        if(dashes == 1)
         {
             GameManager.instance.playerDash.fillAmount = ((dashMax - dashes) / 3f) + ((dashTimer / dashReloadTime) / 3);
         }
-        else if (dashes == 2)
+        else if(dashes == 2)
         {
             GameManager.instance.playerDash.fillAmount = ((dashMax - dashes) / 3f) + ((dashTimer / dashReloadTime) / 3);
         }
