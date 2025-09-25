@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour, IDamage
     public PlayerShoot shoot;
     public AudioSource audioSource;
     public AudioSource walkingAudioSource;
+    public AudioSource crouchAudioSource;
 
     bool canMove = true;
 
