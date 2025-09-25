@@ -152,6 +152,7 @@ MonoBehaviour:
   weaponAnimator: {fileID: 1791555417311272528}
   weaponOverrideController: {fileID: 22100000, guid: e58692d71d26ef749a3aaa28fa586ad3, type: 2}
   equipAnimation: {fileID: 7400000, guid: 4795c80d35ed4284eac1fbb657cc6a9d, type: 2}
+  meleeSwingAnimation: {fileID: 7400000, guid: c15b0221a471c7042a7fe2e7eb15eef2, type: 2}
   weaponAudioSource: {fileID: 2031874675255346090}
   reloadAudioSource: {fileID: 8424887044624441054}
   isReloading: 0
@@ -1372,7 +1373,7 @@ Transform:
   m_GameObject: {fileID: 8937604189313975159}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
