@@ -152,6 +152,7 @@ MonoBehaviour:
   weaponAnimator: {fileID: 1791555417311272528}
   weaponOverrideController: {fileID: 22100000, guid: e58692d71d26ef749a3aaa28fa586ad3, type: 2}
   equipAnimation: {fileID: 7400000, guid: 4795c80d35ed4284eac1fbb657cc6a9d, type: 2}
+  meleeSwingAnimation: {fileID: 7400000, guid: c15b0221a471c7042a7fe2e7eb15eef2, type: 2}
   weaponAudioSource: {fileID: 2031874675255346090}
   reloadAudioSource: {fileID: 8424887044624441054}
   isReloading: 0
