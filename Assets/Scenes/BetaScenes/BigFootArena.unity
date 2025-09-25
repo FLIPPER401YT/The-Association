@@ -26982,10 +26982,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 327888807078103629, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
-      propertyPath: leapUpBoost
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 2685116618366660546, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_Name
       value: Bigfoot
@@ -27028,10 +27024,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3911046518360766697, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9108339018958933876, guid: d1c7a89114331de42824bab4fcc1493e, type: 3}
-      propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
