@@ -25,7 +25,7 @@ class PlayerMovement : MonoBehaviour
 
         stepTimer += Time.deltaTime;
         if (GameManager.instance.playerScript.dash.dashing) stepTimer = 0;
-        if (moveDir != Vector3.zero && stepTimer >= timeBetweenSteps)
+        if (moveDir != Vector3.zero && stepTimer >= timeBetweenSteps && GameManager.instance.playerScript.jump.Grounded)
         {
             if (GameManager.instance.playerScript.crouch.isCrouching)
             {
@@ -39,7 +39,7 @@ class PlayerMovement : MonoBehaviour
             }
             stepTimer = 0;
         }
-        else if (moveDir == Vector3.zero)
+        else if (moveDir == Vector3.zero || !GameManager.instance.playerScript.jump.Grounded)
         {
             GameManager.instance.playerScript.walkingAudioSource.Stop();
         }
