@@ -1,10 +1,12 @@
 using UnityEngine;
 
-class PlayerJump : MonoBehaviour
+public class PlayerJump : MonoBehaviour
 {
     [SerializeField] float jumpHeight;
     [SerializeField] int jumpMax;
     [SerializeField] AudioClip jumpSound;
+
+    public bool Grounded => jumps == 0;
 
     int jumps = 0;
     Rigidbody rb;
