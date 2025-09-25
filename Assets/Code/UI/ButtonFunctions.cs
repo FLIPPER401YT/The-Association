@@ -43,6 +43,8 @@ public class ButtonFunctions : MonoBehaviour
     {
         quitingToMain = true;
         GameManager.instance.playerScript.resetting = true;
+        GameManager.instance.playerScript.updateUIOnLoad = false;
+        //GameManager.instance.player.SetActive(false);
         SceneManager.LoadScene("MainMenu");
     }
 
