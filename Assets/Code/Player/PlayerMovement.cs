@@ -29,13 +29,19 @@ class PlayerMovement : MonoBehaviour
         {
             if (GameManager.instance.playerScript.crouch.isCrouching)
             {
-                GameManager.instance.playerScript.audioSource.PlayOneShot(crouchStepSound);
+                GameManager.instance.playerScript.walkingAudioSource.clip = crouchStepSound;
+                GameManager.instance.playerScript.walkingAudioSource.Play();
             }
             else
             {
-                GameManager.instance.playerScript.audioSource.PlayOneShot(walkStepSound);
+                GameManager.instance.playerScript.walkingAudioSource.clip = walkStepSound;
+                GameManager.instance.playerScript.walkingAudioSource.Play();
             }
             stepTimer = 0;
+        }
+        else if (moveDir == Vector3.zero)
+        {
+            GameManager.instance.playerScript.walkingAudioSource.Stop();
         }
     }
 }
