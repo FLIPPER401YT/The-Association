@@ -107,6 +107,13 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
         {
             dwellTimer -= Time.fixedDeltaTime;
             BrakeToStop();
+
+            if (anim)
+            {
+                anim.SetBool("Walking", false);
+                anim.SetBool("Running", false);
+            }
+
             Face(rb.linearVelocity.sqrMagnitude > 0.01f ? rb.linearVelocity : transform.forward);
             return;
         }
@@ -138,6 +145,18 @@ public abstract class EnemyMovementBaseRB : MonoBehaviour
 
         Face(dir);
         MoveHorizontal(dir);
+
+        // --- drive walk/run bools from current horizontal speed ---
+        if (anim)
+        {
+            Vector3 horiz = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            float speed = horiz.magnitude;
+            bool isMoving = speed > 0.05f;
+
+            // Pick whichever your controller uses. If you only have “Walking”, set that one.
+            anim.SetBool("Walking", isMoving);
+            anim.SetBool("Running", false); // or use a threshold if you want run-on-roam
+        }
     }
 
     void ResetRoam(bool firstPick)
