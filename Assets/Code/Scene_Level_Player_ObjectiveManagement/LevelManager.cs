@@ -15,6 +15,7 @@ public class LevelManager : MonoBehaviour
     public bool isVictoryScene = false;
     public PlayerController player;
     public Transform spawnPoint;
+    public int bossCount = 0;
 
     #region Persistance
     [Serializable]
@@ -204,7 +205,7 @@ public class LevelManager : MonoBehaviour
         if (PlayerPrefs.HasKey("Health")) currentSave.health = PlayerPrefs.GetInt("Health");
         if (PlayerPrefs.HasKey("HealthMax")) currentSave.healthMax = PlayerPrefs.GetInt("HealthMax");
         if (PlayerPrefs.HasKey("BloodSamples")) currentSave.bloodSamples = PlayerPrefs.GetInt("BloodSamples");
-        int count = PlayerPrefs.GetInt("DefeatedBossesCount", 0);
+        int count = PlayerPrefs.GetInt("DefeatedBossesCount", BossCount());
         for (int index = 0; index < count; index++)
         {
             string bossName = PlayerPrefs.GetString("DefeatedBoss_" + index, "");
@@ -262,9 +263,8 @@ public class LevelManager : MonoBehaviour
     #region Boss Tracking
     public int BossCount()
     {
-        int count = 0;
-        if (currentSave.defeatedBosses.Contains("Bigfoot") || currentSave.defeatedBosses.Contains("Mothman")) count++;
-        return count;
+        if (currentSave.defeatedBosses.Contains("Bigfoot") || currentSave.defeatedBosses.Contains("Mothman")) bossCount++;
+        return bossCount;
     }
     public void MarkBossDefeated(string bossName)
     {
