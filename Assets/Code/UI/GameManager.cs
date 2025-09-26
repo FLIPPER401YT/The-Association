@@ -62,6 +62,8 @@ public class GameManager : MonoBehaviour
     public GameObject contractBoardBigfootUI;
     public GameObject contractBoardMothmanUI;
     public GameObject contractBoardWendigoUI;
+    public TMP_Text bossesDefeatedCount;
+    public TMP_Text totalBossesCount;
     public ContractBoardState contractBoardCurr;
 
     public enum ContractBoardState
@@ -144,6 +146,13 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        if(LevelManager.Instance.MarkBossDefeated("Bigfoot") || LevelManager.Instance.MarkBossDefeated("Mothman"))
+        {
+            int bossIncrement = 0;
+            bossIncrement++;
+            bossesDefeatedCount.text = bossIncrement.ToString("F0");
+        }
+        totalBossesCount.text = ("2");
     }
 
     public void statePaused()
