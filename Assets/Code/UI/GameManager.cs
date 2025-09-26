@@ -146,12 +146,8 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        if(LevelManager.Instance.MarkBossDefeated("Bigfoot") || LevelManager.Instance.MarkBossDefeated("Mothman"))
-        {
-            int bossIncrement = 0;
-            bossIncrement++;
-            bossesDefeatedCount.text = bossIncrement.ToString("F0");
-        }
+        
+        bossesDefeatedCount.text = PlayerPrefs.GetInt("BossesDefeatedCount", LevelManager.Instance.BossCount()).ToString("F0");
         totalBossesCount.text = ("2");
     }
 

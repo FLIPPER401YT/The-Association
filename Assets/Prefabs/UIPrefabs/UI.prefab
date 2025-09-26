@@ -20567,6 +20567,8 @@ MonoBehaviour:
   contractBoardBigfootUI: {fileID: 5037163744635624976}
   contractBoardMothmanUI: {fileID: 1316340460708514330}
   contractBoardWendigoUI: {fileID: 1005163113218756085}
+  bossesDefeatedCount: {fileID: 3665742317032161229}
+  totalBossesCount: {fileID: 8528934423872548750}
   contractBoardCurr: 0
   origContractBoardState: 0
   shopTruck: {fileID: 0}
@@ -21121,7 +21123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &138058955766615547
 RectTransform:
   m_ObjectHideFlags: 0
