@@ -533,6 +533,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnPoint
       objectReference: {fileID: 0}
+    - target: {fileID: 3112973308287068369, guid: 1e3c644797b9cf146a40f77b7deeeee7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8918952998549432659, guid: 1e3c644797b9cf146a40f77b7deeeee7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 451.48
@@ -724,123 +728,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 704f5c34f44445a4d85f0fb9a0a1c089, type: 3}
---- !u!1001 &1166461859860309817
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1820647058003358099, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_Name
-      value: Wendigo
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: boltSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: healthMax
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: boltDamage
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: boltPrefab
-      value: 
-      objectReference: {fileID: 12130448720110530, guid: 3aee3143388f24843831764d7a47b3bd, type: 3}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: boltWindup
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: swipeRange
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: swipeDamage
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: swipeWindup
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: summonWindup
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: healthCurrent
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: swipeCooldown
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: deathAnimation
-      value: 
-      objectReference: {fileID: 7400000, guid: c5e6cfd3f03a714448aa5b3f309d9b70, type: 2}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: minions.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: 'minions.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402208737824907341, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: 'minions.Array.data[1]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 430.51
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.03
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 415.33
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8165457497244930920, guid: 6294c2064063e634b8868662e38eb108, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6294c2064063e634b8868662e38eb108, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -849,6 +736,5 @@ SceneRoots:
   - {fileID: 942969398}
   - {fileID: 93962653}
   - {fileID: 1747355481}
-  - {fileID: 1166461859860309817}
   - {fileID: 1102325824}
   - {fileID: 1430195911}
