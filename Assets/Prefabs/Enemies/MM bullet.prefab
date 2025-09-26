@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 16
-  lifetime: 6
+  lifetime: 10
   hitMask:
     serializedVersion: 2
     m_Bits: 128
