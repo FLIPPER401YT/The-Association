@@ -83,8 +83,8 @@ public class LevelManager : MonoBehaviour
             player.health = player.healthMax;
             player.bloodSamples = 0;
             player.SavePlayerStats();
-            player.updatePlayerHealthBarUI();
-            player.UpdateSampleCount(player.bloodSamples);
+            //player.updatePlayerHealthBarUI();
+            //player.UpdateSampleCount(player.bloodSamples);
         }
         SetStartSaveToCurrent();
         BossesDestroyed += Victory;
