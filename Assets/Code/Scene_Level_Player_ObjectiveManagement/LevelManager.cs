@@ -15,6 +15,7 @@ public class LevelManager : MonoBehaviour
     public bool isVictoryScene = false;
     public PlayerController player;
     public Transform spawnPoint;
+    public int bossCount = 0;
 
     #region Persistance
     [Serializable]
@@ -185,7 +186,7 @@ public class LevelManager : MonoBehaviour
         }
         PlayerPrefs.SetInt("Health", currentSave.health);
         PlayerPrefs.SetInt("BloodSamples", currentSave.bloodSamples);
-        PlayerPrefs.SetInt("DefeatedBossesCount", currentSave.defeatedBosses.Count);
+        PlayerPrefs.SetInt("DefeatedBossesCount", BossCount());
         for (int index = 0; index < currentSave.defeatedBosses.Count; index++)
         {
             PlayerPrefs.SetString("DefeatedBoss_" + index, currentSave.defeatedBosses[index]);
@@ -204,7 +205,7 @@ public class LevelManager : MonoBehaviour
         if (PlayerPrefs.HasKey("Health")) currentSave.health = PlayerPrefs.GetInt("Health");
         if (PlayerPrefs.HasKey("HealthMax")) currentSave.healthMax = PlayerPrefs.GetInt("HealthMax");
         if (PlayerPrefs.HasKey("BloodSamples")) currentSave.bloodSamples = PlayerPrefs.GetInt("BloodSamples");
-        int count = PlayerPrefs.GetInt("DefeatedBossesCount", 0);
+        int count = PlayerPrefs.GetInt("DefeatedBossesCount", BossCount());
         for (int index = 0; index < count; index++)
         {
             string bossName = PlayerPrefs.GetString("DefeatedBoss_" + index, "");
@@ -260,6 +261,11 @@ public class LevelManager : MonoBehaviour
     }
     #endregion
     #region Boss Tracking
+    public int BossCount()
+    {
+        if (currentSave.defeatedBosses.Contains("Bigfoot") || currentSave.defeatedBosses.Contains("Mothman")) bossCount++;
+        return bossCount;
+    }
     public void MarkBossDefeated(string bossName)
     {
         if (!currentSave.defeatedBosses.Contains(bossName))

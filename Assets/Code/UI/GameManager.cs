@@ -62,6 +62,8 @@ public class GameManager : MonoBehaviour
     public GameObject contractBoardBigfootUI;
     public GameObject contractBoardMothmanUI;
     public GameObject contractBoardWendigoUI;
+    public TMP_Text bossesDefeatedCount;
+    public TMP_Text totalBossesCount;
     public ContractBoardState contractBoardCurr;
 
     public enum ContractBoardState
@@ -144,6 +146,9 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        
+        bossesDefeatedCount.text = PlayerPrefs.GetInt("DefeatedBossesCount", LevelManager.Instance.BossCount()).ToString("F0");
+        totalBossesCount.text = ("2");
     }
 
     public void statePaused()
