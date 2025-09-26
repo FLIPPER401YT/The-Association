@@ -260,6 +260,12 @@ public class LevelManager : MonoBehaviour
     }
     #endregion
     #region Boss Tracking
+    public int BossCount()
+    {
+        int count = 0;
+        if (currentSave.defeatedBosses.Contains("Bigfoot") || currentSave.defeatedBosses.Contains("Mothman")) count++;
+        return count;
+    }
     public void MarkBossDefeated(string bossName)
     {
         if (!currentSave.defeatedBosses.Contains(bossName))
