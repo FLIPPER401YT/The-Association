@@ -91,7 +91,7 @@ MonoBehaviour:
   spitBoltPrefab: {fileID: 5730125231447525711, guid: 5238f25ea9593e844941dd5fc88e97fa, type: 3}
   castMuzzle: {fileID: 374878025054074241}
   boltSpeed: 20
-  boltDamage: 15
+  boltDamage: 5
   rangedCooldown: 1
   diveSpeed: 14
   diveTime: 0.9

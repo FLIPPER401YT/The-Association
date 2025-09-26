@@ -11,6 +11,7 @@ public class SpitBoltProjectile : MonoBehaviour
     [Header("Homing (gentle)")]
     public Transform player;                 // optional tiny mid-flight aim assist
     public float gentleHomeStrength = 0f;    // set 0 to disable
+    public float homeYOffset = 0.6f;
 
     [Header("Ownership")]
     public Transform owner;                  // spawner passes itself; ignored on hit
@@ -70,7 +71,7 @@ public class SpitBoltProjectile : MonoBehaviour
     {
         if (player && gentleHomeStrength > 0f && rb.linearVelocity.sqrMagnitude > 0.0001f)
         {
-            Vector3 desiredDir = (player.position + Vector3.up * 1.2f - transform.position).normalized;
+            Vector3 desiredDir = (player.position + Vector3.up * homeYOffset - transform.position).normalized;
             Vector3 newVel = Vector3.Lerp(
                 rb.linearVelocity,
                 desiredDir * rb.linearVelocity.magnitude,

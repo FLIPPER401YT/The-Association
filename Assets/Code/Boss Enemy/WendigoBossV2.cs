@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio; // <-- mixer
 using System.Collections;
 
 public class WendigoBossV2 : Base_Boss_AI
@@ -10,7 +11,6 @@ public class WendigoBossV2 : Base_Boss_AI
 
     [Header("Stop")]
     [SerializeField] float stopDistance = 1.75f;
-
 
     // ---------------- SWIPE (MELEE) ----------------
     [Header("Swipe")]
@@ -56,14 +56,20 @@ public class WendigoBossV2 : Base_Boss_AI
     [SerializeField] int maxSummonsAlive = 6;
     [SerializeField] string summonTag = "Enemy";
 
-    // ---------------- AUDIO (optional hooks) ----------------
+    // ---------------- AUDIO ----------------
     [Header("Audio (Optional)")]
-    [SerializeField] AudioClip roarLoop;          // idle/roam loop (use an AudioSource on the boss for loop)
+    [SerializeField] AudioClip roarLoop;          // idle/roam loop (voice)
     [SerializeField] AudioClip swipeSFX;
     [SerializeField] AudioClip rushSFX;
     [SerializeField] AudioClip rangedSFX;
     [SerializeField] AudioClip summonSFX;
-    [SerializeField] float sfxVolume = 0.9f;
+    [Range(0f, 1f)][SerializeField] float sfxVolume = 0.9f;
+
+    [Header("Audio Routing")]
+    [SerializeField] AudioMixerGroup outputMixerGroup; // assign your "SoundEffects (Mixer)" group
+    [SerializeField] AudioSource voiceSrc;             // looping / roar
+    [SerializeField] AudioSource fxSrc;                // one-shots
+    [Range(0f, 0.2f)][SerializeField] float pitchJitter = 0.06f;
 
     // ---------------- DEBUG ----------------
     [Header("Debug")]
@@ -78,12 +84,50 @@ public class WendigoBossV2 : Base_Boss_AI
     {
         base.Awake();
 
-        // Ensure Rigidbody is configured for upright rotation (base does X/Z freeze)
-        if (rb) { rb.useGravity = true; } // ground boss; if you want hover, set false and add vertical control
+        // Ground boss
+        if (rb) rb.useGravity = true;
 
-        // (Optional) if you want roarLoop to always play via a local AudioSource:
-        // var src = GetComponent<AudioSource>();
-        // if (src && roarLoop) { src.clip = roarLoop; src.loop = true; src.spatialBlend = 1f; src.Play(); }
+        // Ensure local audio sources exist
+        if (!voiceSrc) voiceSrc = gameObject.AddComponent<AudioSource>();
+        if (!fxSrc) fxSrc = gameObject.AddComponent<AudioSource>();
+
+        // Route to mixer
+        if (outputMixerGroup)
+        {
+            voiceSrc.outputAudioMixerGroup = outputMixerGroup;
+            fxSrc.outputAudioMixerGroup = outputMixerGroup;
+        }
+
+        // 3D audio setup
+        foreach (var src in new[] { voiceSrc, fxSrc })
+        {
+            src.playOnAwake = false;
+            src.spatialBlend = 1f;
+            src.rolloffMode = AudioRolloffMode.Logarithmic;
+            src.dopplerLevel = 0f;
+            src.minDistance = 2f;
+            src.maxDistance = 30f;
+        }
+
+        // Looping roar (optional)
+        if (roarLoop)
+        {
+            voiceSrc.clip = roarLoop;
+            voiceSrc.loop = true;
+            if (!voiceSrc.isPlaying) voiceSrc.Play();
+        }
+    }
+
+    protected override void FixedUpdate()
+    {
+        float dt = Time.fixedDeltaTime;
+
+        swipeCD = Mathf.Max(0f, swipeCD - dt);
+        rushCD = Mathf.Max(0f, rushCD - dt);
+        rangedCD = Mathf.Max(0f, rangedCD - dt);
+        summonCD = Mathf.Max(0f, summonCD - dt);
+
+        base.FixedUpdate();
     }
 
     protected override void Die()
@@ -109,18 +153,12 @@ public class WendigoBossV2 : Base_Boss_AI
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
         anim.SetBool("Running", false);
-        // Priority idea:
-        // 1) If too many adds aren�t alive and summon off CD, sometimes summon first
-        // 2) If in melee range -> Swipe
-        // 3) Else if farther -> prefer Rush when distance big enough
-        // 4) Else use Ranged
 
         bool canSummon = summonCD <= 0f && CountAliveSummons() < maxSummonsAlive && summonPrefabs != null && summonPrefabs.Length > 0;
         bool canSwipe = swipeCD <= 0f && distToPlayer <= meleeRange + 0.25f;
         bool canRush = rushCD <= 0f && distToPlayer >= rushMinDist;
         bool canRanged = rangedCD <= 0f && distToPlayer <= rangedRange && spitBoltPrefab && castMuzzle;
 
-        // Opportunistic summon when not in immediate melee (or randomly even if close)
         if (canSummon && (!canSwipe || Random.value < 0.35f))
         {
             anim.SetTrigger("Summon");
@@ -153,11 +191,10 @@ public class WendigoBossV2 : Base_Boss_AI
             yield break;
         }
 
-        // If we got here, nothing valid this tick
         yield return null;
     }
 
-    // --- Make Wendigo stop steering when within stopDistance ---
+    // --- Stop steering when within stopDistance ---
     protected override Vector3 DesiredChaseVelocity()
     {
         if (!player) return Vector3.zero;
@@ -166,13 +203,11 @@ public class WendigoBossV2 : Base_Boss_AI
         Vector3 planar = new Vector3(to.x, 0f, to.z);
         float dist = planar.magnitude;
 
-        // if close enough, don't push toward the player anymore
         if (stopDistance > 0f && dist <= stopDistance)
             return Vector3.zero;
 
         return (dist > 0.001f) ? planar.normalized * chaseSpeed : Vector3.zero;
     }
-
 
     // ---------------- SWIPE ----------------
     IEnumerator DoSwipe()
@@ -181,12 +216,10 @@ public class WendigoBossV2 : Base_Boss_AI
         FacePlayer();
         BrakePlanar();
 
-        if (swipeSFX) AudioSource.PlayClipAtPoint(swipeSFX, transform.position, sfxVolume);
+        PlayOneShot(swipeSFX, sfxVolume);
 
-        // windup
         yield return new WaitForSeconds(swipeWindup);
 
-        // do hit
         Vector3 center = swipeAttackPos ? swipeAttackPos.position : transform.position + transform.TransformVector(swipeOffset);
         var hits = Physics.OverlapSphere(center, swipeRadius, rushHitMask, QueryTriggerInteraction.Collide);
         foreach (var h in hits)
@@ -197,7 +230,6 @@ public class WendigoBossV2 : Base_Boss_AI
             break;
         }
 
-        // recover
         yield return new WaitForSeconds(swipeRecover);
         swipeCD = swipeCooldown;
         attackLockout = globalAttackCooldown;
@@ -210,7 +242,7 @@ public class WendigoBossV2 : Base_Boss_AI
         ChangeState(BossState.Attack);
         rushDidHit = false;
 
-        if (rushSFX) AudioSource.PlayClipAtPoint(rushSFX, transform.position, sfxVolume);
+        PlayOneShot(rushSFX, sfxVolume);
 
         float t = 0f;
         while (t < rushTime)
@@ -227,7 +259,6 @@ public class WendigoBossV2 : Base_Boss_AI
 
             if (!rushDidHit)
             {
-                // Simple capsule overlap up the torso to "shoulders"
                 Vector3 origin = transform.position + Vector3.up * 0.4f;
                 Vector3 top = origin + Vector3.up * 1.6f;
                 float radius = Mathf.Max(0.05f, rushShoulderCastRadius);
@@ -239,11 +270,9 @@ public class WendigoBossV2 : Base_Boss_AI
 
                     rushDidHit = true;
 
-                    // damage
                     var dmg = FindDamage(c);
                     if (dmg != null) dmg.TakeDamage((int)rushDamage);
 
-                    // Knockback via StatusEffects
                     var status = GetPlayerStatus();
                     Vector3 playerCenter = GetPlayerCenter();
                     Vector3 hitOrigin = transform.position;
@@ -254,7 +283,6 @@ public class WendigoBossV2 : Base_Boss_AI
                     }
                     else
                     {
-                        // Rigidbody fallback
                         var prb = player ? (player.GetComponent<Rigidbody>() ??
                                             player.GetComponentInChildren<Rigidbody>()) : null;
                         if (prb)
@@ -291,9 +319,8 @@ public class WendigoBossV2 : Base_Boss_AI
     {
         ChangeState(BossState.Attack);
 
-        if (rangedSFX) AudioSource.PlayClipAtPoint(rangedSFX, transform.position, sfxVolume);
+        PlayOneShot(rangedSFX, sfxVolume);
 
-        // small hover-brake + face
         FacePlayer();
         BrakePlanar();
 
@@ -310,10 +337,10 @@ public class WendigoBossV2 : Base_Boss_AI
             {
                 proj.damage = boltDamage;
                 proj.lifetime = 6f;
-                proj.hitMask = ~0;                // tune if needed
-                proj.player = player;             // gentle homing target
+                proj.hitMask = ~0;
+                proj.player = player;
                 proj.gentleHomeStrength = gentleHomeStrength;
-                proj.owner = transform;           // ignore self on hit
+                proj.owner = transform;
             }
             rangedCD = rangedCooldown;
         }
@@ -330,16 +357,14 @@ public class WendigoBossV2 : Base_Boss_AI
         FacePlayer();
         BrakePlanar();
 
-        if (summonSFX) AudioSource.PlayClipAtPoint(summonSFX, transform.position, sfxVolume);
+        PlayOneShot(summonSFX, sfxVolume);
 
-        // little windup to sell it
         yield return new WaitForSeconds(0.6f);
 
         int alive = CountAliveSummons();
         int slots = Mathf.Max(0, maxSummonsAlive - alive);
         if (slots <= 0 || summonPrefabs == null || summonPrefabs.Length == 0)
         {
-            // nothing to do
             yield return null;
         }
         else
@@ -360,12 +385,10 @@ public class WendigoBossV2 : Base_Boss_AI
                 }
                 else
                 {
-                    // radial around boss if no points assigned
                     Vector2 r = Random.insideUnitCircle.normalized * Random.Range(2.5f, 5f);
                     pos = new Vector3(transform.position.x + r.x, transform.position.y, transform.position.z + r.y);
                     rot = Quaternion.identity;
 
-                    // drop to ground if possible
                     if (Physics.Raycast(pos + Vector3.up * 8f, Vector3.down, out RaycastHit hit, 30f, groundMask))
                         pos = hit.point;
                 }
@@ -413,11 +436,9 @@ public class WendigoBossV2 : Base_Boss_AI
     {
         base.OnDrawGizmosSelected();
 
-        // stop distance ring
         Gizmos.color = new Color(0.9f, 0.9f, 0.2f, 0.8f);
         Gizmos.DrawWireSphere(transform.position, stopDistance);
 
-        // Ranges
         Gizmos.color = new Color(1f, 0.25f, 0.2f, 0.9f);
         Gizmos.DrawWireSphere(transform.position, meleeRange);
 
@@ -427,14 +448,12 @@ public class WendigoBossV2 : Base_Boss_AI
         Gizmos.color = new Color(1f, 0.8f, 0f, 0.7f);
         Gizmos.DrawWireSphere(transform.position, rushMinDist);
 
-        // Swipe hit bubble
         Gizmos.color = new Color(1f, 0.4f, 0.8f, 0.8f);
         Vector3 center = swipeAttackPos
             ? swipeAttackPos.position
             : transform.position + transform.TransformVector(swipeOffset);
         Gizmos.DrawWireSphere(center, swipeRadius);
 
-        // Summon points
         if (summonPoints != null)
         {
             Gizmos.color = Color.green;
@@ -447,4 +466,12 @@ public class WendigoBossV2 : Base_Boss_AI
         }
     }
 #endif
+
+    // --- Local SFX helper ---
+    void PlayOneShot(AudioClip clip, float vol = 1f)
+    {
+        if (!clip || !fxSrc) return;
+        fxSrc.pitch = 1f + Random.Range(-pitchJitter, pitchJitter);
+        fxSrc.PlayOneShot(clip, vol);
+    }
 }
