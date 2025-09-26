@@ -185,7 +185,7 @@ public class LevelManager : MonoBehaviour
         }
         PlayerPrefs.SetInt("Health", currentSave.health);
         PlayerPrefs.SetInt("BloodSamples", currentSave.bloodSamples);
-        PlayerPrefs.SetInt("DefeatedBossesCount", currentSave.defeatedBosses.Count);
+        PlayerPrefs.SetInt("DefeatedBossesCount", BossCount());
         for (int index = 0; index < currentSave.defeatedBosses.Count; index++)
         {
             PlayerPrefs.SetString("DefeatedBoss_" + index, currentSave.defeatedBosses[index]);
