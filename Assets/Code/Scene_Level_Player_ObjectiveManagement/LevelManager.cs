@@ -135,7 +135,6 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
-
     void SetPlayerStats(SaveData save)
     {
         player.health = save.health;
@@ -152,7 +151,6 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
-
     void SetStartSaveToCurrent()
     {
         // sceneStartSave.health = currentSave.health;
@@ -162,7 +160,6 @@ public class LevelManager : MonoBehaviour
         // sceneStartSave.ammo = new List<int>(currentSave.ammo);
         sceneStartSave = new SaveData(currentSave);
     }
-
     private Transform SpawnPoint(string sceneName)
     {
         GameObject spawnObject = GameObject.FindGameObjectWithTag("Respawn");
@@ -186,7 +183,7 @@ public class LevelManager : MonoBehaviour
         }
         PlayerPrefs.SetInt("Health", currentSave.health);
         PlayerPrefs.SetInt("BloodSamples", currentSave.bloodSamples);
-        PlayerPrefs.SetInt("DefeatedBossesCount", BossCount());
+        PlayerPrefs.SetInt("DefeatedBossesCount", currentSave.defeatedBosses.Count);
         for (int index = 0; index < currentSave.defeatedBosses.Count; index++)
         {
             PlayerPrefs.SetString("DefeatedBoss_" + index, currentSave.defeatedBosses[index]);

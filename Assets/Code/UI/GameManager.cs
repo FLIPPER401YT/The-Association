@@ -146,9 +146,8 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        
         bossesDefeatedCount.text = PlayerPrefs.GetInt("DefeatedBossesCount", LevelManager.Instance.BossCount()).ToString("F0");
-        totalBossesCount.text = ("2");
+        totalBossesCount.text = "2";
     }
 
     public void statePaused()
