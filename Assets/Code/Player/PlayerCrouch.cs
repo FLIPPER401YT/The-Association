@@ -27,22 +27,28 @@ public class PlayerCrouch : MonoBehaviour
             col.height = Mathf.MoveTowards(col.height, heightOriginal * crouchHeightPct, crouchDownSpeed * Time.deltaTime);
             movement.speed = movement.speedOriginal * crouchSpeedMod;
             isCrouching = true;
-            if (playedSound == 0 || playedSound == 2)
+            if ((playedSound == 0 || playedSound == 2) && GameManager.instance.playerScript.jump.Grounded)
             {
-                GameManager.instance.playerScript.audioSource.PlayOneShot(crouchSound);
-                playedSound = 1;
+                GameManager.instance.playerScript.crouchAudioSource.Stop();
+                GameManager.instance.playerScript.crouchAudioSource.clip = crouchSound;
+                GameManager.instance.playerScript.crouchAudioSource.Play();
             }
+            playedSound = 1;
         }
         else
         {
             col.height = Mathf.MoveTowards(col.height, heightOriginal, crouchDownSpeed * Time.deltaTime);
             movement.speed = movement.speedOriginal;
             isCrouching = false;
-            if (playedSound == 1)
+            if (playedSound == 1 && GameManager.instance.playerScript.jump.Grounded)
             {
-                GameManager.instance.playerScript.audioSource.PlayOneShot(uncrouchSound);
-                playedSound = 2;
+                GameManager.instance.playerScript.crouchAudioSource.Stop();
+                GameManager.instance.playerScript.crouchAudioSource.clip = uncrouchSound;
+                GameManager.instance.playerScript.crouchAudioSource.Play();
             }
+            playedSound = 2;
         }
+
+        if (!GameManager.instance.playerScript.jump.Grounded) GameManager.instance.playerScript.crouchAudioSource.Stop();
     }
 }

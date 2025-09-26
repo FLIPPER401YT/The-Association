@@ -34,6 +34,7 @@ public class ButtonFunctions : MonoBehaviour
     public void restart()
     {
         quitingToMain = true;
+        GameManager.instance.playerScript.resetting = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         GameManager.instance.stateUnpaused();
     }
@@ -41,6 +42,9 @@ public class ButtonFunctions : MonoBehaviour
     public void quitToMainMenu()
     {
         quitingToMain = true;
+        GameManager.instance.playerScript.resetting = true;
+        GameManager.instance.playerScript.updateUIOnLoad = false;
+        //GameManager.instance.player.SetActive(false);
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -62,7 +66,8 @@ public class ButtonFunctions : MonoBehaviour
     public void returnToGameFromShop()
     {
         GameManager.instance.shopTruck._shopUp = false;
-        GameManager.instance.playerUI.SetActive(true);
+        GameManager.instance.playerDashObject.SetActive(true);
+        GameManager.instance.playerHotBarObject.SetActive(true);
         GameManager.instance.mouseInvisibility();
         GameManager.instance.shopUI.SetActive(false);
         GameManager.instance.player.SetActive(true);

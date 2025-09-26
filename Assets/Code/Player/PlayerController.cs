@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour, IDamage
 
     [SerializeField] public int health;
     [SerializeField] int lastBitOfLifeDamageAmount;
-    [SerializeField] PlayerJump jump;
+    [SerializeField] public PlayerJump jump;
     [SerializeField] public PlayerCrouch crouch;
     [SerializeField] PlayerMovement movement;
     [SerializeField] public PlayerDash dash;
@@ -24,8 +24,12 @@ public class PlayerController : MonoBehaviour, IDamage
     public int healthMax;
     public int bloodSamples;
     public bool lastBitOfLifeDamageTaken = false;
+    public bool resetting = false;
+    public bool updateUIOnLoad = true;
     public PlayerShoot shoot;
     public AudioSource audioSource;
+    public AudioSource walkingAudioSource;
+    public AudioSource crouchAudioSource;
 
     bool canMove = true;
 
@@ -46,19 +50,6 @@ public class PlayerController : MonoBehaviour, IDamage
         if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
 
         healthMax = health;
-        if (LevelManager.Instance != null)
-        {
-            var data = LevelManager.Instance.currentSave;
-            health = data.health;
-            healthMax = data.healthMax;
-
-            for (int i = 0; i < shoot.gunList.Count; i++)
-            {
-                if (data.ammo.Count <= i && data.clip.Count <= i) continue;
-                shoot.gunList[i].ammo = data.ammo[i];
-                shoot.gunList[i].clip = data.clip[i];
-            }
-        }
         SpawnPlayer();
         updatePlayerHealthBarUI();
         UpdateSampleCount(bloodSamples);
@@ -77,7 +68,7 @@ public class PlayerController : MonoBehaviour, IDamage
         canMove = !statusEffects.IsStunned;
         updatePlayerHealthBarUI();
 
-        if (Input.GetButtonDown("KnockbackDebug")) statusEffects.ApplyKnockback(transform.position + new Vector3(0, 0, 2), 5f);
+        //if (Input.GetButtonDown("KnockbackDebug")) statusEffects.ApplyKnockback(transform.position + new Vector3(0, 0, 2), 5f);
 
         if (canMove)
         {
@@ -93,8 +84,6 @@ public class PlayerController : MonoBehaviour, IDamage
 
         GameManager.instance.playerHealthText.text = health.ToString("F0");
         GameManager.instance.playerHealthMaxText.text = healthMax.ToString("F0");
-
-
     }
 
     public void Heal(int amount)
@@ -125,20 +114,26 @@ public class PlayerController : MonoBehaviour, IDamage
             }
             else if (health <= 0)
             {
+                health = 0;
                 anim.enabled = true;
                 audioSource.PlayOneShot(deathSound);
                 anim.SetTrigger("Death");
                 StartCoroutine(Lose());
                 enabled = false;
                 lastBitOfLifeDamageTaken = false;
+                updatePlayerHealthBarUI();
             }
         }
     }
-
     public void updatePlayerHealthBarUI()
     {
+        if (!GameManager.instance.playerHealthBar || !GameManager.instance.playerHealthText || !GameManager.instance.playerHealthMaxText) return;
+        
         GameManager.instance.playerHealthBar.fillAmount = (float)health / healthMax;
+        GameManager.instance.playerHealthText.text = health.ToString("F0");
+        GameManager.instance.playerHealthMaxText.text = healthMax.ToString("F0");
     }
+
 
     IEnumerator damageScreenEffect()
     {
@@ -172,29 +167,22 @@ public class PlayerController : MonoBehaviour, IDamage
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Debug.Log("On Scene Runs On Player");
         lastBitOfLifeDamageTaken = false;
         if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
-        if (LevelManager.Instance != null)
+        if (LevelManager.Instance != null && updateUIOnLoad)
         {
-            var data = LevelManager.Instance.currentSave;
-            health = data.health;
-            bloodSamples = data.bloodSamples;
-
-            for (int i = 0; i < shoot.gunList.Count; i++)
-            {
-                shoot.gunList[i].ammo = data.ammo[i];
-                shoot.gunList[i].clip = data.clip[i];
-            }
-
-            updatePlayerHealthBarUI();
+            Debug.Log("Update UI On Load");
+            //updatePlayerHealthBarUI();
             UpdateSampleCount(bloodSamples);
         }
-        Time.timeScale = 1.0f;
-        if (scene.name.Equals("MainMenu")) gameObject.SetActive(false);
+        Time.timeScale = GameManager.instance.timeScaleOriginal;
+        if (!updateUIOnLoad) gameObject.SetActive(false);
         else gameObject.SetActive(true);
+        updateUIOnLoad = true;
+        Debug.Log("Reaches Here");
         GameManager.instance.player = gameObject;
         GameManager.instance.playerScript = this;
-        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
     }
 
     void OnDestroy()

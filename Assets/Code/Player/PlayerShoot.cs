@@ -27,6 +27,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] Animator weaponAnimator;
     [SerializeField] AnimatorOverrideController weaponOverrideController;
     [SerializeField] AnimationClip equipAnimation;
+    [SerializeField] AnimationClip meleeSwingAnimation;
     //[SerializeField] AnimationClip unequipAnimation;
     [SerializeField] AudioSource weaponAudioSource;
     [SerializeField] AudioSource reloadAudioSource;
@@ -34,9 +35,10 @@ public class PlayerShoot : MonoBehaviour
     public bool isReloading = false;
     public bool changingWeapons = false;
     public int gunListPos = 0;
+    public float fireTimer = 0;
 
-    float fireTimer = 0;
     bool isMelee = false;
+    bool isShooting = false;
 
     void Start()
     {
@@ -46,7 +48,7 @@ public class PlayerShoot : MonoBehaviour
 
     void Update()
     {
-        if (isReloading || changingWeapons) return;
+        if (isReloading || changingWeapons || GameManager.instance.playerScript.health <= 0 || isShooting) return;
 
         if (Input.GetButtonDown("Weapon1"))
         {
@@ -211,13 +213,31 @@ public class PlayerShoot : MonoBehaviour
                         gunList[gunListPos].clip--;
                         GameManager.instance.playerScript.SavePlayerStats();
                         weaponAnimator.SetTrigger("Ranged");
+                        StartCoroutine(ShootingDuration(weaponOverrideController["TempShoot"].length));
                     }
-                    else weaponAnimator.SetTrigger("Melee");
+                    else
+                    {
+                        weaponAnimator.SetTrigger("Melee");
+                        StartCoroutine(ShootingDuration(meleeSwingAnimation.length));
+                    }
                 }
-                else if (!isMelee && gunList[gunListPos].clip == 0) weaponAnimator.SetTrigger("ShootNoAmmo");
+                else if (!isMelee && gunList[gunListPos].clip == 0)
+                {
+                    weaponAnimator.SetTrigger("ShootNoAmmo");
+                    StartCoroutine(ShootingDuration(weaponOverrideController["TempShootNoAmmo"].length));
+                }
                 fireTimer = 0;
             }
         }
+    }
+
+    IEnumerator ShootingDuration(float time)
+    {
+        isShooting = true;
+
+        yield return new WaitForSeconds(time);
+
+        isShooting = false;
     }
 
     void SwitchWeapons(GunStats stats, int pos)

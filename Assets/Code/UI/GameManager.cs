@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public PlayerController playerScript;
     public CameraController cameraController;
     public Image playerHealthBar;
+    public GameObject playerDashObject;
     public Image playerDash;
     public Image playerBloomReticle;
     public GameObject playerDamageEffect;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text playerHealthMaxText;
     public TMP_Text playerHealthText;
     public GameObject playerUI;
+    public GameObject playerHotBarObject;
 
     public GameObject ammoUIObject;
     public TMP_Text currentAmmo;
@@ -60,6 +62,8 @@ public class GameManager : MonoBehaviour
     public GameObject contractBoardBigfootUI;
     public GameObject contractBoardMothmanUI;
     public GameObject contractBoardWendigoUI;
+    public TMP_Text bossesDefeatedCount;
+    public TMP_Text totalBossesCount;
     public ContractBoardState contractBoardCurr;
 
     public enum ContractBoardState
@@ -76,7 +80,7 @@ public class GameManager : MonoBehaviour
     public GameObject shopUI;
 
     [Header("Miscellaneous stuff")]
-    float timeScaleOriginal;
+    public float timeScaleOriginal;
 
     [SerializeField] public GameObject interactableTextObject;
     [SerializeField] public TMP_Text interactableText;
@@ -103,11 +107,15 @@ public class GameManager : MonoBehaviour
             playerScript = player.GetComponent<PlayerController>();
         }
 
-        cameraController = Camera.main.GetComponent<CameraController>();
         spawnPoint = GameObject.FindWithTag("Respawn");
 
         playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, reticleOriginalWidth);
         playerBloomReticle.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, reticleOriginalHeight);
+    }
+
+    void Start()
+    {
+        cameraController = Camera.main.GetComponent<CameraController>();
     }
 
     // Update is called once per frame
@@ -138,10 +146,13 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        bossesDefeatedCount.text = PlayerPrefs.GetInt("DefeatedBossesCount", LevelManager.Instance.BossCount()).ToString("F0");
+        totalBossesCount.text = "2";
     }
 
     public void statePaused()
     {
+        if (playerScript) playerScript.shoot.fireTimer = 0;
         isPaused = !isPaused;
         Time.timeScale = 0;
         Cursor.visible = true;

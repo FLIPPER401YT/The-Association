@@ -161,6 +161,18 @@ public class EnemyAI_Base : MonoBehaviour, IDamage
             anim.SetBool("Walking", false);
             anim.SetBool("Death", true);
 
+            // --- Disable physics so animation plays correctly ---
+            var rb = GetComponent<Rigidbody>();
+            if (rb)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true;          // disable physics
+                rb.detectCollisions = false;    // optional: prevents further collisions
+            }
+
+            if (mover) mover.enabled = false;   // stop movement logic
+
             StartCoroutine(DestroyOnDeath());
 
             if (enableDrops) DropLoot();
