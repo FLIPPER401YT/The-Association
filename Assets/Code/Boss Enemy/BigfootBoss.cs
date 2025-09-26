@@ -416,8 +416,7 @@ public class BigfootBoss : Base_Boss_AI
         anim.SetTrigger("Slam");
 
         Vector3 target = player ? player.position : transform.position + transform.forward * 5f;
-        if (Physics.Raycast(target + Vector3.up * 10f, Vector3.down, out RaycastHit ghit, 30f, groundMask))
-            target = ghit.point;
+        if (Physics.Raycast(target + Vector3.up * 10f, Vector3.down, out RaycastHit ghit, 30f, groundMask)) target = ghit.point;
 
         if (telegraphLanding && landingIndicatorPrefab)
         {
@@ -496,7 +495,7 @@ public class BigfootBoss : Base_Boss_AI
 
     void DoSlamImpact()
     {
-        Vector3 slamCenter = transform.position + Vector3.up * 0.3f;
+        Vector3 slamCenter = transform.position + Vector3.up * 0f;
 
         // SFX: ground impact
         PlayOneShot(slamImpactSfx, slamImpactVol);

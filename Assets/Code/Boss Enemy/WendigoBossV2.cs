@@ -86,6 +86,15 @@ public class WendigoBossV2 : Base_Boss_AI
         // if (src && roarLoop) { src.clip = roarLoop; src.loop = true; src.spatialBlend = 1f; src.Play(); }
     }
 
+    protected override void Die()
+    {
+        anim.SetBool("Running", false);
+        anim.SetBool("Rushing", false);
+        anim.SetBool("Death", true);
+
+        base.Die();
+    }
+
     // ---------------- ATTACK GATING ----------------
     protected override bool CanAttack(float distToPlayer)
     {
@@ -99,8 +108,9 @@ public class WendigoBossV2 : Base_Boss_AI
 
     protected override IEnumerator PickAndRunAttack(float distToPlayer)
     {
+        anim.SetBool("Running", false);
         // Priority idea:
-        // 1) If too many adds aren’t alive and summon off CD, sometimes summon first
+        // 1) If too many adds arenï¿½t alive and summon off CD, sometimes summon first
         // 2) If in melee range -> Swipe
         // 3) Else if farther -> prefer Rush when distance big enough
         // 4) Else use Ranged
@@ -113,6 +123,7 @@ public class WendigoBossV2 : Base_Boss_AI
         // Opportunistic summon when not in immediate melee (or randomly even if close)
         if (canSummon && (!canSwipe || Random.value < 0.35f))
         {
+            anim.SetTrigger("Summon");
             if (logAttacks) Debug.Log("[Wendigo] ATTACK: Summon");
             yield return StartCoroutine(DoSummon());
             yield break;
@@ -120,6 +131,7 @@ public class WendigoBossV2 : Base_Boss_AI
 
         if (canSwipe)
         {
+            anim.SetTrigger("Swipe");
             if (logAttacks) Debug.Log("[Wendigo] ATTACK: Swipe");
             yield return StartCoroutine(DoSwipe());
             yield break;
@@ -127,6 +139,7 @@ public class WendigoBossV2 : Base_Boss_AI
 
         if (canRush && (!canRanged || distToPlayer > meleeRange * 2f))
         {
+            anim.SetBool("Rushing", true);
             if (logAttacks) Debug.Log("[Wendigo] ATTACK: Rush");
             yield return StartCoroutine(DoRush());
             yield break;
@@ -134,6 +147,7 @@ public class WendigoBossV2 : Base_Boss_AI
 
         if (canRanged)
         {
+            anim.SetTrigger("Range");
             if (logAttacks) Debug.Log("[Wendigo] ATTACK: SpitBolt");
             yield return StartCoroutine(DoSpitBolt());
             yield break;
@@ -262,6 +276,8 @@ public class WendigoBossV2 : Base_Boss_AI
 
         BrakePlanar();
         rb.linearVelocity = Vector3.zero;
+
+        anim.SetBool("Rushing", false);
 
         yield return new WaitForSeconds(rushRestDuration);
 
