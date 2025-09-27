@@ -7,7 +7,7 @@ public class ShowcaseDebug : MonoBehaviour
     {
         if (Input.GetButtonDown("Showcase"))
         {
-            SceneManager.LoadScene("Showcase");
+            //SceneManager.LoadScene("Showcase");
         }
     }
 }

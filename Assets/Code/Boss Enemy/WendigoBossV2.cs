@@ -162,7 +162,7 @@ public class WendigoBossV2 : Base_Boss_AI
         if (canSummon && (!canSwipe || Random.value < 0.35f))
         {
             anim.SetTrigger("Summon");
-            if (logAttacks) Debug.Log("[Wendigo] ATTACK: Summon");
+            //if (logAttacks) Debug.Log("[Wendigo] ATTACK: Summon");
             yield return StartCoroutine(DoSummon());
             yield break;
         }
@@ -170,7 +170,7 @@ public class WendigoBossV2 : Base_Boss_AI
         if (canSwipe)
         {
             anim.SetTrigger("Swipe");
-            if (logAttacks) Debug.Log("[Wendigo] ATTACK: Swipe");
+            //if (logAttacks) Debug.Log("[Wendigo] ATTACK: Swipe");
             yield return StartCoroutine(DoSwipe());
             yield break;
         }
@@ -178,7 +178,7 @@ public class WendigoBossV2 : Base_Boss_AI
         if (canRush && (!canRanged || distToPlayer > meleeRange * 2f))
         {
             anim.SetBool("Rushing", true);
-            if (logAttacks) Debug.Log("[Wendigo] ATTACK: Rush");
+            //if (logAttacks) Debug.Log("[Wendigo] ATTACK: Rush");
             yield return StartCoroutine(DoRush());
             yield break;
         }
@@ -186,7 +186,7 @@ public class WendigoBossV2 : Base_Boss_AI
         if (canRanged)
         {
             anim.SetTrigger("Range");
-            if (logAttacks) Debug.Log("[Wendigo] ATTACK: SpitBolt");
+            //if (logAttacks) Debug.Log("[Wendigo] ATTACK: SpitBolt");
             yield return StartCoroutine(DoSpitBolt());
             yield break;
         }

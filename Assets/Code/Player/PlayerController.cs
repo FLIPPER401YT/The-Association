@@ -167,12 +167,10 @@ public class PlayerController : MonoBehaviour, IDamage
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("On Scene Runs On Player");
         lastBitOfLifeDamageTaken = false;
         if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
         if (LevelManager.Instance != null && updateUIOnLoad)
         {
-            Debug.Log("Update UI On Load");
             //updatePlayerHealthBarUI();
             UpdateSampleCount(bloodSamples);
         }
@@ -180,7 +178,6 @@ public class PlayerController : MonoBehaviour, IDamage
         if (!updateUIOnLoad) gameObject.SetActive(false);
         else gameObject.SetActive(true);
         updateUIOnLoad = true;
-        Debug.Log("Reaches Here");
         GameManager.instance.player = gameObject;
         GameManager.instance.playerScript = this;
     }
