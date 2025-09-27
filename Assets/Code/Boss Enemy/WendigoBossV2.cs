@@ -72,8 +72,8 @@ public class WendigoBossV2 : Base_Boss_AI
     [Range(0f, 0.2f)][SerializeField] float pitchJitter = 0.06f;
 
     // ---------------- DEBUG ----------------
-    [Header("Debug")]
-    [SerializeField] bool logAttacks = false;
+    //[Header("Debug")]
+    //[SerializeField] bool logAttacks = false;
 
     // cooldowns
     float swipeCD, rushCD, rangedCD, summonCD;
