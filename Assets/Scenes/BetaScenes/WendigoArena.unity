@@ -28003,18 +28003,6 @@ PrefabInstance:
       value: WendigoV2
       objectReference: {fileID: 0}
     - target: {fileID: 8551462350138272785, guid: ee3d7b12925cf42489c78600e5c07c1a, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8551462350138272785, guid: ee3d7b12925cf42489c78600e5c07c1a, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8551462350138272785, guid: ee3d7b12925cf42489c78600e5c07c1a, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8551462350138272785, guid: ee3d7b12925cf42489c78600e5c07c1a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 100.701744
       objectReference: {fileID: 0}
