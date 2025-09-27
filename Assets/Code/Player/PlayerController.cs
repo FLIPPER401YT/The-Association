@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour, IDamage
         rigidBody = GetComponent<Rigidbody>();
         if (GameManager.instance != null && GameManager.instance.spawnPoint != null) spawnPoint = GameManager.instance.spawnPoint.transform;
 
-        healthMax = health;
+        health = healthMax;
         SpawnPlayer();
         updatePlayerHealthBarUI();
         UpdateSampleCount(bloodSamples);
